@@ -1,0 +1,11 @@
+BusinessManager
+===============
+
+- Inventory
+- POS (Point of Sale)
+- Clients / Accounts / Billing
+- Orders / Order Items
+- Lay-Away System
+
+- Connect to Printer
+- Connect to Cash Register
