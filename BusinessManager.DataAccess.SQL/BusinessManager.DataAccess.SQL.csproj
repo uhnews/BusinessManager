@@ -49,6 +49,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataContext.cs" />
+    <Compile Include="Migrations\201909010838351_Initial.cs" />
+    <Compile Include="Migrations\201909010838351_Initial.Designer.cs">
+      <DependentUpon>201909010838351_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
   </ItemGroup>
@@ -61,6 +66,11 @@
       <Project>{76f0862a-eea2-4307-9adf-181f0db6040b}</Project>
       <Name>BusinessManager.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201909010838351_Initial.resx">
+      <DependentUpon>201909010838351_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
