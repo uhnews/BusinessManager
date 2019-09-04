@@ -61,6 +61,14 @@
     <Compile Include="Migrations\201909020313108_ModelsAdded2.Designer.cs">
       <DependentUpon>201909020313108_ModelsAdded2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909031243351_ASPDOTNETSecurity.cs" />
+    <Compile Include="Migrations\201909031243351_ASPDOTNETSecurity.Designer.cs">
+      <DependentUpon>201909031243351_ASPDOTNETSecurity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909040508547_CustomerIdToProduct.cs" />
+    <Compile Include="Migrations\201909040508547_CustomerIdToProduct.Designer.cs">
+      <DependentUpon>201909040508547_CustomerIdToProduct.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -84,6 +92,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909020313108_ModelsAdded2.resx">
       <DependentUpon>201909020313108_ModelsAdded2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909031243351_ASPDOTNETSecurity.resx">
+      <DependentUpon>201909031243351_ASPDOTNETSecurity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909040508547_CustomerIdToProduct.resx">
+      <DependentUpon>201909040508547_CustomerIdToProduct.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

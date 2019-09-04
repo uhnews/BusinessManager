@@ -1,6 +1,7 @@
 using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
 using BusinessManager.DataAccess.SQL;
+using BusinessManager.Services;
 using System;
 
 using Unity;
@@ -49,13 +50,13 @@ namespace BusinessManager.WebUI
 
             container.RegisterType<IRepository<Product>, SQLRepository<Product>>();
             container.RegisterType<IRepository<ProductCategory>, SQLRepository<ProductCategory>>();
-            //container.RegisterType<IRepository<Basket>, SQLRepository<Basket>>();
-            //container.RegisterType<IRepository<BasketItem>, SQLRepository<BasketItem>>();
-            //container.RegisterType<IRepository<Customer>, SQLRepository<Customer>>();
-            //container.RegisterType<IRepository<Order>, SQLRepository<Order>>();
-            //container.RegisterType<IRepository<OrderItem>, SQLRepository<OrderItem>>();
-            //container.RegisterType<IBasketService, BasketService>();
-            //container.RegisterType<IOrderService, OrderService>();
+            container.RegisterType<IRepository<Basket>, SQLRepository<Basket>>();
+            container.RegisterType<IRepository<BasketItem>, SQLRepository<BasketItem>>();
+            container.RegisterType<IRepository<Customer>, SQLRepository<Customer>>();
+            container.RegisterType<IRepository<Order>, SQLRepository<Order>>();
+            container.RegisterType<IRepository<OrderItem>, SQLRepository<OrderItem>>();
+            container.RegisterType<IBasketService, BasketService>();
+            container.RegisterType<IOrderService, OrderService>();
         }
     }
 }

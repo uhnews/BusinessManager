@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BusinessManager.WebUI.Models;
+using BusinessManager.Core.Models;
+using BusinessManager.Core.Contracts;
 
 namespace BusinessManager.WebUI.Controllers
 {
@@ -17,15 +19,20 @@ namespace BusinessManager.WebUI.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private IRepository<Customer> customerRepository;
 
-        public AccountController()
-        {
-        }
+        //public AccountController()
+        //{
+        //}
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        //public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        //{
+        //    UserManager = userManager;
+        //    SignInManager = signInManager;
+        //}
+        public AccountController(IRepository<Customer> customerRepository)
         {
-            UserManager = userManager;
-            SignInManager = signInManager;
+            this.customerRepository = customerRepository;
         }
 
         public ApplicationSignInManager SignInManager
@@ -149,14 +156,31 @@ namespace BusinessManager.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    // register the customer model
+                    Customer customer = new Customer()
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Street = model.Street,
+                        City = model.City,
+                        State = model.State,
+                        ZipCode = model.ZipCode,
+                        Email = model.Email,
+                        UserId = user.Id
+                    };
+
+                    customerRepository.Insert(customer);
+                    customerRepository.Commit();
+
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

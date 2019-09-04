@@ -8,6 +8,7 @@ namespace BusinessManager.Core.Models
         {
             this.OrderItems = new List<OrderItem>();
         }
+        public string CustomerId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
