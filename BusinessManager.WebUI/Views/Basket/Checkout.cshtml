@@ -9,6 +9,11 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+        <div class="form-group">
+            <div class="d-none">
+                @Html.Hidden("CustomerId")
+            </div>
+        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })

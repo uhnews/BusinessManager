@@ -95,6 +95,8 @@ namespace BusinessManager.WebUI.Controllers
                 productToEdit.Description = product.Description;
                 productToEdit.Name = product.Name;
                 productToEdit.Price = product.Price;
+                productToEdit.Quantity = product.Quantity;
+                productToEdit.IsService = product.IsService;
                 if (file != null)
                 {
                     productToEdit.Image = product.Id + Path.GetExtension(file.FileName);

@@ -13,5 +13,10 @@ namespace BusinessManager.Core.Models
         public decimal Price { get; set; }
         public string Category { get; set; }
         public string Image { get; set; }
+        [DefaultValue(0)]
+        [Range(0, 1000000)]
+        public int Quantity { get; set; }
+        [DefaultValue(false)]
+        public bool IsService { get; set; }
     }
 }

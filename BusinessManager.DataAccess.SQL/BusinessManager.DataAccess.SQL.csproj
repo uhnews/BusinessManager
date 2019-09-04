@@ -69,6 +69,10 @@
     <Compile Include="Migrations\201909040508547_CustomerIdToProduct.Designer.cs">
       <DependentUpon>201909040508547_CustomerIdToProduct.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909040907385_QuantiyAndIServiceAddedToProduct.cs" />
+    <Compile Include="Migrations\201909040907385_QuantiyAndIServiceAddedToProduct.Designer.cs">
+      <DependentUpon>201909040907385_QuantiyAndIServiceAddedToProduct.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -98,6 +102,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909040508547_CustomerIdToProduct.resx">
       <DependentUpon>201909040508547_CustomerIdToProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909040907385_QuantiyAndIServiceAddedToProduct.resx">
+      <DependentUpon>201909040907385_QuantiyAndIServiceAddedToProduct.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
