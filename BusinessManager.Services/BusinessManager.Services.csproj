@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="BasketService.cs" />
     <Compile Include="OrderService.cs" />
+    <Compile Include="POSSaleService.cs" />
+    <Compile Include="POSTransactionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

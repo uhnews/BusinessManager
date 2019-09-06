@@ -9,3 +9,10 @@ BusinessManager
 
 - Connect to Printer
 - Connect to Cash Register
+
+Product Model
+- low stock level integer
+- vendor price
+- retail price
+- wholesale price
+- UPC

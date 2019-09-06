@@ -23,7 +23,8 @@
         </th>
         <th></th>
     </tr>
-
+    
+    @{ int itemCount = 0; }
     @foreach (var item in Model)
     {
         <tr>
@@ -41,14 +42,24 @@
                 @String.Format("{0:c}", item.Price * item.Quantity);
             </td>
             <td>
-                <a href="@Url.Action("RemoveFromBasket", "Basket", new { Id=item.Id })" class="btn btn-danger">Delete</a>
+                <a href="@Url.Action("RemoveFromBasket", "Basket", new { Id = item.Id })" class="btn btn-danger">Delete</a>
             </td>
         </tr>
+        ++itemCount;
     }
     <tr>
-        <td colspan="4" style="text-align: right"><strong>Basket Total</strong></td>
-        <td>@String.Format("{0:c}", (from p in Model select p.Price * p.Quantity).Sum());</td>
-        <td><a href="@Url.Action("Checkout", "Basket")">Checkout</a></td>
+        @if (itemCount > 0)
+        {
+            <td colspan="4" style="text-align: right"><strong>Basket Total</strong></td>
+            <td>@String.Format("{0:c}", (from p in Model select p.Price * p.Quantity).Sum());</td>
+            <td><a href="@Url.Action("Checkout", "Basket")">Checkout</a></td>
+        }
+        else
+        {
+            <td colspan="4" style="text-align: right"><strong>Basket Total</strong></td>
+            <td>@String.Format("{0:c}", (from p in Model select p.Price * p.Quantity).Sum());</td>
+            <td><span class="text-muted">Checkout</span></td>
+        }
     </tr>
 
 </table>

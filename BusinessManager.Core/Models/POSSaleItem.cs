@@ -2,9 +2,9 @@
 
 namespace BusinessManager.Core.Models
 {
-    public class OrderItem : BaseEntity
+    public class POSSaleItem : BaseEntity
     {
-        public string OrderId { get; set; }
+        public string POSSaleId { get; set; }
 
         public string ProductId { get; set; }
 

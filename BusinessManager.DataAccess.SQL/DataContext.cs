@@ -17,5 +17,9 @@ namespace BusinessManager.DataAccess.SQL
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<POSTransaction> POSTransactions { get; set; }
+        public DbSet<POSTransactionItem> POSTransactionItems { get; set; }
+        public DbSet<POSSale> POSSales { get; set; }
+        public DbSet<POSSaleItem> POSSaleItems { get; set; }
     }
 }

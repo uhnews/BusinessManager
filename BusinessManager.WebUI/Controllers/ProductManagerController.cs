@@ -95,7 +95,11 @@ namespace BusinessManager.WebUI.Controllers
                 productToEdit.Description = product.Description;
                 productToEdit.Name = product.Name;
                 productToEdit.Price = product.Price;
+                productToEdit.WholesalePrice = product.WholesalePrice;
+                productToEdit.SupplierPrice = product.SupplierPrice;
                 productToEdit.Quantity = product.Quantity;
+                productToEdit.QuantityMin = product.QuantityMin;
+                productToEdit.UPC = product.UPC;
                 productToEdit.IsService = product.IsService;
                 if (file != null)
                 {

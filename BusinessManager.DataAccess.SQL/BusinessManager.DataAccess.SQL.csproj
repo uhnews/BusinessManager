@@ -73,6 +73,38 @@
     <Compile Include="Migrations\201909040907385_QuantiyAndIServiceAddedToProduct.Designer.cs">
       <DependentUpon>201909040907385_QuantiyAndIServiceAddedToProduct.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909041331561_ValidationsForProductModel.cs" />
+    <Compile Include="Migrations\201909041331561_ValidationsForProductModel.Designer.cs">
+      <DependentUpon>201909041331561_ValidationsForProductModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909060219441_FieldsAddedToModels.cs" />
+    <Compile Include="Migrations\201909060219441_FieldsAddedToModels.Designer.cs">
+      <DependentUpon>201909060219441_FieldsAddedToModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909060858506_POSTransactionsAdded.cs" />
+    <Compile Include="Migrations\201909060858506_POSTransactionsAdded.Designer.cs">
+      <DependentUpon>201909060858506_POSTransactionsAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909060909596_POSTransactionsAdded1.cs" />
+    <Compile Include="Migrations\201909060909596_POSTransactionsAdded1.Designer.cs">
+      <DependentUpon>201909060909596_POSTransactionsAdded1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909060919585_DeleteTransactionModels.cs" />
+    <Compile Include="Migrations\201909060919585_DeleteTransactionModels.Designer.cs">
+      <DependentUpon>201909060919585_DeleteTransactionModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909060925328_POSTransactionsAdded2.cs" />
+    <Compile Include="Migrations\201909060925328_POSTransactionsAdded2.Designer.cs">
+      <DependentUpon>201909060925328_POSTransactionsAdded2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909061147492_POSSaleModelsAdded.cs" />
+    <Compile Include="Migrations\201909061147492_POSSaleModelsAdded.Designer.cs">
+      <DependentUpon>201909061147492_POSSaleModelsAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909061241271_ProductCodeAddedToProductModel.cs" />
+    <Compile Include="Migrations\201909061241271_ProductCodeAddedToProductModel.Designer.cs">
+      <DependentUpon>201909061241271_ProductCodeAddedToProductModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -105,6 +137,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909040907385_QuantiyAndIServiceAddedToProduct.resx">
       <DependentUpon>201909040907385_QuantiyAndIServiceAddedToProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909041331561_ValidationsForProductModel.resx">
+      <DependentUpon>201909041331561_ValidationsForProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909060219441_FieldsAddedToModels.resx">
+      <DependentUpon>201909060219441_FieldsAddedToModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909060858506_POSTransactionsAdded.resx">
+      <DependentUpon>201909060858506_POSTransactionsAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909060909596_POSTransactionsAdded1.resx">
+      <DependentUpon>201909060909596_POSTransactionsAdded1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909060919585_DeleteTransactionModels.resx">
+      <DependentUpon>201909060919585_DeleteTransactionModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909060925328_POSTransactionsAdded2.resx">
+      <DependentUpon>201909060925328_POSTransactionsAdded2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909061147492_POSSaleModelsAdded.resx">
+      <DependentUpon>201909061147492_POSSaleModelsAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909061241271_ProductCodeAddedToProductModel.resx">
+      <DependentUpon>201909061241271_ProductCodeAddedToProductModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

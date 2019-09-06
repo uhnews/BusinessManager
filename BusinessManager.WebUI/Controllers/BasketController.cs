@@ -75,13 +75,16 @@ namespace BusinessManager.WebUI.Controllers
             order.OrderStatus = "Order Created";
             order.Email = User.Identity.Name;
 
-
             // process payment here
 
+
+
+            //
             order.OrderStatus = "Payment Processed";
             orderService.CreateOrder(order, basketItems);
             basketService.ClearBasket(this.HttpContext);
 
+            //
             return RedirectToAction("Thankyou", new { orderId = order.Id });
         }
 

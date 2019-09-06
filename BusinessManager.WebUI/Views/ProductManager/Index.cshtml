@@ -19,6 +19,9 @@
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.ProductCode)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Price)
         </th>
         <th>
@@ -28,6 +31,9 @@
             @Html.DisplayNameFor(model => model.IsService)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.QuantityMin)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Quantity)
         </th>
         <th></th>
@@ -35,41 +41,56 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                <img class="img-thumbnail" style="height:50px" src="~/Content/ProductImages/@item.Image" />
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsService)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-                @if (item.Quantity == 0)
-                {
-                    <div style="display: inline-block"> | @Html.ActionLink("Delete", "Delete", new { id = item.Id })</div>
-                }
-                else
-                {
-                    <div style="display: inline-block"> | Delete</div>
-                }
+<tr>
+    <td>
+        <img class="img-thumbnail" style="height:50px" src="~/Content/ProductImages/@item.Image" />
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ProductCode)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Price)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Category)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.IsService)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.QuantityMin)
+    </td>
+    @if (item.Quantity > item.QuantityMin)
+    {
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+    }
+    else
+    {
+        <td>
+            <div class="bg-danger" style="width: 100%">@Html.DisplayFor(modelItem => item.Quantity)</div>
+        </td>
+    }
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+        @if (item.Quantity == 0)
+        {
+            <div style="display: inline-block"> | @Html.ActionLink("Delete", "Delete", new { id = item.Id })</div>
+        }
+        else
+        {
+            <div class="text-muted" style="display: inline-block"> | Delete</div>
+        }
 
-            </td>
-        </tr>
+    </td>
+</tr>
     }
 
 </table>

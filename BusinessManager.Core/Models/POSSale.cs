@@ -3,11 +3,11 @@ using System.ComponentModel;
 
 namespace BusinessManager.Core.Models
 {
-    public class Order : BaseEntity
+    public class POSSale : BaseEntity
     {
-        public Order()
+        public POSSale()
         {
-            this.OrderItems = new List<OrderItem>();
+            this.POSSaleItems = new List<POSSaleItem>();
         }
 
         public string CustomerId { get; set; }
@@ -30,9 +30,6 @@ namespace BusinessManager.Core.Models
         [DisplayName("Zip Code")]
         public string ZipCode { get; set; }
 
-        [DisplayName("Order Status")]
-        public string OrderStatus { get; set; }
-
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual ICollection<POSSaleItem> POSSaleItems { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace BusinessManager.WebUI.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
-        [Display(Name = "Email")]
+        [Display(Name = "E-Mail")]
         public string Email { get; set; }
     }
 
@@ -42,14 +42,14 @@ namespace BusinessManager.WebUI.Models
     public class ForgotViewModel
     {
         [Required]
-        [Display(Name = "Email")]
+        [Display(Name = "E-Mail")]
         public string Email { get; set; }
     }
 
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
+        [Display(Name = "E-Mail")]
         [EmailAddress]
         public string Email { get; set; }
 
@@ -66,7 +66,7 @@ namespace BusinessManager.WebUI.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "E-Mail")]
         public string Email { get; set; }
 
         [Required]
@@ -80,8 +80,10 @@ namespace BusinessManager.WebUI.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
         [Required]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Required]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
         [Required]
         public string Street { get; set; }
@@ -89,6 +91,7 @@ namespace BusinessManager.WebUI.Models
         public string City { get; set; }
         public string State { get; set; }
         [Required]
+        [Display(Name = "Zip Code")]
         public string ZipCode { get; set; }
     }
 
@@ -96,7 +99,7 @@ namespace BusinessManager.WebUI.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "E-Mail")]
         public string Email { get; set; }
 
         [Required]
@@ -117,7 +120,7 @@ namespace BusinessManager.WebUI.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "E-Mail")]
         public string Email { get; set; }
     }
 }

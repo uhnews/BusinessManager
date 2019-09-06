@@ -55,8 +55,12 @@ namespace BusinessManager.WebUI
             container.RegisterType<IRepository<Customer>, SQLRepository<Customer>>();
             container.RegisterType<IRepository<Order>, SQLRepository<Order>>();
             container.RegisterType<IRepository<OrderItem>, SQLRepository<OrderItem>>();
+            container.RegisterType<IRepository<POSTransaction>, SQLRepository<POSTransaction>>();
+            container.RegisterType<IRepository<POSTransactionItem>, SQLRepository<POSTransactionItem>>();
             container.RegisterType<IBasketService, BasketService>();
             container.RegisterType<IOrderService, OrderService>();
+            container.RegisterType<IPOSTransactionService, POSTransactionService>();
+            container.RegisterType<IPOSSaleService, POSSaleService>();
         }
     }
 }
