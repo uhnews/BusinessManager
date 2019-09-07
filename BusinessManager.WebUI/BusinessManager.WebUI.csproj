@@ -193,6 +193,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderManagerController.cs" />
+    <Compile Include="Controllers\POSSaleManagerController.cs" />
     <Compile Include="Controllers\POSTransactionController.cs" />
     <Compile Include="Controllers\ProductCategoryManagerController.cs" />
     <Compile Include="Controllers\ProductManagerController.cs" />
@@ -278,11 +279,17 @@
     <Content Include="Views\ProductManager\Edit.cshtml" />
     <Content Include="Views\ProductManager\Delete.cshtml" />
     <Content Include="Views\Home\Details.cshtml" />
+    <Content Include="Views\POSTransaction\Index.cshtml" />
+    <Content Include="Views\POSTransaction\POSTransactionSummary.cshtml" />
+    <Content Include="Views\POSTransaction\Checkout.cshtml" />
+    <Content Include="Views\POSTransaction\ThankYou.cshtml" />
+    <Content Include="Views\POSSaleManager\Index.cshtml" />
+    <Content Include="Views\POSSaleManager\POSSaleItems.cshtml" />
+    <Content Include="Views\POSSaleManager\UpdatePOSSale.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\ProductImages\" />
-    <Folder Include="Views\POSTransaction\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

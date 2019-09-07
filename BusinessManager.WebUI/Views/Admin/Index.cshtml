@@ -8,13 +8,14 @@
     <h4>Product Management</h4>
     <div>
         @Html.ActionLink("Product Categories", "Index", "ProductCategoryManager", null, new { @class = "list-group-item" })
-        @Html.ActionLink("Products", "Index", "ProductManager", null, new { @class = "list-group-item" })
+        @Html.ActionLink("Product Inventory", "Index", "ProductManager", null, new { @class = "list-group-item" })
     </div>
 </div>
 
 <div class="col-md-6">
     <h4>Order Management</h4>
     <div>
-        @Html.ActionLink("Orders", "Index", "OrderManager", null, new { @class = "list-group-item" })
+        @Html.ActionLink("POS Sales", "Index", "POSSaleManager", null, new { @class = "list-group-item" })
+        @Html.ActionLink("Online Orders", "Index", "OrderManager", null, new { @class = "list-group-item" })
     </div>
 </div>

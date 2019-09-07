@@ -1,10 +1,10 @@
-﻿@model IEnumerable<BusinessManager.Core.ViewModels.BasketItemViewModel>
+﻿@model IEnumerable<BusinessManager.Core.ViewModels.POSTransactionItemViewModel>
 
 @{
-    ViewBag.Title = "Basket";
+    ViewBag.Title = "POS Transaction";
 }
 
-<h2>Basket</h2>
+<h2>Point of Sale (POS)</h2>
 
 <table class="table">
     <tr>
@@ -36,13 +36,13 @@
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
             <td>
-                @String.Format("{0:c}", item.Price);
+                @String.Format("{0:c}", item.Price)
             </td>
             <td>
-                @String.Format("{0:c}", item.Price * item.Quantity);
+                @String.Format("{0:c}", item.Price * item.Quantity)
             </td>
             <td>
-                <a href="@Url.Action("RemoveFromBasket", "Basket", new { Id = item.Id })" class="btn btn-danger">Delete</a>
+                <a href="@Url.Action("RemoveFromPOSTransaction", "POSTransaction", new { Id = item.Id })" class="btn btn-danger">Delete</a>
             </td>
         </tr>
         ++itemCount;
@@ -50,21 +50,20 @@
     <tr>
         @if (itemCount > 0)
         {
-            <td colspan="4" style="text-align: right"><strong>Basket Total</strong></td>
+            <td colspan="4" style="text-align: right"><strong>Sale Total</strong></td>
             <td>@String.Format("{0:c}", (from p in Model select p.Price * p.Quantity).Sum());</td>
-            <td><a href="@Url.Action("Checkout", "Basket")">Checkout</a></td>
+            <td><a href="@Url.Action("Checkout", "POSTransaction")">Checkout</a></td>
         }
         else
         {
-            <td colspan="4" style="text-align: right"><strong>Basket Total</strong></td>
+            <td colspan="4" style="text-align: right"><strong>Transaction Total</strong></td>
             <td>@String.Format("{0:c}", (from p in Model select p.Price * p.Quantity).Sum());</td>
             <td><span class="text-muted">Checkout</span></td>
         }
     </tr>
-
 </table>
 
-<hr >
+<hr>
 <div>
     <a href="@Url.Action("Index", "Home")">Back To Product List</a>
 </div>

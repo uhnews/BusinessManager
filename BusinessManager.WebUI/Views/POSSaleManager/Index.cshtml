@@ -1,10 +1,10 @@
-﻿@model IEnumerable<BusinessManager.Core.Models.Order>
+﻿@model IEnumerable<BusinessManager.Core.Models.POSSale>
 
 @{
-    ViewBag.Title = "Online Orders";
+    ViewBag.Title = "POS Transactions";
 }
 
-<h2>Online Orders</h2>
+<h2>POS Transactions</h2>
 
 <table class="table">
     <tr>
@@ -19,9 +19,6 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OrderStatus)
         </th>
         <th></th>
     </tr>
@@ -42,10 +39,7 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderStatus)
-            </td>
-            <td>
-                @Html.ActionLink("Manage Order", "UpdateOrder", new { id = item.Id })
+                @Html.ActionLink("Transaction Detail", "UpdatePOSSale", new { id = item.Id })
             </td>
         </tr>
     }

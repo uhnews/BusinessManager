@@ -43,7 +43,7 @@
     {
 <tr>
     <td>
-        <img class="img-thumbnail" style="height:50px" src="~/Content/ProductImages/@item.Image" />
+        <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })"><img class="img-thumbnail" style="height:50px" src="~/Content/ProductImages/@item.Image" /></a>
     </td>
     <td>
         @Html.DisplayFor(modelItem => item.Name)

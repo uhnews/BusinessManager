@@ -1,0 +1,6 @@
+﻿@model BusinessManager.Core.ViewModels.POSTransactionSummaryViewModel
+
+<ul class="nav navbar-nav navbar-right">
+    <li><a href="@Url.Action("Index", "POSTransaction")">@Model.TransactionCount items</a></li>
+    <li><a href="@Url.Action("Index", "POSTransaction")">@String.Format("{0:c}", Model.TransactionTotal)</a></li>
+</ul>
