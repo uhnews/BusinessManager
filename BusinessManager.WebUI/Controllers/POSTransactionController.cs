@@ -1,6 +1,5 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
-using System.Linq;
 using System.Web.Mvc;
 
 namespace BusinessManager.WebUI.Controllers

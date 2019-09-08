@@ -190,6 +190,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BasketController.cs" />
+    <Compile Include="Controllers\CustomerManagerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderManagerController.cs" />
@@ -286,6 +287,10 @@
     <Content Include="Views\POSSaleManager\Index.cshtml" />
     <Content Include="Views\POSSaleManager\POSSaleItems.cshtml" />
     <Content Include="Views\POSSaleManager\UpdatePOSSale.cshtml" />
+    <Content Include="Views\CustomerManager\Index.cshtml" />
+    <Content Include="Views\CustomerManager\Create.cshtml" />
+    <Content Include="Views\CustomerManager\Edit.cshtml" />
+    <Content Include="Views\CustomerManager\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
