@@ -16,3 +16,8 @@ Product Model
 - retail price
 - wholesale price
 - UPC
+
+to do:
+======
+- add default image or icon when pic not available
+

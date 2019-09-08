@@ -7,7 +7,7 @@
 
 <div class="col-md-2">
     <h4>Filter by Category</h4>
-    <div class="col-md-10">
+    <div class="col-md-12">
         @Html.ActionLink("All", "Index", null, new { @class = Request["category"] == null ? "list-group-item active" : "list-group-item" })
         @foreach (var cat in Model.ProductCategories)
         {
@@ -17,28 +17,48 @@
 </div>
 
 <div class="col-md-10">
-    @foreach (var item in Model.Products)
-    {
-    <div col="col-md-4" style="height: 250px; padding: 10px; margin: 10px; border: solid thin whitesmoke">
-        <div class="col-md-12">
-            <img class="img" style="height: 250px" src="~/Content/ProductImages/@item.Image" />
-        </div>
-        <div class="col-md-12">
-            <strong>@Html.ActionLink(item.Name, "Details", new { Id = item.Id })</strong>
-        </div>
-        <div class="col-md-12">
-            <p>@item.Description</p>
-        </div>
-        <div class="col-md-12">
-            <p>@item.Price</p>
-        </div>
-        <div class="col-md-12">
-            <a href="@Url.Action("AddToBasket", "Basket", new { Id = item.Id })" class="btn btn-default">Add to Basket</a>
-        </div>
-        <div class="col-md-12">
-            <a href="@Url.Action("AddToPOSTransaction", "POSTransaction", new { Id = item.Id })" class="btn btn-default">Add to Sale</a>
-        </div>
+    <div class="container-fluid ">
+        @{ 
+            string imageWidth = "col-md-5 bg-warning";
+            string rowWidth = "col-md-5";
+        }
+        @foreach (var item in Model.Products)
+        {
+            <div class=@rowWidth style="height: 240px; padding: 10px; margin: 10px; border: solid thin #e6e6e6">
+
+                <div class=@imageWidth style="height: 100%">
+                    <img class="img" style="height: 200px; max-width: 110%" src="~/Content/ProductImages/@item.Image" alt="Image" />
+                </div>
+
+                <div>
+                    <strong>@Html.ActionLink(item.Name, "Details", new { Id = item.Id })</strong>
+                </div>
+
+                <div>
+                    <p>@item.Description</p>
+                </div>
+
+                <div>
+                    <p>@string.Format("{0:c}", item.Price)</p>
+                </div>
+
+                @if (!User.IsInRole("POSAttendant") || (User.IsInRole("POSAttendant") && User.IsInRole("Client")))
+                {
+                    <div style="margin: 65px 5px 5px 5px">
+                        <a href="@Url.Action("AddToBasket", "Basket", new { Id = item.Id })" class="btn btn-default"><i class="fa fa-shopping-cart">&nbsp;&nbsp;Add to Basket</i></a>
+                    </div>
+                }
+
+                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("POSAttendant")))
+                {
+                    <div style="margin: 5px">
+                        <a href="@Url.Action("AddToPOSTransaction", "POSTransaction", new { Id = item.Id })" class="btn btn-default"><span class="fas fa-cash-register">&nbsp;&nbsp;Add to Sale</span></a>
+                    </div>
+                }
+
+            </div>
+        }
     </div>
-    }
 </div>
+
 <div class="col-md-12 clearfix" />

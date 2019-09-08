@@ -22,3 +22,13 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/* Custon CSS Classes: */
+
+/* custom warning text color class for <a> tags */
+.link-text-warning {
+    color: #806000 !important;
+}
+    .link-text-warning:hover {
+        color: #ffc107 !important;
+    }

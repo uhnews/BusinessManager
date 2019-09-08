@@ -11,7 +11,7 @@ using System.Web.Mvc;
 namespace BusinessManager.WebUI.Controllers
 {
 
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class ProductManagerController : Controller
     {
         IRepository<Product> context;

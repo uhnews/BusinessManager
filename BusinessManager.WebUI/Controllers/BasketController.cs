@@ -46,7 +46,10 @@ namespace BusinessManager.WebUI.Controllers
         [Authorize]
         public ActionResult Checkout()
         {
+            // customer variable returns one Customer (whose email == current user's email)
+            // i.e. the basket created is being assigned to the currently logged-in user
             Customer customer = customers.Collection().FirstOrDefault(c => c.Email == User.Identity.Name);
+
             if (customer != null)
             {
                 Order order = new Order()
@@ -75,6 +78,13 @@ namespace BusinessManager.WebUI.Controllers
             var basketItems = basketService.GetBasketItems(this.HttpContext);
             order.OrderStatus = "Order Created";
             order.Email = User.Identity.Name;
+
+            bool validatedIfPOSAttendant = !User.IsInRole("POSAttendant") || (User.IsInRole("POSAttendant") && User.IsInRole("Client"));
+            if (!validatedIfPOSAttendant)
+            {
+                return RedirectToAction("Error");
+            }
+
 
             // process payment here
 

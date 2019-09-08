@@ -46,19 +46,20 @@ namespace BusinessManager.WebUI.Controllers
         [Authorize]
         public ActionResult Checkout()
         {
-            Customer customer = customers.Collection().FirstOrDefault(c => c.Email == User.Identity.Name);
+            Customer customer = new Customer();
             if (customer != null)
             {
                 POSSale sale = new POSSale()
                 {
-                    CustomerId = customer.Id,
-                    FirstName = customer.FirstName,
-                    LastName = customer.LastName,
-                    Street = customer.Street,
-                    City = customer.City,
-                    State = customer.State,
-                    ZipCode = customer.ZipCode,
-                    Email = customer.Email
+                    // initialize all properties to blank (but valid) strings
+                    CustomerId = "",
+                    FirstName = "",
+                    LastName = "",
+                    Street = "",
+                    City = "",
+                    State = "",
+                    ZipCode = "",
+                    Email = ""
                 };
                 return View(sale);
             }
@@ -73,7 +74,6 @@ namespace BusinessManager.WebUI.Controllers
         public ActionResult Checkout(POSSale sale)
         {
             var transactionItems = posTransactionService.GetPOSTransactionItems(this.HttpContext);
-            sale.Email = User.Identity.Name;
 
             // process payment here
 
@@ -84,7 +84,7 @@ namespace BusinessManager.WebUI.Controllers
             posTransactionService.ClearPOSTransaction(this.HttpContext);
 
             //
-            return RedirectToAction("Thankyou", new { saleId = sale.Id });
+            return RedirectToAction("ThankYou", new { saleId = sale.Id });
         }
 
         public ActionResult ThankYou(string saleId)

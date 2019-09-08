@@ -11,7 +11,8 @@
 </p>
 <table class="table">
     <tr>
-        <th></th>
+        <th>
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
@@ -43,7 +44,7 @@
     {
 <tr>
     <td>
-        <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })"><img class="img-thumbnail" style="height:50px" src="~/Content/ProductImages/@item.Image" /></a>
+        <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })"><img class="img-thumbnail" style="height:50px" src="~/Content/ProductImages/@item.Image" alt="Image" /></a>
     </td>
     <td>
         @Html.DisplayFor(modelItem => item.Name)
@@ -66,16 +67,25 @@
     <td>
         @Html.DisplayFor(modelItem => item.QuantityMin)
     </td>
-    @if (item.Quantity > item.QuantityMin)
+    @{
+        int halfOfMin = item.QuantityMin / 2;
+    }
+    @if (item.Quantity <= item.QuantityMin)
     {
         <td>
-            @Html.DisplayFor(modelItem => item.Quantity)
+            <div class="bg-danger" style="width: 100%">@Html.DisplayFor(modelItem => item.Quantity)</div>
+        </td>
+    }
+    else if (item.Quantity <= item.QuantityMin + halfOfMin)
+    {
+        <td>
+            <div class="bg-warning" style="width: 100%">@Html.DisplayFor(modelItem => item.Quantity)</div>
         </td>
     }
     else
     {
         <td>
-            <div class="bg-danger" style="width: 100%">@Html.DisplayFor(modelItem => item.Quantity)</div>
+            @Html.DisplayFor(modelItem => item.Quantity)
         </td>
     }
     <td>

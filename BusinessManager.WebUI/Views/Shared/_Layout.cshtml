@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/ef8288156e.js"></script>
     <title>Management Pro - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -27,9 +27,16 @@
                         <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
                     }
                 </ul>
+
+                @*// Partial Login *@
                 @Html.Partial("_LoginPartial")
+
                 @{
                     Html.RenderAction("BasketSummary", "Basket");
+                }
+
+                @{
+                    Html.RenderAction("POSTransactionSummary", "POSTransaction");
                 }
             </div>
         </div>
