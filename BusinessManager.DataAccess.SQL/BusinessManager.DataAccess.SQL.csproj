@@ -105,6 +105,10 @@
     <Compile Include="Migrations\201909061241271_ProductCodeAddedToProductModel.Designer.cs">
       <DependentUpon>201909061241271_ProductCodeAddedToProductModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909090233308_ModifyCustomerAddSupplier.cs" />
+    <Compile Include="Migrations\201909090233308_ModifyCustomerAddSupplier.Designer.cs">
+      <DependentUpon>201909090233308_ModifyCustomerAddSupplier.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -161,6 +165,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909061241271_ProductCodeAddedToProductModel.resx">
       <DependentUpon>201909061241271_ProductCodeAddedToProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909090233308_ModifyCustomerAddSupplier.resx">
+      <DependentUpon>201909090233308_ModifyCustomerAddSupplier.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -47,7 +47,7 @@ namespace BusinessManager.WebUI
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
 
-
+            // SQL Repositories
             container.RegisterType<IRepository<Product>, SQLRepository<Product>>();
             container.RegisterType<IRepository<ProductCategory>, SQLRepository<ProductCategory>>();
             container.RegisterType<IRepository<Basket>, SQLRepository<Basket>>();
@@ -59,6 +59,9 @@ namespace BusinessManager.WebUI
             container.RegisterType<IRepository<POSTransactionItem>, SQLRepository<POSTransactionItem>>();
             container.RegisterType<IRepository<POSSale>, SQLRepository<POSSale>>();
             container.RegisterType<IRepository<POSSaleItem>, SQLRepository<POSSaleItem>>();
+            container.RegisterType<IRepository<Supplier>, SQLRepository<Supplier>>();
+
+            // Data Service Contracts
             container.RegisterType<IBasketService, BasketService>();
             container.RegisterType<IOrderService, OrderService>();
             container.RegisterType<IPOSTransactionService, POSTransactionService>();

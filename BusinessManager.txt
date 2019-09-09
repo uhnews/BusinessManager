@@ -19,5 +19,5 @@ Product Model
 
 to do:
 ======
-- add default image or icon when pic not available
+- on browse... image button chage "No file selected" to "Select new image file"
 

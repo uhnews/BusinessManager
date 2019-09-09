@@ -21,5 +21,6 @@ namespace BusinessManager.DataAccess.SQL
         public DbSet<POSTransactionItem> POSTransactionItems { get; set; }
         public DbSet<POSSale> POSSales { get; set; }
         public DbSet<POSSaleItem> POSSaleItems { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace BusinessManager.Core.Models
 {
-    public class Customer : BaseEntity
+    public class Supplier : BaseEntity
     {
         public string UserId { get; set; }
 
