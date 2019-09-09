@@ -10,6 +10,7 @@ namespace BusinessManager.Core.Models
         [DisplayName("Product Name")]
         public string Name { get; set; }
 
+        [StringLength(70)]
         [Required]
         public string Description { get; set; }
 
@@ -22,9 +23,11 @@ namespace BusinessManager.Core.Models
         [DisplayName("Wholesale")]
         public decimal WholesalePrice { get; set; }
 
+        [StringLength(50)]
         [Required]
         public string Category { get; set; }
 
+        [StringLength(200)]
         public string Image { get; set; }
 
         [Required]

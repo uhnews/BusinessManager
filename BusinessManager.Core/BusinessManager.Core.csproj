@@ -60,11 +60,11 @@
     <Compile Include="Models\POSTransactionItem.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductCategory.cs" />
-    <Compile Include="Models\ProductSerialNum.cs" />
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BasketItemViewModel.cs" />
     <Compile Include="ViewModels\BasketSummaryViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModel.cs" />
     <Compile Include="ViewModels\POSTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\POSTransactionSummaryViewModel.cs" />
     <Compile Include="ViewModels\ProductListViewModel.cs" />
