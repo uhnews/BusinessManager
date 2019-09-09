@@ -168,6 +168,7 @@ namespace BusinessManager.WebUI.Controllers
                     {
                         FirstName = model.FirstName,
                         LastName = model.LastName,
+                        CompanyName = model.CompanyName,
                         Street = model.Street,
                         City = model.City,
                         State = model.State,

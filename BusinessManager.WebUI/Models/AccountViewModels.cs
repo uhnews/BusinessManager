@@ -31,6 +31,7 @@ namespace BusinessManager.WebUI.Models
         [Required]
         [Display(Name = "Code")]
         public string Code { get; set; }
+
         public string ReturnUrl { get; set; }
 
         [Display(Name = "Remember this browser?")]
@@ -79,17 +80,27 @@ namespace BusinessManager.WebUI.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
         [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
+
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+
+        [Display(Name = "Company Name")]
+        public string CompanyName { get; set; }
+
         [Required]
         public string Street { get; set; }
+
         [Required]
         public string City { get; set; }
+
+        [Required]
         public string State { get; set; }
+
         [Required]
         [Display(Name = "Zip Code")]
         public string ZipCode { get; set; }

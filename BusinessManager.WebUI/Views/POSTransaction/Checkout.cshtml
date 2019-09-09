@@ -12,11 +12,13 @@
         <h4>POS Transaction Checkout</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         @{ 
             string labelWidth = "col-md-3";
             string fieldWidth = "col-md-8";
             string maxfieldWidth = "100%";
         }
+
         <div class="col-md-6">
 
             <div class="form-group d-none" style="display: none">
@@ -89,9 +91,9 @@
         </div>
 
         @* Customer list div *@
-    <div class="col-md-6 bg-info" style="height: 600px; margin-left: -30px">
-        @Html.Partial("Customers", Model.Customers)
-    </div>
+        <div class="col-md-6" style="height: 600px; margin-left: -30px">
+            @Html.Partial("CustomerList", Model.Customers)
+        </div>
     </div>
 }
 

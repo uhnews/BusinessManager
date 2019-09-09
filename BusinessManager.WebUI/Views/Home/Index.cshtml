@@ -45,14 +45,14 @@
                 @if (!User.IsInRole("POSAttendant") || (User.IsInRole("POSAttendant") && User.IsInRole("Client")))
                 {
                     <div style="margin: 65px 5px 5px 5px">
-                        <a href="@Url.Action("AddToBasket", "Basket", new { Id = item.Id })" class="btn btn-default"><i class="fa fa-shopping-cart">&nbsp;&nbsp;Add to Basket</i></a>
+                        <a href="@Url.Action("AddToBasket", "Basket", new { Id = item.Id })" class="btn btn-default text-primary-force"><i class="fa fa-shopping-cart">&nbsp;&nbsp;Add to Basket</i></a>
                     </div>
                 }
 
                 @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("POSAttendant")))
                 {
                     <div style="margin: 5px">
-                        <a href="@Url.Action("AddToPOSTransaction", "POSTransaction", new { Id = item.Id })" class="btn btn-default"><span class="fas fa-cash-register">&nbsp;&nbsp;Add to Sale</span></a>
+                        <a href="@Url.Action("AddToPOSTransaction", "POSTransaction", new { Id = item.Id })" class="btn btn-default text-primary-force"><span class="fas fa-cash-register">&nbsp;&nbsp;Add to Sale</span></a>
                     </div>
                 }
 

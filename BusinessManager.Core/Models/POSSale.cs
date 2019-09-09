@@ -10,6 +10,7 @@ namespace BusinessManager.Core.Models
         public POSSale()
         {
             this.POSSaleItems = new List<POSSaleItem>();
+            this.Customers = new List<CustomerViewModel>();
         }
 
         [StringLength(128)]

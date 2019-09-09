@@ -107,15 +107,15 @@ namespace BusinessManager.Services
             Basket basket = GetBasket(httpContext, false);
             if (basket != null)
             {
-                var result = (from b in basket.BasketItems
-                              join p in productContext.Collection() on b.ProductId equals p.Id
+                var result = (from item in basket.BasketItems
+                              join product in productContext.Collection() on item.ProductId equals product.Id
                               select new BasketItemViewModel()
                               {
-                                  Id = b.Id,
-                                  Quantity = b.Quantity,
-                                  ProductName = p.Name,
-                                  Image = p.Image,
-                                  Price = p.Price
+                                  Id = item.Id,
+                                  Quantity = item.Quantity,
+                                  ProductName = product.Name,
+                                  Image = product.Image,
+                                  Price = product.Price
                               }
                               ).ToList();
                 return result;

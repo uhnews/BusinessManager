@@ -32,3 +32,8 @@ textarea {
     .link-text-warning:hover {
         color: #ffc107 !important;
     }
+
+/* custom class to force Bootstrap's Primary text color on an element */
+.text-primary-force {
+    color: #428bca !important;
+}

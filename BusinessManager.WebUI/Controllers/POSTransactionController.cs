@@ -1,16 +1,19 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
+using BusinessManager.Core.ViewModels;
+using BusinessManager.Services;
+using System.Collections.Generic;
 using System.Web.Mvc;
 
 namespace BusinessManager.WebUI.Controllers
 {
     public class POSTransactionController : Controller
     {
-        IRepository<Customer> customers;
+        List<CustomerViewModel> customers;
         IPOSTransactionService posTransactionService;
         IPOSSaleService posSaleService;
 
-        public POSTransactionController(IPOSTransactionService posTransactionService, IPOSSaleService posSaleService, IRepository<Customer> customers)
+        public POSTransactionController(IPOSTransactionService posTransactionService, IPOSSaleService posSaleService, List<CustomerViewModel> customers)
         {
             this.posTransactionService = posTransactionService;
             this.posSaleService = posSaleService;
@@ -60,6 +63,10 @@ namespace BusinessManager.WebUI.Controllers
                     ZipCode = "",
                     Email = ""
                 };
+
+                // request customer list
+                sale.Customers = new CustomerService().GetCustomers();
+
                 return View(sale);
             }
             else

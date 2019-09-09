@@ -57,6 +57,7 @@ namespace BusinessManager.WebUI.Controllers
                     CustomerId = customer.Id,
                     FirstName = customer.FirstName,
                     LastName = customer.LastName,
+                    CompanyName = customer.CompanyName,
                     Street = customer.Street,
                     City = customer.City,
                     State = customer.State,

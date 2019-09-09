@@ -291,6 +291,7 @@
     <Content Include="Views\CustomerManager\Create.cshtml" />
     <Content Include="Views\CustomerManager\Edit.cshtml" />
     <Content Include="Views\CustomerManager\Delete.cshtml" />
+    <Content Include="Views\POSTransaction\CustomerList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
