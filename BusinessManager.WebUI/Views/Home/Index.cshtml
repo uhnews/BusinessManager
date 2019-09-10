@@ -27,7 +27,7 @@
             <div class=@rowWidth style="height: 240px; padding: 10px; margin: 10px; border: solid thin #e6e6e6">
 
                 <div class=@imageWidth style="height: 100%">
-                    <img class="img" style="height: 200px; max-width: 110%" src="~/Content/ProductImages/@item.Image" alt="Image" />
+                    <a href="@Url.Action("Details", "Home", new { id = item.Id })"><img class="img" style="height: 200px; max-width: 110%" src="~/Content/ProductImages/@item.Image" alt="Image" /></a>
                 </div>
 
                 <div>
@@ -41,20 +41,21 @@
                 <div>
                     <p>@string.Format("{0:c}", item.Price)</p>
                 </div>
+                <div class="btn-group-vertical ">
+                    @if (!User.IsInRole("POSAttendant") || (User.IsInRole("POSAttendant") && User.IsInRole("Client")))
+                    {
+                        <div style="margin: 5px">
+                            <a href="@Url.Action("AddToBasket", "Basket", new { Id = item.Id })" class="btn btn-default text-primary-force"><span class="fa fa-shopping-cart">&nbsp;&nbsp;Add to Basket</span></a>
+                        </div>
+                    }
 
-                @if (!User.IsInRole("POSAttendant") || (User.IsInRole("POSAttendant") && User.IsInRole("Client")))
-                {
-                    <div style="margin: 65px 5px 5px 5px">
-                        <a href="@Url.Action("AddToBasket", "Basket", new { Id = item.Id })" class="btn btn-default text-primary-force"><i class="fa fa-shopping-cart">&nbsp;&nbsp;Add to Basket</i></a>
-                    </div>
-                }
-
-                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("POSAttendant")))
-                {
-                    <div style="margin: 5px">
-                        <a href="@Url.Action("AddToPOSTransaction", "POSTransaction", new { Id = item.Id })" class="btn btn-default text-primary-force"><span class="fas fa-cash-register">&nbsp;&nbsp;Add to Sale</span></a>
-                    </div>
-                }
+                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("POSAttendant")))
+                    {
+                        <div style="margin: 5px">
+                            <a href="@Url.Action("AddToPOSTransaction", "POSTransaction", new { Id = item.Id })" class="btn btn-default text-primary-force"><span class="fas fa-cash-register">&nbsp;&nbsp;Add to POS Sale</span></a>
+                        </div>
+                    }
+                </div>
 
             </div>
         }

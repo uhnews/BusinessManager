@@ -1,12 +1,11 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
 using BusinessManager.Core.ViewModels;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using BusinessManager.DataAccess.SQL;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Linq;
 
 namespace BusinessManager.Services
 {

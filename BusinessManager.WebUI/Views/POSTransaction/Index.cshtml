@@ -4,7 +4,7 @@
     ViewBag.Title = "POS Transaction";
 }
 
-<h2>Point of Sale (POS)</h2>
+<h2><span class="fas fa-cash-register text-primary">&nbsp;&nbsp;</span>Point of Sale (POS)</h2>
 
 <table class="table">
     <tr>
@@ -65,5 +65,17 @@
 
 <hr>
 <div>
-    <a href="@Url.Action("Index", "Home")">Back To Product List</a>
+    @*<a href="javascript: history.go(-1)" class="btn btn-primary badge badge-pill">&#8592;</a><span>&nbsp;&nbsp;</span>*@
+    @{
+        string baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+        string prevURL = Request.UrlReferrer.ToString();
+        if (prevURL == baseUrl)
+        {
+            <a href="javascript: history.go(-1)">Back To Product List</a><span>&nbsp;&nbsp;</span>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", "Home")">Back To Product List</a>
+        }
+    }
 </div>
