@@ -105,7 +105,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Product.Image, htmlAttributes: new { @class = "control-label " + @labelWidth })
             <div class=@fieldWidth>
-                <input type="file" id="file" name="file" class="form-control" style="width: 100%; max-width: 100%" />
+                <input type="file" id="file" name="file" class="form-control hidden" style="width: 100%; max-width: 100%" />
+                <a class="btn btn-primary" href="#"><label style="margin-top: 3px; cursor: pointer" for="file"><span class="far fa-image" style="font-size: large">&nbsp;&nbsp;</span>Select New Image File</label></a>
             </div>
         </div>
 

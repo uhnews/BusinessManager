@@ -26,7 +26,7 @@ namespace BusinessManager.WebUI.Controllers
 
         public ActionResult Create()
         {
-            Customer customer = new Customer();
+            Customer customer = new Customer() { CreatedAt = DateTime.Now };
             return View(customer);
         }
 
@@ -39,6 +39,7 @@ namespace BusinessManager.WebUI.Controllers
             }
             else
             {
+                customer.CreatedAt = DateTime.Now;
                 context.Insert(customer);
                 context.Commit();
                 return RedirectToAction("Index");
@@ -76,11 +77,12 @@ namespace BusinessManager.WebUI.Controllers
                 customerToEdit.FirstName = customer.FirstName;
                 customerToEdit.LastName = customer.LastName;
                 customerToEdit.Email = customer.Email;
+                customerToEdit.CompanyName = customer.CompanyName;
                 customerToEdit.Street = customer.Street;
                 customerToEdit.City = customer.City;
                 customerToEdit.State = customer.State;
                 customerToEdit.ZipCode = customer.ZipCode;
-                customerToEdit.CreatedAt = customer.CreatedAt;
+                //customerToEdit.CreatedAt = customer.CreatedAt;
 
                 context.Commit();
                 return RedirectToAction("Index");

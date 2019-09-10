@@ -4,7 +4,7 @@
     ViewBag.Title = "Customer Management";
 }
 
-    <h2>Customer Management</h2>
+    <h2><span class="fas fa-address-card text-primary">&nbsp;&nbsp;</span>Customer Management</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -24,6 +24,9 @@
             @Html.DisplayNameFor(model => model.Email)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.CompanyName)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Street)
         </th>
         <th>
@@ -41,7 +44,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.CreatedAt)
+            @Html.DisplayFor(modelItem => item.CreatedAt).ToString().Replace("-07:00", "")
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.FirstName)
@@ -51,6 +54,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompanyName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Street)
