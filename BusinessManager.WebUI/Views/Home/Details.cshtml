@@ -38,11 +38,24 @@
             {
                 <dt></dt>
                 <dd style="margin-top: 5px; margin-bottom: 5px"><a href="@Url.Action("AddToBasket", "Basket", new { Id=Model.Id })" class="btn btn-default text-primary-force"><i class="fa fa-shopping-cart">&nbsp;&nbsp;Add to Basket</i></a></dd>
-
             }
 
             <dt></dt>
-            <dd>@Html.ActionLink("Back to List", "Index")</dd>
+
+
+            @{
+                string baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+                string prevURL = Request.UrlReferrer == null ? "" : Request.UrlReferrer.ToString();
+                if (prevURL == baseUrl)
+                {
+                    <dd><a href="javascript: history.go(-1)">Back To Product List</a></dd>
+                }
+                else
+                {
+                    <dd>@Html.ActionLink("Back to List", "Index")</dd>
+                }
+            }
+
         </dl>
     </div>
 </div>

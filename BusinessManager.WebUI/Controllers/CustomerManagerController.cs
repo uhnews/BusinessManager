@@ -26,7 +26,7 @@ namespace BusinessManager.WebUI.Controllers
 
         public ActionResult Create()
         {
-            Customer customer = new Customer() { CreatedAt = DateTime.Now };
+            Customer customer = new Customer();
             return View(customer);
         }
 
@@ -39,7 +39,6 @@ namespace BusinessManager.WebUI.Controllers
             }
             else
             {
-                customer.CreatedAt = DateTime.Now;
                 context.Insert(customer);
                 context.Commit();
                 return RedirectToAction("Index");

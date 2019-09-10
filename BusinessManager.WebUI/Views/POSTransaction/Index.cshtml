@@ -68,10 +68,10 @@
     @*<a href="javascript: history.go(-1)" class="btn btn-primary badge badge-pill">&#8592;</a><span>&nbsp;&nbsp;</span>*@
     @{
         string baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
-        string prevURL = Request.UrlReferrer.ToString();
+        string prevURL = Request.UrlReferrer == null ? "" : Request.UrlReferrer.ToString();
         if (prevURL == baseUrl)
         {
-            <a href="javascript: history.go(-1)">Back To Product List</a><span>&nbsp;&nbsp;</span>
+            <a href="javascript: history.go(-1)">Back To Product List</a>
         }
         else
         {
