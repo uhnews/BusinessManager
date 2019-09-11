@@ -33,6 +33,10 @@ namespace BusinessManager.Core.Models
         public string Email { get; set; }
 
         [StringLength(50)]
+        [DisplayName("Telephone")]
+        public string Phone { get; set; }
+
+        [StringLength(50)]
         public string Street { get; set; }
 
         [StringLength(50)]
@@ -44,6 +48,10 @@ namespace BusinessManager.Core.Models
         [StringLength(50)]
         [DisplayName("Zip Code")]
         public string ZipCode { get; set; }
+
+        public decimal TotalAmount { get; set; }
+
+        public int TotalItemCount { get; set; }
 
         public virtual ICollection<POSSaleItem> POSSaleItems { get; set; }
 

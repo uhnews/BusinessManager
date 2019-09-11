@@ -12,6 +12,7 @@ namespace BusinessManager.WebUI.Controllers
         List<CustomerViewModel> customers;
         IPOSTransactionService posTransactionService;
         IPOSSaleService posSaleService;
+        readonly CustomerService customeService = new CustomerService();
 
         public POSTransactionController(IPOSTransactionService posTransactionService, IPOSSaleService posSaleService, List<CustomerViewModel> customers)
         {
@@ -45,37 +46,22 @@ namespace BusinessManager.WebUI.Controllers
             return PartialView(posTransactionSummary);
         }
 
-        //[Authorize]
+        // GET: Checkout Data
         [Authorize(Roles = "Admin, POSAttendant")]
         public ActionResult Checkout()
         {
-            Customer customer = new Customer();
-            if (customer != null)
-            {
-                POSSale sale = new POSSale()
-                {
-                    // initialize all properties to blank (but valid) strings
-                    CustomerId = "",
-                    FirstName = "",
-                    LastName = "",
-                    Street = "",
-                    City = "",
-                    State = "",
-                    ZipCode = "",
-                    Email = ""
-                };
+            POSTransactionSummaryViewModel summaryModel = posTransactionService.GetPOSTransactionSummary(this.HttpContext);
+            POSSale sale = new POSSale();
+            sale.TotalAmount = summaryModel.TransactionTotal;
+            sale.TotalItemCount = summaryModel.TransactionCount;
 
-                // request customer list
-                sale.Customers = new CustomerService().GetCustomers();
+            // request customer list
+            sale.Customers = customeService.GetCustomers();
 
-                return View(sale);
-            }
-            else
-            {
-                return RedirectToAction("Error");
-            }
+            return View(sale);
         }
 
+        // POST: Checkout Data
         [HttpPost]
         [Authorize(Roles = "Admin, POSAttendant")]
         public ActionResult Checkout(POSSale sale)
@@ -98,6 +84,13 @@ namespace BusinessManager.WebUI.Controllers
         {
             ViewBag.SaleId = saleId;
             return View();
+        }
+
+        // GET: Customer
+        public JsonResult Customer(string Id)
+        {
+            Customer customer = customeService.GetCustomer(Id);
+            return Json(customer, JsonRequestBehavior.AllowGet);
         }
     }
 }

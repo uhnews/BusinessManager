@@ -6,9 +6,6 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.CompanyName)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.FirstName)
         </th>
         <th>
@@ -17,15 +14,15 @@
         <th>
             @Html.DisplayNameFor(model => model.Email)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompanyName)
+        </th>
         <th></th>
     </tr>
     @{
         foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CompanyName)
-                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FirstName)
                 </td>
@@ -36,9 +33,13 @@
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.CompanyName)
+                </td>
+                <td>
                     <button onclick="getCustomer(event)" class="btn-pill"><span style="display: none">@item.Id</span>Copy</button>
                 </td>
             </tr>
         }
     }
 </table>
+<hr style="margin-top: -15px" />

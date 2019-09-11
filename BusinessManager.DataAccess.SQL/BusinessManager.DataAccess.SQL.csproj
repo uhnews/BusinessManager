@@ -113,6 +113,14 @@
     <Compile Include="Migrations\201909090501076_AddFieldLengthsToAllModels.Designer.cs">
       <DependentUpon>201909090501076_AddFieldLengthsToAllModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909111146422_AddPhoneModels.cs" />
+    <Compile Include="Migrations\201909111146422_AddPhoneModels.Designer.cs">
+      <DependentUpon>201909111146422_AddPhoneModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909111525059_AddSummaryFielsToSale.cs" />
+    <Compile Include="Migrations\201909111525059_AddSummaryFielsToSale.Designer.cs">
+      <DependentUpon>201909111525059_AddSummaryFielsToSale.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -175,6 +183,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909090501076_AddFieldLengthsToAllModels.resx">
       <DependentUpon>201909090501076_AddFieldLengthsToAllModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909111146422_AddPhoneModels.resx">
+      <DependentUpon>201909111146422_AddPhoneModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909111525059_AddSummaryFielsToSale.resx">
+      <DependentUpon>201909111525059_AddSummaryFielsToSale.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

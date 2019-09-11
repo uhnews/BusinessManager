@@ -38,7 +38,11 @@ namespace BusinessManager.Core.Models
         public string ZipCode { get; set; }
 
         [StringLength(50)]
+        [DisplayName("Telephone")]
         public string Phone { get; set; }
+
+        [StringLength(50)]
+        public string Phone2 { get; set; }
 
         [StringLength(65)]
         public string Website { get; set; }

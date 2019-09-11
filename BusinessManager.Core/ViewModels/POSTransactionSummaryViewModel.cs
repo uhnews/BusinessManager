@@ -10,10 +10,10 @@
 
         }
 
-        public POSTransactionSummaryViewModel(int basketCount, decimal basketTotal)
+        public POSTransactionSummaryViewModel(int transactionCount, decimal transactionTotal)
         {
-            this.TransactionCount = basketCount;
-            this.TransactionTotal = basketTotal;
+            this.TransactionCount = transactionCount;
+            this.TransactionTotal = transactionTotal;
         }
     }
 }

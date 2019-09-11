@@ -31,6 +31,10 @@ namespace BusinessManager.Core.Models
         public string Email { get; set; }
 
         [StringLength(50)]
+        [DisplayName("Telephone")]
+        public string Phone { get; set; }
+
+        [StringLength(50)]
         public string Street { get; set; }
 
         [StringLength(50)]
