@@ -23,7 +23,8 @@ textarea {
     max-width: 280px;
 }
 
-/* Custon CSS Classes: */
+
+/* ******************************************** Custon CSS Classes ******************************************** */
 
 /* custom warning text color class for <a> tags */
 .link-text-warning {
@@ -37,3 +38,24 @@ textarea {
 .text-primary-force {
     color: #428bca !important;
 }
+
+.btn-pill {
+    background-color: #428bca;
+    border: none;
+    color: white;
+    padding: 0 6px 6px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    max-height: 20px;
+    border-radius: 20px
+}
+
+    .btn-pill:hover {
+        background-color: #9cc2e3; /* Green */
+    }
+
+    .btn-pill:active {
+        background-color: #428bca; /* Green */
+    }

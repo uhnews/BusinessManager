@@ -13,7 +13,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        @{ 
+        @{
             string labelWidth = "col-md-3";
             string fieldWidth = "col-md-8";
             string maxfieldWidth = "100%";
@@ -99,7 +99,7 @@
         </div>
 
         @* Customer list div *@
-        <div class="col-md-6" style="height: 600px; margin-left: -30px">
+        <div class="col-md-6" style="margin-left: -30px">
             @Html.Partial("CustomerList", Model.Customers)
         </div>
     </div>
@@ -108,3 +108,20 @@
 <div class="col-md-12">
     @Html.ActionLink("Back to POS Screen", "Index")
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        function getCustomer(event) {
+            event.preventDefault();
+
+            let clickedBtn = event.target;
+            let innerSpan = clickedBtn.querySelector("Span");
+            let customerId = innerSpan.innerText;
+            alert(customerId);
+
+
+        }
+
+    </script>
+}

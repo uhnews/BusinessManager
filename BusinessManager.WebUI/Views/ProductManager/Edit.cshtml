@@ -17,8 +17,7 @@
         @Html.HiddenFor(model => model.Product.Id)
 
         <div class="col-md-2">
-            <img class="img-responsive" src="~/Content/ProductImages/@Model.Product.Image" alt="Image" />
-            <p id="image">test 1</p>
+            <img id="product-image" class="img-responsive" src="~/Content/ProductImages/@Model.Product.Image" alt="Image" />
         </div>
 
         <div class="col-md-10">
@@ -105,7 +104,8 @@
                 @Html.LabelFor(model => model.Product.Image, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     <input type="file" id="file" name="file" class="form-control hidden" />
-                    <a class="btn btn-primary" href="#"><label style="margin-top: 3px; cursor: pointer" for="file"><span class="far fa-image" style="font-size: large">&nbsp;&nbsp;</span>Select New Image File</label></a>
+                    <a class="btn btn-primary" href="#"><label style="margin-top: 3px; cursor: pointer; max-height: 10px" for="file"><span class="far fa-image" style="font-size: large">&nbsp;&nbsp;</span>Select New Image File</label></a>
+                    <p id="image-message" class="text-danger" style="margin-top: 10px; margin-bottom: 0"></p>
                 </div>
             </div>
 
@@ -132,4 +132,10 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        document.getElementById("file").onchange = function () {
+            let message = ("New file selected: " + this.value).replace("C:\\fakepath\\", "");
+            document.getElementById('image-message').innerText = message;
+        };
+    </script>
 }
