@@ -45,7 +45,8 @@ namespace BusinessManager.WebUI.Controllers
             return PartialView(posTransactionSummary);
         }
 
-        [Authorize]
+        //[Authorize]
+        [Authorize(Roles = "Admin, POSAttendant")]
         public ActionResult Checkout()
         {
             Customer customer = new Customer();
@@ -76,7 +77,7 @@ namespace BusinessManager.WebUI.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin, POSAttendant")]
         public ActionResult Checkout(POSSale sale)
         {
             var transactionItems = posTransactionService.GetPOSTransactionItems(this.HttpContext);
