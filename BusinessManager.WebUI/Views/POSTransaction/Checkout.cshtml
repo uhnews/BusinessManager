@@ -19,109 +19,110 @@
             string maxfieldWidth = "100%";
         }
 
-    <div class="col-md-6">
+        <div class="col-md-6">
 
-        <div class="form-group d-none" style="display: none">
-            <div>
-                @Html.Hidden("CustomerId")
+            <div class="form-group d-none" style="display: none">
+                <div>
+                    @Html.Hidden("CustomerId")
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                <div class=@fieldWidth>
+                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                <div class=@fieldWidth>
+                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                <div class=@fieldWidth>
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                <div class=@fieldWidth>
+                    @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
+                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                <div class=@fieldWidth>
+                    @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
+                    @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                <div class=@fieldWidth>
+                    @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
+                    @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                <div class=@fieldWidth>
+                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                <div class=@fieldWidth>
+                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
+                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                <div class=@fieldWidth>
+                    @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
+                    @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @* *********************************************************************************************************** *@
+            <div class="form-group">
+                <label class="control-label @labelWidth">Sale Summary</label>
+                <div class="@fieldWidth text-primary" style="margin-top: 5px">
+                    <div class="bg-primary" style="height: 1px; margin: 0"></div>
+                    <h4 style="padding-top: 0; margin-top: 3px">
+                        Items: @Model.TotalItemCount   <br />
+                        Amount: @string.Format("{0:c}", Model.TotalAmount)
+                    </h4>
+                    <div class="bg-primary" style="height: 1px; margin-top: -3px"></div>
+                </div>
+            </div>
+            @* *********************************************************************************************************** *@
+
+            @{
+                var itemCount = Model.TotalItemCount;
+            }
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input onclick="processPayment(event, @itemCount)" type="submit" value="Proceed to Payment" class="btn btn-default" />
+                    <div id="submitted" style="display: none; "></div>
+                </div>
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label " + @labelWidth })
-            <div class=@fieldWidth>
-                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label " + @labelWidth })
-            <div class=@fieldWidth>
-                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label " + @labelWidth })
-            <div class=@fieldWidth>
-                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label " + @labelWidth })
-            <div class=@fieldWidth>
-                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label " + @labelWidth })
-            <div class=@fieldWidth>
-                @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label " + @labelWidth })
-            <div class=@fieldWidth>
-                @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label " + @labelWidth })
-            <div class=@fieldWidth>
-                @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label " + @labelWidth })
-            <div class=@fieldWidth>
-                @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label " + @labelWidth })
-            <div class=@fieldWidth>
-                @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @* *********************************************************************************************************** *@
-
-        <div class="form-group">
-            <label class="control-label @labelWidth">Sale Summary</label>
-            <div class="@fieldWidth text-primary " style="margin-top: 5px">
-                <div class="bg-primary" style="height: 1px; margin: 0"></div>
-                <h4 style="padding-top: 0; margin-top: 3px">
-                    Items: @Model.TotalItemCount   <br />
-                    Amount: @string.Format("{0:c}", Model.TotalAmount)
-                </h4>
-                <div class="bg-primary" style="height: 1px; margin-top: -3px"></div>
-            </div>
-        </div>
-
-        @* *********************************************************************************************************** *@
-
-
-        <div class="form-group">
-            <div class="col-md-offset-3 col-md-9">
-                <input type="submit" value="Proceed to Payment" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
 
         @* Customer list div *@
         <div class="col-md-6" style="margin-left: -30px">
@@ -131,7 +132,7 @@
 }
 
 <div class="col-md-12">
-    @Html.ActionLink("Back to POS Screen", "Index")
+    @Html.ActionLink("Back to POS Transaction", "Index")
 </div>
 
 @section Scripts {
@@ -147,7 +148,7 @@
                 if (this.readyState === 4 && this.status === 200) {
                     //
                     var responseText = this.responseText;
-                    customer = JSON.parse(responseText);
+                    let customer = JSON.parse(responseText);
                     mapCustomerDataToView(customer);
                 }
             };
@@ -163,6 +164,23 @@
             document.getElementById("City").value = customer.City;
             document.getElementById("State").value = customer.State;
             document.getElementById("ZipCode").value = customer.ZipCode;
+        }
+        function processPayment(event, itemCount) {
+            var test = document.getElementById("submitted").innerText
+            if (test) {
+                location.assign("/POSTransaction");
+                document.getElementById("submitted").innerText = "yes";
+                event.preventDefault();
+            }
+            if (!itemCount) {
+                event.preventDefault();
+                alert("There are no items to process.")
+            }
+            document.getElementById("submitted").innerText = "yes";
+
+            //
+            // code to execute payment goes here
+            //
         }
 
     </script>

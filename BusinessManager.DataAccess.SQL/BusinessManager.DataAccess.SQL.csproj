@@ -121,6 +121,22 @@
     <Compile Include="Migrations\201909111525059_AddSummaryFielsToSale.Designer.cs">
       <DependentUpon>201909111525059_AddSummaryFielsToSale.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909111810268_UpdateRequiredForSupplier.cs" />
+    <Compile Include="Migrations\201909111810268_UpdateRequiredForSupplier.Designer.cs">
+      <DependentUpon>201909111810268_UpdateRequiredForSupplier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909111945141_UpdateRequiredForCustomer.cs" />
+    <Compile Include="Migrations\201909111945141_UpdateRequiredForCustomer.Designer.cs">
+      <DependentUpon>201909111945141_UpdateRequiredForCustomer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909112146523_AddSummaryFielsToOnlineOrder.cs" />
+    <Compile Include="Migrations\201909112146523_AddSummaryFielsToOnlineOrder.Designer.cs">
+      <DependentUpon>201909112146523_AddSummaryFielsToOnlineOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909120319541_AddFieldsToSupplierModel.cs" />
+    <Compile Include="Migrations\201909120319541_AddFieldsToSupplierModel.Designer.cs">
+      <DependentUpon>201909120319541_AddFieldsToSupplierModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -189,6 +205,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909111525059_AddSummaryFielsToSale.resx">
       <DependentUpon>201909111525059_AddSummaryFielsToSale.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909111810268_UpdateRequiredForSupplier.resx">
+      <DependentUpon>201909111810268_UpdateRequiredForSupplier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909111945141_UpdateRequiredForCustomer.resx">
+      <DependentUpon>201909111945141_UpdateRequiredForCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909112146523_AddSummaryFielsToOnlineOrder.resx">
+      <DependentUpon>201909112146523_AddSummaryFielsToOnlineOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909120319541_AddFieldsToSupplierModel.resx">
+      <DependentUpon>201909120319541_AddFieldsToSupplierModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

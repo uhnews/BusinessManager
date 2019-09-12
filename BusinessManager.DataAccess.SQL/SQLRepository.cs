@@ -1,5 +1,6 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
+using System;
 using System.Data.Entity;
 using System.Linq;
 
@@ -42,6 +43,7 @@ namespace BusinessManager.DataAccess.SQL
 
         public void Insert(T t)
         {
+            t.CreatedAt = DateTime.Now;
             dbSet.Add(t);
         }
 

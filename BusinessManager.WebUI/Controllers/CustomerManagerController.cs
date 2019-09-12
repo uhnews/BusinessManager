@@ -17,7 +17,7 @@ namespace BusinessManager.WebUI.Controllers
             context = customerContext;
         }
 
-        // GET: CustomerManagerController
+        // GET: Customers
         public ActionResult Index()
         {
             List<Customer> customers = context.Collection().ToList();
@@ -81,7 +81,6 @@ namespace BusinessManager.WebUI.Controllers
                 customerToEdit.City = customer.City;
                 customerToEdit.State = customer.State;
                 customerToEdit.ZipCode = customer.ZipCode;
-                //customerToEdit.CreatedAt = customer.CreatedAt;
 
                 context.Commit();
                 return RedirectToAction("Index");

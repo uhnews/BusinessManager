@@ -51,6 +51,10 @@ namespace BusinessManager.Core.Models
         [DisplayName("Order Status")]
         public string OrderStatus { get; set; }
 
+        public decimal TotalAmount { get; set; }
+
+        public int TotalItemCount { get; set; }
+
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

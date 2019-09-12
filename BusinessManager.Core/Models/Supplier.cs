@@ -13,10 +13,12 @@ namespace BusinessManager.Core.Models
         public string CompanyName { get; set; }
 
         [StringLength(50)]
+        [Required]
         [DisplayName("First Name")]
         public string FirstName { get; set; }
 
         [StringLength(50)]
+        [Required]
         [DisplayName("Last Name")]
         public string LastName { get; set; }
 
@@ -42,5 +44,10 @@ namespace BusinessManager.Core.Models
 
         [StringLength(65)]
         public string Website { get; set; }
+
+        [StringLength(200)]
+        public string BusinessDescription { get; set; }
+
+        public string BusinessCategory { get; set; }
     }
 }

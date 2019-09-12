@@ -30,6 +30,7 @@ namespace BusinessManager.DataAccess.InMemory
 
         public void Insert(T t)
         {
+            t.CreatedAt = DateTime.Now;
             items.Add(t);
         }
 

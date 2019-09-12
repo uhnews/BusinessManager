@@ -3,13 +3,15 @@
     ViewBag.Title = "Online Order Management";
 }
 
+<h2>Online Order Management</h2>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h3>Online Order Management</h3>
         <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
         @{

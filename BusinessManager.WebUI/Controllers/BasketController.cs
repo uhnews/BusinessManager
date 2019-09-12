@@ -1,5 +1,6 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
+using BusinessManager.Core.ViewModels;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -46,6 +47,9 @@ namespace BusinessManager.WebUI.Controllers
         [Authorize]
         public ActionResult Checkout()
         {
+            //POSTransactionSummaryViewModel summaryModel = posTransactionService.GetPOSTransactionSummary(this.HttpContext);
+            BasketSummaryViewModel summaryModel = basketService.GetBasketSummary(this.HttpContext);
+
             // customer variable returns one Customer (whose email == current user's email)
             // i.e. the basket created is being assigned to the currently logged-in user
             Customer customer = customers.Collection().FirstOrDefault(c => c.Email == User.Identity.Name);
@@ -62,7 +66,9 @@ namespace BusinessManager.WebUI.Controllers
                     City = customer.City,
                     State = customer.State,
                     ZipCode = customer.ZipCode,
-                    Email = customer.Email
+                    Email = customer.Email,
+                    TotalItemCount = summaryModel.BasketCount,
+                    TotalAmount = summaryModel.BasketTotal
                 };
                 return View(order);
             }

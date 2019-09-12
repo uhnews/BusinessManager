@@ -13,9 +13,11 @@ namespace BusinessManager.Core.Models
         public string CompanyName { get; set; }
 
         [StringLength(50)]
+        [Required]
         [DisplayName("First Name")]
         public string FirstName { get; set; }
 
+        [Required]
         [StringLength(50)]
         [DisplayName("Last Name")]
         public string LastName { get; set; }

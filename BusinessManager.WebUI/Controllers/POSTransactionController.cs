@@ -46,7 +46,7 @@ namespace BusinessManager.WebUI.Controllers
             return PartialView(posTransactionSummary);
         }
 
-        // GET: Checkout Data
+        // GET: Transaction Checkout Data
         [Authorize(Roles = "Admin, POSAttendant")]
         public ActionResult Checkout()
         {
@@ -61,7 +61,7 @@ namespace BusinessManager.WebUI.Controllers
             return View(sale);
         }
 
-        // POST: Checkout Data
+        // POST: Transaction Checkout Data
         [HttpPost]
         [Authorize(Roles = "Admin, POSAttendant")]
         public ActionResult Checkout(POSSale sale)

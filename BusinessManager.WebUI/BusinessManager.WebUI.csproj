@@ -198,6 +198,7 @@
     <Compile Include="Controllers\POSTransactionController.cs" />
     <Compile Include="Controllers\ProductCategoryManagerController.cs" />
     <Compile Include="Controllers\ProductManagerController.cs" />
+    <Compile Include="Controllers\SupplierManagerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -292,6 +293,10 @@
     <Content Include="Views\CustomerManager\Edit.cshtml" />
     <Content Include="Views\CustomerManager\Delete.cshtml" />
     <Content Include="Views\POSTransaction\CustomerList.cshtml" />
+    <Content Include="Views\SupplierManager\Index.cshtml" />
+    <Content Include="Views\SupplierManager\Create.cshtml" />
+    <Content Include="Views\SupplierManager\Edit.cshtml" />
+    <Content Include="Views\SupplierManager\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
