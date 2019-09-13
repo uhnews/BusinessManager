@@ -53,5 +53,10 @@ namespace BusinessManager.DataAccess.SQL
             context.Entry(t).State = EntityState.Modified;
 
         }
+
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+
+        //}
     }
 }

@@ -100,6 +100,7 @@ namespace BusinessManager.WebUI.Controllers
                 productToEdit.Quantity = product.Quantity;
                 productToEdit.QuantityMin = product.QuantityMin;
                 productToEdit.UPC = product.UPC;
+                productToEdit.ProductCode = product.ProductCode;
                 productToEdit.IsService = product.IsService;
                 if (file != null)
                 {
