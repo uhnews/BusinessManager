@@ -45,68 +45,64 @@
 
     @foreach (var item in Model)
     {
-<tr>
-    <td>
-        <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })"><img class="img-thumbnail" style="height:50px" src="~/Content/ProductImages/@item.Image" alt="Image" /></a>
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Description)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ProductCode)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.UPC)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Price)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Category)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.IsService)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.QuantityMin)
-    </td>
-    @{
+        
         int halfOfMin = item.QuantityMin / 2;
-    }
-    @if (item.Quantity <= item.QuantityMin)
-    {
-        <td>
-            <div class="bg-danger" style="width: 100%">@Html.DisplayFor(modelItem => item.Quantity)</div>
-        </td>
-    }
-    else if (item.Quantity <= item.QuantityMin + halfOfMin)
-    {
-        <td>
-            <div class="bg-warning" style="width: 100%">@Html.DisplayFor(modelItem => item.Quantity)</div>
-        </td>
-    }
-    else
-    {
-        <td>
-            @Html.DisplayFor(modelItem => item.Quantity)
-        </td>
-    }
-    <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-        @if (item.Quantity == 0)
+        var cssClass = "";
+        if (item.Quantity <= item.QuantityMin)
         {
-            <div style="display: inline-block"> | @Html.ActionLink("Delete", "Delete", new { id = item.Id })</div>
+            cssClass = "bg-danger";
         }
-        else
+        else if (item.Quantity <= item.QuantityMin + halfOfMin)
         {
-            <div class="text-muted" style="display: inline-block"> | Delete</div>
+            cssClass = "bg-warning";
         }
 
-    </td>
-</tr>
+        <tr class="@cssClass">
+            <td>
+                <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })">
+                    <img class="img-thumbnail" style="height:50px" src="~/Content/ProductImages/@item.Image" alt="Image" />
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UPC)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsService)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuantityMin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                @if (item.Quantity == 0)
+                {
+                    <div style="display: inline-block"> | @Html.ActionLink("Delete", "Delete", new { id = item.Id })</div>
+                }
+                else
+                {
+                    <div class="text-muted" style="display: inline-block"> | Delete</div>
+                }
+
+            </td>
+        </tr>
     }
 
 </table>
