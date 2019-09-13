@@ -59,6 +59,7 @@ namespace BusinessManager.Services
                 FirstName = c.FirstName,
                 LastName = c.LastName,
                 Email = c.Email,
+                Phone = c.Phone,
                 CompanyName = c.CompanyName,
                 Street = c.Street,
                 City = c.City,

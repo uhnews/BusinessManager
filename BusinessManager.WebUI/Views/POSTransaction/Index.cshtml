@@ -72,11 +72,19 @@
         string prevURL = Request.UrlReferrer == null ? "" : Request.UrlReferrer.ToString();
         if (prevURL == baseUrl)
         {
-            <a href="javascript: history.go(-1)">Back To Product List</a>
+            <a href="javascript: history.go(-1)">Go To Product List</a>
         }
         else
         {
-            <a href="@Url.Action("Index", "Home")">Back To Product List</a>
+            <a href="@Url.Action("Index", "Home")">Go To Product List</a>
         }
     }
+    <h3 style="margin: 5px 0 0 0 ">
+        Enter UPC Barcode: <span class="fas fa-barcode"></span>&nbsp;&nbsp;<input id="UPCBarcode" type="text" />
+    </h3>
+    <span class="text-danger" id="barcode-error-msg">sample test</span>
 </div>
+
+@section Scripts {
+
+}

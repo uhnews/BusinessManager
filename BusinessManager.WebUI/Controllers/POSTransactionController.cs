@@ -77,7 +77,8 @@ namespace BusinessManager.WebUI.Controllers
             posTransactionService.ClearPOSTransaction(this.HttpContext);
 
             //
-            return RedirectToAction("ThankYou", new { saleId = sale.Id });
+            //return RedirectToAction("ThankYou", new { saleId = sale.Id });
+            return RedirectToAction("Index");
         }
 
         public ActionResult ThankYou(string saleId)

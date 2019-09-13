@@ -67,6 +67,7 @@ namespace BusinessManager.WebUI.Controllers
                     State = customer.State,
                     ZipCode = customer.ZipCode,
                     Email = customer.Email,
+                    Phone = customer.Phone,
                     TotalItemCount = summaryModel.BasketCount,
                     TotalAmount = summaryModel.BasketTotal
                 };

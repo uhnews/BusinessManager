@@ -72,11 +72,11 @@
         string prevURL = Request.UrlReferrer == null ? "" : Request.UrlReferrer.ToString();
         if (prevURL == baseUrl)
         {
-            <a href="javascript: history.go(-1)">Back To Product List</a>
+            <a href="javascript: history.go(-1)">Product List</a>
         }
         else
         {
-            <a href="@Url.Action("Index", "Home")">Back To Product List</a>
+            <a href="@Url.Action("Index", "Home")">Product List</a>
         }
     }
 </div>

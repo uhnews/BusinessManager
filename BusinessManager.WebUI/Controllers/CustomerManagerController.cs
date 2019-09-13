@@ -81,6 +81,9 @@ namespace BusinessManager.WebUI.Controllers
                 customerToEdit.City = customer.City;
                 customerToEdit.State = customer.State;
                 customerToEdit.ZipCode = customer.ZipCode;
+                customerToEdit.Phone = customer.Phone;
+                customerToEdit.Phone2 = customer.Phone2;
+                customerToEdit.Website = customer.Website;
 
                 context.Commit();
                 return RedirectToAction("Index");
