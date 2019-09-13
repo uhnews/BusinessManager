@@ -54,6 +54,7 @@
     <Compile Include="OrderService.cs" />
     <Compile Include="POSSaleService.cs" />
     <Compile Include="POSTransactionService.cs" />
+    <Compile Include="ProductRetrieveService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

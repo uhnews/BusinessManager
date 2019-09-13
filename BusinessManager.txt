@@ -19,5 +19,23 @@ Product Model
 
 to do:
 ======
-- on browse... image button chage "No file selected" to "Select new image file"
+
+- For Proceed to Payment:
+	- no need to restrict sale if inventory falls to zero or below
+	  since it IS point of sale, meaning attendant has possession of
+	  the physical item. However, if inventory falls below zero issue
+	  warning to attendant that there is something wrong with the
+	  inventory count for the given product or products falling below
+	  zero.	
+
+	- get form and amount of payment
+
+	- if payment is less than total of sale, and if authorized for 
+	  credit, process credit receivable
+
+	- if payment equals total amount of sale, conclude the sale and print
+	  sale ticket.
+
+	- if payment is greater than total of sale, conclude sale, print ticket
+	  and display change amount.
 

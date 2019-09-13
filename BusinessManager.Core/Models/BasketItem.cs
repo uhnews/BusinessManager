@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusinessManager.Core.Models
 {
@@ -11,5 +13,8 @@ namespace BusinessManager.Core.Models
         public string ProductId { get; set; }
 
         public int Quantity { get; set; }
+
+        [DisplayName("Modified At")]
+        public DateTimeOffset ModifiedAt { get; set; }
     }
 }

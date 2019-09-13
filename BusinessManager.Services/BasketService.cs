@@ -77,14 +77,16 @@ namespace BusinessManager.Services
                 {
                     BasketId = basket.Id,
                     ProductId = productId,
-                    Quantity = 1
+                    Quantity = 1,
+                    ModifiedAt = DateTime.Now
                 };
 
                 basket.BasketItems.Add(item);
             }
             else
             {
-                item.Quantity = item.Quantity + 1;
+                item.ModifiedAt = DateTime.Now;
+                ++item.Quantity;
             }
 
             basketContext.Commit();
@@ -109,10 +111,12 @@ namespace BusinessManager.Services
             {
                 var result = (from item in basket.BasketItems
                               join product in productContext.Collection() on item.ProductId equals product.Id
+                              orderby item.ModifiedAt
                               select new BasketItemViewModel()
                               {
                                   Id = item.Id,
                                   Quantity = item.Quantity,
+                                  ModifiedAt = item.ModifiedAt,
                                   ProductName = product.Name,
                                   Image = product.Image,
                                   Price = product.Price

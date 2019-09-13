@@ -12,7 +12,8 @@ namespace BusinessManager.WebUI.Controllers
         List<CustomerViewModel> customers;
         IPOSTransactionService posTransactionService;
         IPOSSaleService posSaleService;
-        readonly CustomerService customeService = new CustomerService();
+        readonly CustomerService customerService = new CustomerService();
+        readonly ProductRetrieveService productRetrieveService = new ProductRetrieveService();
 
         public POSTransactionController(IPOSTransactionService posTransactionService, IPOSSaleService posSaleService, List<CustomerViewModel> customers)
         {
@@ -56,7 +57,7 @@ namespace BusinessManager.WebUI.Controllers
             sale.TotalItemCount = summaryModel.TransactionCount;
 
             // request customer list
-            sale.Customers = customeService.GetCustomers();
+            sale.Customers = customerService.GetCustomers();
 
             return View(sale);
         }
@@ -88,10 +89,17 @@ namespace BusinessManager.WebUI.Controllers
         }
 
         // GET: Customer
-        public JsonResult Customer(string Id)
+        public JsonResult GetCustomer(string Id)
         {
-            Customer customer = customeService.GetCustomer(Id);
+            Customer customer = customerService.GetCustomer(Id);
             return Json(customer, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: Product
+        public JsonResult GetProduct(string barcode)
+        {
+            Product product = productRetrieveService.GetProductByUPC(barcode);
+            return Json(product, JsonRequestBehavior.AllowGet);
         }
     }
 }

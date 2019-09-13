@@ -78,14 +78,16 @@ namespace BusinessManager.Services
                 {
                     POSTransactionId = posTransaction.Id,
                     ProductId = productId,
-                    Quantity = 1
+                    Quantity = 1,
+                    ModifiedAt = DateTime.Now
                 };
 
                 posTransaction.POSTransactionItems.Add(item);
             }
             else
             {
-                item.Quantity = item.Quantity + 1;
+                ++item.Quantity;
+                item.ModifiedAt = DateTime.Now;
             }
 
             POSTransactionContext.Commit();
@@ -98,8 +100,16 @@ namespace BusinessManager.Services
 
             if (item != null)
             {
-                posTransaction.POSTransactionItems.Remove(item);
-                POSTransactionContext.Commit();
+                if (item.Quantity > 1)
+                {
+                    --item.Quantity;
+                    POSTransactionContext.Commit();
+                }
+                else
+                {
+                    posTransaction.POSTransactionItems.Remove(item);
+                    POSTransactionContext.Commit();
+                }
             }
         }
 
@@ -110,15 +120,18 @@ namespace BusinessManager.Services
             {
                 var result = (from b in posTransaction.POSTransactionItems
                               join p in productContext.Collection() on b.ProductId equals p.Id
+                              orderby b.ModifiedAt descending
                               select new POSTransactionItemViewModel()
                               {
                                   Id = b.Id,
                                   Quantity = b.Quantity,
+                                  ModifiedAt = b.ModifiedAt,
                                   ProductName = p.Name,
+                                  UPC = p.UPC,
+                                  ProductCode = p.ProductCode,
                                   Image = p.Image,
                                   Price = p.Price
-                              }
-                              ).ToList();
+                              }).ToList();
                 return result;
             }
             else

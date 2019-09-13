@@ -1,16 +1,29 @@
 ﻿@model IEnumerable<BusinessManager.Core.ViewModels.POSTransactionItemViewModel>
 
 @{
-    ViewBag.Title = "POS Transaction";
+    ViewBag.Title = "POS - Current Transaction";
 }
 
-<h2><span class="fas fa-cash-register text-primary">&nbsp;&nbsp;</span>Point of Sale (POS)</h2>
+<h2 style="display: inline-block">
+    <span class="fas fa-cash-register text-primary">&nbsp;&nbsp;</span>Point of Sale (POS) - Current Transaction
+</h2>
+
+<h3>
+    Enter UPC Barcode: <span class="fas fa-barcode"></span>&nbsp;&nbsp;<input style="display: inline" class="form-control" onkeypress="getProduct(event)" id="UPCBarcode" type="text" />
+    <span class="text-danger" id="barcode-error-msg"></span>
+</h3>
 
 <table class="table">
     <tr>
         <th></th>
         <th>
             @Html.DisplayNameFor(model => model.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UPC)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Quantity)
@@ -31,6 +44,12 @@
             <td><img style="height: 50px" class="img" src="~/Content/ProductImages/@item.Image" /></td>
             <td>
                 @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UPC)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
@@ -79,12 +98,38 @@
             <a href="@Url.Action("Index", "Home")">Go To Product List</a>
         }
     }
-    <h3 style="margin: 5px 0 0 0 ">
-        Enter UPC Barcode: <span class="fas fa-barcode"></span>&nbsp;&nbsp;<input id="UPCBarcode" type="text" />
-    </h3>
-    <span class="text-danger" id="barcode-error-msg">sample test</span>
 </div>
 
 @section Scripts {
+    <script type="text/javascript">
 
+        document.getElementById("UPCBarcode").focus();
+
+        function getProduct(event) {
+            if (event.keyCode != 13) {
+                return;
+            };
+
+            let barcode = document.getElementById("UPCBarcode").value;
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/POSTransaction/GetProduct/?barcode=" + barcode, true);
+            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    //
+                    var responseText = this.responseText;
+                    let product = JSON.parse(responseText);
+                    if (product.Id) {
+                        location.assign("/POSTransaction/AddToPOSTransaction/" + product.Id);
+                    }
+                    else {
+                        document.getElementById("barcode-error-msg").innerText = "Product '" + barcode + "' not found.";
+                    }
+                }
+            };
+            xhttp.send();
+        }
+
+    </script>
 }

@@ -142,7 +142,7 @@
             event.preventDefault();
             let customerId =  event.target.querySelector("Span").innerText;            
             var xhttp = new XMLHttpRequest();
-            xhttp.open("GET", "/POSTransaction/Customer/?Id=" + customerId, true);
+            xhttp.open("GET", "/POSTransaction/GetCustomer/?Id=" + customerId, true);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhttp.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {

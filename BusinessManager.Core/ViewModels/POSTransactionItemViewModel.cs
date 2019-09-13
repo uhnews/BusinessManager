@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace BusinessManager.Core.ViewModels
 {
@@ -11,8 +12,16 @@ namespace BusinessManager.Core.ViewModels
         [DisplayName("Product Name")]
         public string ProductName { get; set; }
 
+        public string UPC { get; set; }
+
+        [DisplayName("Product Code")]
+        public string ProductCode { get; set; }
+
         public decimal Price { get; set; }
 
         public string Image { get; set; }
+
+        [DisplayName("Modified At")]
+        public DateTimeOffset ModifiedAt { get; set; }
     }
 }
