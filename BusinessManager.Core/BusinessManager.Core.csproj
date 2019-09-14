@@ -115,8 +115,13 @@
     <Compile Include="Models\Basket.cs" />
     <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Invoice.cs" />
+    <Compile Include="Models\InvoiceItem.cs" />
+    <Compile Include="Models\Layaway.cs" />
+    <Compile Include="Models\LayawayItem.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderItem.cs" />
+    <Compile Include="Models\Payment.cs" />
     <Compile Include="Models\POSSale.cs" />
     <Compile Include="Models\POSSaleItem.cs" />
     <Compile Include="Models\POSTransaction.cs" />

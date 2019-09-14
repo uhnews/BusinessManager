@@ -10,8 +10,8 @@ namespace BusinessManager.Services
 {
     public class BasketService : IBasketService
     {
-        IRepository<Product> productContext;
-        IRepository<Basket> basketContext;
+        readonly IRepository<Product> productContext;
+        readonly IRepository<Basket> basketContext;
 
         public const string BasketSessionName = "eCommerceBasket";
 
