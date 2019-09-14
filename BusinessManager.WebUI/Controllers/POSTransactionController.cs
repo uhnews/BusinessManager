@@ -26,6 +26,7 @@ namespace BusinessManager.WebUI.Controllers
         public ActionResult Index()
         {
             var model = posTransactionService.GetPOSTransactionItems(this.HttpContext);
+            ViewBag.ItemCount = model.Count;
             return View(model);
         }
 

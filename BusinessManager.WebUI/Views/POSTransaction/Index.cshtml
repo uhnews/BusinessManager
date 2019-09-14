@@ -9,9 +9,25 @@
 </h2>
 
 <h3>
-    Enter UPC Barcode: <span class="fas fa-barcode"></span>&nbsp;&nbsp;<input style="display: inline" class="form-control" onkeypress="getProduct(event)" id="UPCBarcode" type="text" />
-    <span class="text-danger" id="barcode-error-msg"></span>
+    Enter UPC Barcode:
+    <span class="fas fa-barcode">&nbsp;&nbsp;</span>
+    <input style="display: inline" class="form-control" onkeypress="getProduct(event)" id="UPCBarcode" type="text" />
+    <span style="margin-left: 5px">
+        @if (@ViewBag.ItemCount > 0)
+        {
+            <a href="@Url.Action("Checkout", "POSTransaction")">Checkout</a>
+        }
+        else
+        {
+            <span class="text-muted">Checkout</span>
+        }
+    </span>
+    <br />
 </h3>
+<div id="barcode-error-box" class="alert alert-danger col-md-7" style="display: none; margin: 0; padding: 3px 3px 3px 6px; margin: 0 3px 6px 0; font-size: 20px">
+    <button type="button" onclick="closeBarcodeErrorBox(event)" style="margin-top: 5px; margin-right: 5px" class="close">&times;</button>
+    <span><em id="barcode-error-msg">some text</em></span>
+</div>
 
 <table class="table">
     <tr>
@@ -67,25 +83,13 @@
         ++itemCount;
     }
     <tr>
-        @if (itemCount > 0)
-        {
-            <td colspan="4" style="text-align: right"><strong>Sale Total</strong></td>
-            <td>@String.Format("{0:c}", (from p in Model select p.Price * p.Quantity).Sum())</td>
-            <td><a href="@Url.Action("Checkout", "POSTransaction")">Checkout</a></td>
-        }
-        else
-        {
-            <td colspan="4" style="text-align: right"><strong>Transaction Total</strong></td>
-            <td>@String.Format("{0:c}", (from p in Model select p.Price * p.Quantity).Sum())</td>
-            <td><span class="text-muted">Checkout</span></td>
-        }
+        <td colspan="4" style="text-align: right"><strong>Transaction Total</strong></td>
+        <td>@String.Format("{0:c}", (from p in Model select p.Price * p.Quantity).Sum())</td>
     </tr>
 </table>
 
 <hr>
 <div>
-    @*<a href="javascript: history.go(-1)" class="btn btn-primary badge badge-pill">&#8592;</a><span>&nbsp;&nbsp;</span>*@
-
     @{
         string baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
         string prevURL = Request.UrlReferrer == null ? "" : Request.UrlReferrer.ToString();
@@ -125,10 +129,15 @@
                     }
                     else {
                         document.getElementById("barcode-error-msg").innerText = "Product '" + barcode + "' not found.";
+                        document.getElementById("barcode-error-box").style.display = "block";
                     }
                 }
             };
             xhttp.send();
+        }
+        function closeBarcodeErrorBox(event) {
+            document.getElementById("barcode-error-box").style.display = "none";
+            document.getElementById("UPCBarcode").select();
         }
 
     </script>

@@ -90,8 +90,7 @@ namespace BusinessManager.Services
             {
                 if (ex.Message == "Sequence contains no elements")
                 {
-                    product = new Product();
-                    product.Id = "";
+                    product = new Product() { Id = "" };
                 }
                 else
                 {
@@ -120,6 +119,114 @@ namespace BusinessManager.Services
         {
 
             return GetProduct("UPC", upc);
+        }
+
+        public bool FindUPC(string upc, string exceptId = "")
+        {
+            if (upc == "")
+            {
+                return false;
+            }
+                
+            List<Product> products;
+            DataContext dataContext = new DataContext();
+            DbSet<Product> dbSet = dataContext.Set<Product>();
+
+            var query = from p in dbSet
+                        select p;
+            try
+            {
+                if (exceptId == "")
+                {
+                    products = query.ToList().Where(p => p.UPC == upc).Select(c => new Product
+                    {
+                        UPC = c.UPC
+                    }).ToList();
+                }
+                else
+                {
+                    products = query.ToList().Where(p => p.UPC == upc && p.Id != exceptId).Select(c => new Product
+                    {
+                        UPC = c.UPC
+                    }).ToList();
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (ex.Message == "Sequence contains no elements")
+                {
+                    products = new List<Product>();
+                }
+                else
+                {
+                    throw ex;
+                }
+            }
+
+            dataContext.Dispose();
+
+            if (products != null)
+            {
+                return products.Count == 0 ? false : true;
+            }
+            else
+            {
+                throw new Exception("Null value (null) found instead of List<Product> object.");
+            }
+        }
+        
+        public bool FindProductCode(string productCode, string exceptId = "")
+        {
+            if (productCode == "")
+            {
+                return false;
+            }
+
+            List<Product> products;
+            DataContext dataContext = new DataContext();
+            DbSet<Product> dbSet = dataContext.Set<Product>();
+
+            var query = from p in dbSet
+                        select p;
+            try
+            {
+                if (exceptId == "")
+                {
+                    products = query.ToList().Where(p => p.ProductCode == productCode).Select(c => new Product
+                    {
+                        ProductCode = c.ProductCode
+                    }).ToList();
+                }
+                else
+                {
+                    products = query.ToList().Where(p => p.ProductCode == productCode && p.Id != exceptId).Select(c => new Product
+                    {
+                        ProductCode = c.ProductCode
+                    }).ToList();
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (ex.Message == "Sequence contains no elements")
+                {
+                    products = new List<Product>();
+                }
+                else
+                {
+                    throw ex;
+                }
+            }
+
+            dataContext.Dispose();
+
+            if (products != null)
+            {
+                return products.Count == 0 ? false : true;
+            }
+            else
+            {
+                throw new Exception("Null value (null) found instead of List<Product> object.");
+            }
         }
     }
 }

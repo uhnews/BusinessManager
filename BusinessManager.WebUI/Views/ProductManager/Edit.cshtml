@@ -119,7 +119,8 @@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save" class="btn btn-default" />
+                    <input onclick="validateProductCodes(event)" type="button" value="Save" class="btn btn-default" />
+                    <input id="submit-btn" type="submit" value="Save" class="btn btn-default" style="display: none" />
                 </div>
             </div>
         </div>
@@ -133,9 +134,49 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
+
         document.getElementById("file").onchange = function () {
             let message = ("New file selected: " + this.value).replace("C:\\fakepath\\", "");
             document.getElementById('image-message').innerText = message;
         };
+
+        async function validateProductCodes(event) {
+            var productId = document.getElementById("Product_Id").value;
+            var upc = document.getElementById("Product_UPC").value;
+            var productCode = document.getElementById("Product_ProductCode").value;
+            var promise1 = new Promise(function (resolve, reject) {
+            var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", "/ProductManager/CheckForUniqueCodes/?upc=" + upc + "&productCode=" + productCode + "&exceptId=" + productId, true);
+                xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {                        
+                        var responseText = this.responseText;
+
+                        if (responseText) {
+                            resolve(responseText); 
+                        }
+                        else {
+                            alert("ERROR IN THE RESPONSE!!");
+                        }
+                    }
+                };
+                xhttp.send();
+            });
+            var serverText = await promise1;
+            var responseObject = JSON.parse(serverText);
+
+            if (responseObject.UPC === false && responseObject.ProductCode === false) {
+                document.getElementById("submit-btn").click();
+            }
+            else {
+                if (responseObject.UPC === true) {
+                    alert("UPC '" + upc + "' already exists.")
+                }
+                if (responseObject.ProductCode === true) {
+                    alert("ProductCode '" + productCode + "' already exists.")
+                }
+            }            
+        }
+
     </script>
 }

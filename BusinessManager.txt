@@ -39,3 +39,25 @@ to do:
 	- if payment is greater than total of sale, conclude sale, print ticket
 	  and display change amount.
 
+
+
+
+Esme_5170
+uhnews@yahoo.com
+uhnews123@gmail.com
+uhnews@outlook.com
+
+https://localhost:44394/CustomerManager
+https://localhost:44394/CustomerManager/Edit/0aaa2de7-a32c-4389-91da-37e28139963c
+https://localhost:44394/CustomerManager/Create
+https://localhost:44394/POSTransaction
+https://localhost:44394/POSTransaction/Checkout
+
+>  is  &#8249
+
+string prevURL = Request.UrlReferrer.ToString();
+string baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+
+
+C:\pagefile.sys
+orderby p.CreatedAt descending

@@ -1,7 +1,7 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
 using BusinessManager.Core.ViewModels;
-using System;
+using BusinessManager.Services;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,6 +16,7 @@ namespace BusinessManager.WebUI.Controllers
     {
         IRepository<Product> context;
         IRepository<ProductCategory> productCategories;
+        readonly ProductRetrieveService productRetrieveService = new ProductRetrieveService();
 
         // dependency injection
         public ProductManagerController(IRepository<Product> productContext, IRepository<ProductCategory> productCategoryConext)
@@ -31,6 +32,17 @@ namespace BusinessManager.WebUI.Controllers
             return View(products);
         }
 
+        // GET: /ProductManager/Create Page
+        public JsonResult CheckForUniqueCodes(string upc, string productCode, string exceptId = "")
+        {
+
+            bool upcFound = productRetrieveService.FindUPC(upc, exceptId);
+            bool prodCodeFound = productRetrieveService.FindProductCode(productCode, exceptId);
+
+            return Json(new { UPC = upcFound, ProductCode = prodCodeFound }, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /ProductManager/Create Page
         public ActionResult Create()
         {
             ProductManagerViewModel viewModel = new ProductManagerViewModel();
@@ -40,6 +52,7 @@ namespace BusinessManager.WebUI.Controllers
             return View(viewModel);
         }
 
+        // POST: /ProductManager/Create Page
         [HttpPost]
         public ActionResult Create(Product product, HttpPostedFileBase file)
         {
