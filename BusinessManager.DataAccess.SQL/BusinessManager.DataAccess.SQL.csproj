@@ -202,6 +202,10 @@
     <Compile Include="Migrations\201909131227089_AddModifitedAtToItemsTables.Designer.cs">
       <DependentUpon>201909131227089_AddModifitedAtToItemsTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909141245380_AddFiveNewModels.cs" />
+    <Compile Include="Migrations\201909141245380_AddFiveNewModels.Designer.cs">
+      <DependentUpon>201909141245380_AddFiveNewModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -285,6 +289,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909131227089_AddModifitedAtToItemsTables.resx">
       <DependentUpon>201909131227089_AddModifitedAtToItemsTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909141245380_AddFiveNewModels.resx">
+      <DependentUpon>201909141245380_AddFiveNewModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
