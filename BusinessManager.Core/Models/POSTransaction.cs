@@ -6,6 +6,11 @@ namespace BusinessManager.Core.Models
 {
     public class POSTransaction : BaseEntity
     {
+        public POSTransaction()
+        {
+            this.POSTransactionItems = new List<POSTransactionItem>();
+        }
+
         [StringLength(128)]
         public string CustomerId { get; set; }
 
@@ -47,10 +52,5 @@ namespace BusinessManager.Core.Models
         public string OrderStatus { get; set; }
 
         public virtual ICollection<POSTransactionItem> POSTransactionItems { get; set; }
-
-        public POSTransaction()
-        {
-            this.POSTransactionItems = new List<POSTransactionItem>();
-        }
     }
 }
