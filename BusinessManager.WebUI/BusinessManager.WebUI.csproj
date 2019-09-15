@@ -192,6 +192,7 @@
     <Compile Include="Controllers\BasketController.cs" />
     <Compile Include="Controllers\CustomerManagerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LayawayManagerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderManagerController.cs" />
     <Compile Include="Controllers\POSSaleManagerController.cs" />
@@ -297,6 +298,10 @@
     <Content Include="Views\SupplierManager\Create.cshtml" />
     <Content Include="Views\SupplierManager\Edit.cshtml" />
     <Content Include="Views\SupplierManager\Delete.cshtml" />
+    <Content Include="Views\LayawayManager\Index.cshtml" />
+    <Content Include="Views\LayawayManager\Create.cshtml" />
+    <Content Include="Views\LayawayManager\Edit.cshtml" />
+    <Content Include="Views\LayawayManager\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

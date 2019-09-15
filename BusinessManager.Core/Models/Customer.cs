@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BusinessManager.Core.Models
@@ -48,5 +49,18 @@ namespace BusinessManager.Core.Models
 
         [StringLength(65)]
         public string Website { get; set; }
+
+        public virtual ICollection<Layaway> Layaways { get; set; }
+
+        public virtual ICollection<Invoice> Invoices { get; set; }
+
+        public virtual ICollection<Order> OnlineOrders { get; set; }
+
+        public Customer()
+        {
+            this.Layaways = new List<Layaway>();
+            this.Invoices = new List<Invoice>();
+            this.OnlineOrders = new List<Order>();
+        }
     }
 }

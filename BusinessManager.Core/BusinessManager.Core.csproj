@@ -106,6 +106,7 @@
   <ItemGroup>
     <Compile Include="Contracts\IBasketService.cs" />
     <Compile Include="Contracts\ICustomerService.cs" />
+    <Compile Include="Contracts\ILayawayService.cs" />
     <Compile Include="Contracts\IOrderService.cs" />
     <Compile Include="Contracts\IPOSSaleService.cs" />
     <Compile Include="Contracts\IPOSTransactionService.cs" />
@@ -133,6 +134,8 @@
     <Compile Include="ViewModels\BasketItemViewModel.cs" />
     <Compile Include="ViewModels\BasketSummaryViewModel.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
+    <Compile Include="ViewModels\LayawayItemViewModel.cs" />
+    <Compile Include="ViewModels\LayawaySummaryViewModel.cs" />
     <Compile Include="ViewModels\POSTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\POSTransactionSummaryViewModel.cs" />
     <Compile Include="ViewModels\ProductListViewModel.cs" />

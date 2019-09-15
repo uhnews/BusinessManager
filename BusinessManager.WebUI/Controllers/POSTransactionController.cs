@@ -9,9 +9,9 @@ namespace BusinessManager.WebUI.Controllers
 {
     public class POSTransactionController : Controller
     {
-        List<CustomerViewModel> customers;
-        IPOSTransactionService posTransactionService;
-        IPOSSaleService posSaleService;
+        readonly List<CustomerViewModel> customers;
+        readonly IPOSTransactionService posTransactionService;
+        readonly IPOSSaleService posSaleService;
         readonly CustomerService customerService = new CustomerService();
         readonly ProductRetrieveService productRetrieveService = new ProductRetrieveService();
 
@@ -79,7 +79,6 @@ namespace BusinessManager.WebUI.Controllers
             posTransactionService.ClearPOSTransaction(this.HttpContext);
 
             //
-            //return RedirectToAction("ThankYou", new { saleId = sale.Id });
             return RedirectToAction("Index");
         }
 

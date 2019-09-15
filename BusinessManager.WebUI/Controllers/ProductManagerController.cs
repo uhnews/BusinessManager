@@ -14,21 +14,21 @@ namespace BusinessManager.WebUI.Controllers
     [Authorize(Roles = "Admin")]
     public class ProductManagerController : Controller
     {
-        IRepository<Product> context;
-        IRepository<ProductCategory> productCategories;
+        readonly IRepository<Product> productContext;
+        readonly IRepository<ProductCategory> productCategoryConext;
         readonly ProductRetrieveService productRetrieveService = new ProductRetrieveService();
 
         // dependency injection
         public ProductManagerController(IRepository<Product> productContext, IRepository<ProductCategory> productCategoryConext)
         {
-            context = productContext;
-            productCategories = productCategoryConext;
+            this.productContext = productContext;
+            this.productCategoryConext = productCategoryConext;
         }
 
         // GET: ProductManager
         public ActionResult Index()
         {
-            List<Product> products = context.Collection().ToList();
+            List<Product> products = productContext.Collection().ToList();
             return View(products);
         }
 
@@ -47,7 +47,7 @@ namespace BusinessManager.WebUI.Controllers
         {
             ProductManagerViewModel viewModel = new ProductManagerViewModel();
             viewModel.Product = new Product();
-            viewModel.ProductCategories = productCategories.Collection();
+            viewModel.ProductCategories = productCategoryConext.Collection();
 
             return View(viewModel);
         }
@@ -67,15 +67,16 @@ namespace BusinessManager.WebUI.Controllers
                     product.Image = product.Id + Path.GetExtension(file.FileName);
                     file.SaveAs(Server.MapPath("//Content//ProductImages//" + product.Image));
                 }
-                context.Insert(product);
-                context.Commit();
+                productContext.Insert(product);
+                productContext.Commit();
                 return RedirectToAction("Index");
             }
         }
 
+        // GET: /ProductManager/Edit Page
         public ActionResult Edit(string Id)
         {
-            Product product = context.Find(Id);
+            Product product = productContext.Find(Id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -84,15 +85,16 @@ namespace BusinessManager.WebUI.Controllers
             {
                 ProductManagerViewModel viewModel = new ProductManagerViewModel();
                 viewModel.Product = product;
-                viewModel.ProductCategories = productCategories.Collection();
+                viewModel.ProductCategories = productCategoryConext.Collection();
                 return View(viewModel);
             }
         }
 
+        // POST: /ProductManager/Edit Page
         [HttpPost]
         public ActionResult Edit(Product product, string Id, HttpPostedFileBase file)
         {
-            Product productToEdit = context.Find(Id);
+            Product productToEdit = productContext.Find(Id);
             if (productToEdit == null)
             {
                 return HttpNotFound();
@@ -121,14 +123,16 @@ namespace BusinessManager.WebUI.Controllers
                     file.SaveAs(Server.MapPath("//Content//ProductImages//" + productToEdit.Image));
                 }
 
-                context.Commit();
+                productContext.Commit();
                 return RedirectToAction("Index");
             }
         }
 
+        // GET: /ProductManager/Delete Page
         public ActionResult Delete(string Id)
         {
-            Product productToDelete = context.Find(Id);
+            Product productToDelete = productContext.Find(Id);
+
             if (productToDelete == null)
             {
                 return HttpNotFound();
@@ -139,11 +143,12 @@ namespace BusinessManager.WebUI.Controllers
             }
         }
 
+        // POST: /ProductManager/Delete Page
         [HttpPost]
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string Id)
         {
-            Product productToDelete = context.Find(Id);
+            Product productToDelete = productContext.Find(Id);
 
             if (productToDelete == null)
             {
@@ -151,8 +156,8 @@ namespace BusinessManager.WebUI.Controllers
             }
             else
             {
-                context.Delete(Id);
-                context.Commit();
+                productContext.Delete(Id);
+                productContext.Commit();
                 return RedirectToAction("Index");
             }
         }

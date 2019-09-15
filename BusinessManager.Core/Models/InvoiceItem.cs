@@ -4,11 +4,14 @@ namespace BusinessManager.Core.Models
 {
     public class InvoiceItem : BaseEntity
     {
+        [Required]
         public string InvoiceId { get; set; }
 
+        [Required]
         [StringLength(128)]
         public string ProductId { get; set; }
 
+        [Required]
         [StringLength(50)]
         public string ProductName { get; set; }
 

@@ -12,15 +12,19 @@ namespace BusinessManager.Core.Models
         public string InvoiceNo { get; set; }
 
         [StringLength(128)]
+        [Required]
         public string CustomerId { get; set; }
 
+        [Required]
         public DateTimeOffset InvoiceDate { get; set; }
 
         [DisplayName("First Name")]
         [StringLength(50)]
+        [Required]
         public string PayerFirstName { get; set; }
 
         [DisplayName("Last Name")]
+        [Required]
         [StringLength(50)]
         public string PayerLastName { get; set; }
 

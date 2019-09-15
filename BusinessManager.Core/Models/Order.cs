@@ -12,14 +12,17 @@ namespace BusinessManager.Core.Models
         }
 
         [StringLength(128)]
+        [Required]
         public string CustomerId { get; set; }
 
         [StringLength(50)]
         [DisplayName("First Name")]
+        [Required]
         public string FirstName { get; set; }
 
         [StringLength(50)]
         [DisplayName("Last Name")]
+        [Required]
         public string LastName { get; set; }
 
         [StringLength(65)]
@@ -28,6 +31,7 @@ namespace BusinessManager.Core.Models
 
         [StringLength(50)]
         [DisplayName("E-Mail")]
+        [Required]
         public string Email { get; set; }
 
         [StringLength(50)]

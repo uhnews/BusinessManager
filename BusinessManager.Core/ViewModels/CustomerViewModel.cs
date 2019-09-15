@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessManager.Core.ViewModels
 {
+    [NotMapped]
     public class CustomerViewModel
     {
         public string Id { get; set; }

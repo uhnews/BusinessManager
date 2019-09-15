@@ -10,7 +10,6 @@ namespace BusinessManager.Services
 {
     public class POSTransactionService : IPOSTransactionService
     {
-
         IRepository<Product> productContext;
         IRepository<POSTransaction> POSTransactionContext;
 

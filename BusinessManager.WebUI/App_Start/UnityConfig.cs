@@ -72,6 +72,7 @@ namespace BusinessManager.WebUI
             container.RegisterType<IPOSTransactionService, POSTransactionService>();
             container.RegisterType<IPOSSaleService, POSSaleService>();
             container.RegisterType<ICustomerService, CustomerService>();
+            container.RegisterType<ILayawayService, LayawayService>();
         }
     }
 }

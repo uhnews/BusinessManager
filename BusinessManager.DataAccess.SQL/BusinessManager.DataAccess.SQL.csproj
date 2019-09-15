@@ -206,6 +206,26 @@
     <Compile Include="Migrations\201909141245380_AddFiveNewModels.Designer.cs">
       <DependentUpon>201909141245380_AddFiveNewModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909150201003_AddModifiedAtToLayawayItem.cs" />
+    <Compile Include="Migrations\201909150201003_AddModifiedAtToLayawayItem.Designer.cs">
+      <DependentUpon>201909150201003_AddModifiedAtToLayawayItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909150347379_AddOrderStatusToLayaway.cs" />
+    <Compile Include="Migrations\201909150347379_AddOrderStatusToLayaway.Designer.cs">
+      <DependentUpon>201909150347379_AddOrderStatusToLayaway.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909150442100_RemoveCustomerViewModelsTable.cs" />
+    <Compile Include="Migrations\201909150442100_RemoveCustomerViewModelsTable.Designer.cs">
+      <DependentUpon>201909150442100_RemoveCustomerViewModelsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909150500234_ForeignIndexForCustomerRelatedModels.cs" />
+    <Compile Include="Migrations\201909150500234_ForeignIndexForCustomerRelatedModels.Designer.cs">
+      <DependentUpon>201909150500234_ForeignIndexForCustomerRelatedModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909150526256_AddRequiredAttributeToTables.cs" />
+    <Compile Include="Migrations\201909150526256_AddRequiredAttributeToTables.Designer.cs">
+      <DependentUpon>201909150526256_AddRequiredAttributeToTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -292,6 +312,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909141245380_AddFiveNewModels.resx">
       <DependentUpon>201909141245380_AddFiveNewModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909150201003_AddModifiedAtToLayawayItem.resx">
+      <DependentUpon>201909150201003_AddModifiedAtToLayawayItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909150347379_AddOrderStatusToLayaway.resx">
+      <DependentUpon>201909150347379_AddOrderStatusToLayaway.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909150442100_RemoveCustomerViewModelsTable.resx">
+      <DependentUpon>201909150442100_RemoveCustomerViewModelsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909150500234_ForeignIndexForCustomerRelatedModels.resx">
+      <DependentUpon>201909150500234_ForeignIndexForCustomerRelatedModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909150526256_AddRequiredAttributeToTables.resx">
+      <DependentUpon>201909150526256_AddRequiredAttributeToTables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

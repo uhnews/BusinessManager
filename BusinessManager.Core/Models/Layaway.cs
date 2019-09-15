@@ -8,6 +8,7 @@ namespace BusinessManager.Core.Models
     public class Layaway : BaseEntity
     {
         [StringLength(128)]
+        [Required]
         public string CustomerId { get; set; }
 
         [DisplayName("Agreement Date")]
@@ -28,6 +29,9 @@ namespace BusinessManager.Core.Models
         [DisplayName("Cancellation Fee")]
         [Range(0, 99999999999.99, ErrorMessage = "Value cannot be negative.")]
         public decimal CancellationFee { get; set; }
+
+        [StringLength(50)]
+        public string OrderStatus { get; set; }
 
         public virtual ICollection<LayawayItem> LayawayItems { get; set; }
 
