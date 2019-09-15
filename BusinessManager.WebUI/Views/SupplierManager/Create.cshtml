@@ -4,14 +4,13 @@
     ViewBag.Title = "Create Supplier";
 }
 
-<h2><span class="fas fa-truck text-primary">&nbsp;&nbsp;</span>Create Supplier</h2>
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
+    <h2><span class="fas fa-truck text-primary">&nbsp;&nbsp;</span>Create Supplier</h2>
+    <hr />
     <div class="form-horizontal">
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.CreatedAt, htmlAttributes: new { @class = "control-label col-md-2" })

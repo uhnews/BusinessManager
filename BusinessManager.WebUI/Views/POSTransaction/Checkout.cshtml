@@ -8,9 +8,9 @@
 {
     @Html.AntiForgeryToken()
 
+    <h4 style="padding: 15px 10px 0px 10px"><span class="fas fa-cash-register" style="font-size: x-large">&nbsp;&nbsp;</span><span class="fas fa-check" style="font-size: x-large">&nbsp;&nbsp;</span>POS Transaction Checkout</h4>
+    <hr />
     <div class="form-horizontal">
-        <h4 style="padding: 15px 10px 0px 10px"><span class="fas fa-cash-register" style="font-size: x-large">&nbsp;&nbsp;</span><span class="fas fa-check" style="font-size: x-large">&nbsp;&nbsp;</span>POS Transaction Checkout</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         @{
@@ -140,7 +140,7 @@
 
         function getCustomer(event) {
             event.preventDefault();
-            let customerId =  event.target.querySelector("Span").innerText;            
+            let customerId = event.target.querySelector("Span").innerText;
             var xhttp = new XMLHttpRequest();
             xhttp.open("GET", "/POSTransaction/GetCustomer/?Id=" + customerId, true);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');

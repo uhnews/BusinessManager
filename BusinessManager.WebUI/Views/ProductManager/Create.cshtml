@@ -4,14 +4,13 @@
     ViewBag.Title = "Create Product";
 }
 
-    <h2>Create Product</h2>
-
 @using (Html.BeginForm("Create", "ProductManager", FormMethod.Post, new { encType = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
+    <h2>Create Product</h2>
+    <hr />
     <div class="form-horizontal">
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @{
             string labelWidth = "col-md-2";
@@ -63,8 +62,8 @@
             @Html.LabelFor(model => model.Product.Category, htmlAttributes: new { @class = "control-label " + @labelWidth })
             <div class="col-md-4">
                 @Html.DropDownListFor(
-                    model => model.Product.Category, 
-                    new SelectList(Model.ProductCategories, "Category", "Category"), 
+                    model => model.Product.Category,
+                    new SelectList(Model.ProductCategories, "Category", "Category"),
                     htmlAttributes: new { @class = "control-label", @style = "width: 75%; max-width: " + @maxFieldWidth }
                 )
             </div>
@@ -140,15 +139,15 @@
             var upc = document.getElementById("Product_UPC").value;
             var productCode = document.getElementById("Product_ProductCode").value;
             var promise1 = new Promise(function (resolve, reject) {
-            var xhttp = new XMLHttpRequest();
+                var xhttp = new XMLHttpRequest();
                 xhttp.open("GET", "/ProductManager/CheckForUniqueCodes/?upc=" + upc + "&productCode=" + productCode, true);
                 xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 xhttp.onreadystatechange = function () {
-                    if (this.readyState === 4 && this.status === 200) {                        
+                    if (this.readyState === 4 && this.status === 200) {
                         var responseText = this.responseText;
 
                         if (responseText) {
-                            resolve(responseText); 
+                            resolve(responseText);
                         }
                         else {
                             alert("ERROR IN THE RESPONSE!!");
@@ -170,7 +169,7 @@
                 if (responseObject.ProductCode === true) {
                     alert("ProductCode '" + productCode + "' already exists.")
                 }
-            }            
+            }
         }
 
     </script>
