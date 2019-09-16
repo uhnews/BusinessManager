@@ -54,6 +54,13 @@ namespace BusinessManager.WebUI.Controllers
             }
             else
             {
+                // get Invoices
+
+                // get Layaways
+
+                // get (online) Orders
+
+
                 return View(customer);
             }
         }

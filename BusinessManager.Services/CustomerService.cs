@@ -51,9 +51,9 @@ namespace BusinessManager.Services
             DataContext dataContext = new DataContext();
             DbSet<Customer> dbSet = dataContext.Set<Customer>();
 
-            var query = from p in dbSet
-                        select p;
-            customer = query.ToList().Where(p => p.Id == customerId).Select(c => new Customer
+            var query = from m in dbSet
+                        select m;
+            customer = query.ToList().Where(m => m.Id == customerId).Select(c => new Customer
             {
                 Id = "",
                 FirstName = c.FirstName,
@@ -78,6 +78,53 @@ namespace BusinessManager.Services
             {
                 return new Customer();
             }
+        }
+
+        List<Invoice> GetInvoices(string customerId)
+        {
+            List<Invoice> invoices = new List<Invoice>();
+
+            DataContext dataContext = new DataContext();
+            DbSet<Invoice> dbSet = dataContext.Set<Invoice>();
+
+            var query = from m in dbSet
+                        select m;
+            invoices = query.ToList().Where(m => m.Id == customerId).Select(i => new Invoice
+            {
+                //Id = i.Id,
+                //InvoiceNo = i.FirstName,
+                //InvoiceDate = i.LastName,
+                //PayerFirstName = i.Email,
+                //PayerLastName = i.Phone,
+                //PayerCompany = i.CompanyName,
+                //Street = i.Street,
+                //City = i.City,
+                //State = i.State,
+                //ZipCode = i.ZipCode,
+                //CreatedAt = new DateTime()
+            }).ToList();
+
+            dataContext.Dispose();
+
+            if (invoices != null)
+            {
+                return invoices;
+            }
+            else
+            {
+                return new List<Invoice>();
+            }
+
+        }
+
+        List<Layaway> GetLayaways(string customerId)
+        {
+            return new List<Layaway>();
+        }
+
+        List<Order> GetOrders(string customerId)
+        {
+            return new List<Order>();
         }
     }
 }

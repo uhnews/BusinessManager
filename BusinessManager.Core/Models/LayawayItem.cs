@@ -26,6 +26,9 @@ namespace BusinessManager.Core.Models
         [Required]
         public int Quantity { get; set; }
 
+        [StringLength(200)]
+        public string Image { get; set; }
+
         [DisplayName("Modified At")]
         public DateTimeOffset ModifiedAt { get; set; }
     }

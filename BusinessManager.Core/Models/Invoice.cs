@@ -32,9 +32,8 @@ namespace BusinessManager.Core.Models
         [StringLength(50)]
         public string PayerCompany { get; set; }
 
-        [DisplayName("Address")]
         [StringLength(50)]
-        public string PayerAddress { get; set; }
+        public string PayerStreet { get; set; }
 
         [StringLength(50)]
         public string City { get; set; }

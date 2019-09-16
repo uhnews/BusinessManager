@@ -203,6 +203,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909040127304_InitialCreate.cs" />
+    <Compile Include="Migrations\201909040127304_InitialCreate.Designer.cs">
+      <DependentUpon>201909040127304_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -302,6 +307,7 @@
     <Content Include="Views\LayawayManager\Create.cshtml" />
     <Content Include="Views\LayawayManager\Edit.cshtml" />
     <Content Include="Views\LayawayManager\Delete.cshtml" />
+    <Content Include="Views\CustomerManager\Layaways.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -337,6 +343,11 @@
       <Project>{84e3cac1-b5ad-4101-b0be-dd4970c577e2}</Project>
       <Name>BusinessManager.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201909040127304_InitialCreate.resx">
+      <DependentUpon>201909040127304_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

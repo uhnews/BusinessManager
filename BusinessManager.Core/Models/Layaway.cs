@@ -30,6 +30,7 @@ namespace BusinessManager.Core.Models
         [Range(0, 99999999999.99, ErrorMessage = "Value cannot be negative.")]
         public decimal CancellationFee { get; set; }
 
+        [DisplayName("Order Status")]
         [StringLength(50)]
         public string OrderStatus { get; set; }
 

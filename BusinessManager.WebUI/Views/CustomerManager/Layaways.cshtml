@@ -1,14 +1,8 @@
 ﻿@model IEnumerable<BusinessManager.Core.Models.Layaway>
 
 @{
-    ViewBag.Title = "Layaway Management";
+    ViewBag.Title = "Layaways";
 }
-
-    <h2><span class="fas fa-gifts text-primary">&nbsp;&nbsp;</span>Layaway Management</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
 
     @foreach (var layaway in Model)
@@ -21,14 +15,16 @@
                             .layaway-label {
                                 width: 30%
                             }
+
                             .fixed-header tbody {
-                                display:block;
-                                overflow:auto;
-                                height:400px;
-                                width:100%;
+                                display: block;
+                                overflow: auto;
+                                height: 400px;
+                                width: 100%;
                             }
-                            .fixed_header thead tr{
-                              display:block;
+
+                            .fixed_header thead tr {
+                                display: block;
                             }
                         </style>
                         @{
