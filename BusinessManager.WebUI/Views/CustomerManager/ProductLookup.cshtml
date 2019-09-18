@@ -1,0 +1,102 @@
+﻿@model IEnumerable<BusinessManager.Core.Models.Product>
+
+@{
+    ViewBag.Title = "Products";
+}
+
+<style>
+    .fixed-header tbody {
+        display: block;
+        overflow: auto;
+        height: 600px;
+        width: 100%;
+    }
+
+    .fixed_header thead tr {
+        display: block;
+    }
+</style>
+<div>
+    <h3 style="display: inline-block">Product Search</h3>
+    <div class="form-group">
+        <input type="text" class="form-control" style="display: inline-block; margin: 0" />
+        <button class="btn btn-default btn-primary-text"
+                style="display: inline-block; margin-top:-4px">
+            <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+        </button>
+    </div>
+</div>
+
+<div class="col-md-6" style="display: flex">
+    <div class="col-md-6 fixed-header" style="flex: 1; padding-left: 0">
+        <table class="table table-condensed">
+            <tr>
+                <th>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)/
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Category)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductCode)/
+                    @Html.DisplayNameFor(model => model.UPC)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsService)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+
+                int halfOfMin = item.QuantityMin / 2;
+                var cssClass = "";
+                if (item.Quantity <= item.QuantityMin)
+                {
+                    cssClass = "bg-danger";
+                }
+                else if (item.Quantity <= item.QuantityMin + halfOfMin)
+                {
+                    cssClass = "bg-warning";
+                }
+
+                <tr class="@cssClass">
+                    <td>
+                        <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })">
+                            <img class="img-thumbnail" style="width:400px" src="~/Content/ProductImages/@item.Image" alt="Image" />
+                        </a>
+                    </td>
+                    <td>
+                        <p>@Html.DisplayFor(modelItem => item.Name)</p>
+                        <p>@Html.DisplayFor(modelItem => item.Description)</p>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductCode)
+                        @Html.DisplayFor(modelItem => item.UPC)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsService)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

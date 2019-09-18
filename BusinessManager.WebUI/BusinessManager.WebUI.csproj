@@ -304,6 +304,7 @@
     <Content Include="Views\LayawayManager\Delete.cshtml" />
     <Content Include="Views\CustomerManager\Layaways.cshtml" />
     <Content Include="Views\Shared\AlertBox.cshtml" />
+    <Content Include="Views\CustomerManager\ProductLookup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

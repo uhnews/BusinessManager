@@ -19,23 +19,23 @@
                         var inputGroupStyle = "margin: 6px";
                         var dateStyle = "padding: 5px; line-height: 100%; display: inline; max-width: 45%";
                     }
+                    <style>
+                        .layaway-label {
+                            width: 30%
+                        }
+
+                        .fixed-header tbody {
+                            display: block;
+                            overflow: auto;
+                            height: 400px;
+                            width: 100%;
+                        }
+
+                        .fixed_header thead tr {
+                            display: block;
+                        }
+                    </style>
                     <div class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorLightBlue">
-                        <style>
-                            .layaway-label {
-                                width: 30%
-                            }
-
-                            .fixed-header tbody {
-                                display: block;
-                                overflow: auto;
-                                height: 400px;
-                                width: 100%;
-                            }
-
-                            .fixed_header thead tr {
-                                display: block;
-                            }
-                        </style>
                         <form id="layaway-form">
                             <div style="@inputGroupStyle">
                                 <label class="control-label layaway-label" for="layaway_CreatedAt" style="width: 45%">@Html.DisplayNameFor(model => model.CreatedAt)</label>
@@ -66,9 +66,9 @@
                                 @Html.EditorFor(model => layaway.OrderStatus, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
                             </div>
                             <div style="@inputGroupStyle">
-                                <input type="button" value="Save" class="btn btn-sm btn-default" /> 
-                                <input type="button" value="Scan Barcode" class="btn btn-sm btn-default" /> 
-                                <input type="button" value="Add Item" class="btn btn-sm btn-default" /> 
+                                <input type="button" value="Save" class="btn btn-sm btn-default" />
+                                <input type="button" value="Scan Barcode" class="btn btn-sm btn-default" />
+                                <input type="button" value="Add Item" class="btn btn-sm btn-default" />
                                 <input type="button" value="Delete" class="btn btn-sm btn-default btn-danger-text" />
                             </div>
                         </form>
@@ -80,7 +80,7 @@
                     <div class="col-md-6 fixed-header" style="flex: 1; background-color: @colorLightBlue; padding-left: 0">
                         <h4>Layaway Items</h4>
                         <table class="table">
-                            @{ 
+                            @{
                                 var itemCount = 0;
                                 var rowElementId = "";
                                 ++layawayCount;
@@ -89,19 +89,22 @@
                             {
                                 ++itemCount;
                                 rowElementId = "row-" + layawayCount + "-" + itemCount;
-                                <tr id=@rowElementId title="test 1" style="margin-top: 20px">                                    
+                                <tr id=@rowElementId title="test 1" style="margin-top: 20px">
                                     <td style="position: relative">
-                                        <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })">
-                                            <img class="img-thumbnail" style="width: 100px" src="~/Content/ProductImages/@item.Image" alt="Image" />
-                                        </a>
-                                         @* LawayItem delete button here *@ 
-                                        <input id="layaway-item-delete" 
-                                               type="button" 
-                                               value="Delete" 
-                                               style="margin: 0px 5px 5px 5px; position: absolute; bottom: 5px" 
+                                        <div>
+                                            <img onClick="showPic(event, '@item.Image')"
+                                                 class="img-thumbnail"
+                                                 style="width: 100px; cursor: pointer"
+                                                 src="~/Content/ProductImages/@item.Image"
+                                                 alt="Image" />
+                                        </div>
+                                        @* LawayItem delete button here *@
+                                        <input id="layaway-item-delete"
+                                               type="button"
+                                               value="Delete"
+                                               style="margin: 0px 5px 5px 5px; position: absolute; bottom: 5px"
                                                class="btn btn-sm btn-default btn-danger-text"
-                                               onclick="deleteLayawayItem(event, @item.Id, '@rowElementId')"
-                                               />
+                                               onclick="deleteLayawayItem(event, @item.Id, '@rowElementId')" />
                                     </td>
                                     <td>
                                         <div style="padding-top: 7px">
