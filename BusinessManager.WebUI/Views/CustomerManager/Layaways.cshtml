@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Layaways";
+    var layawayCount = 0;
 }
 <table class="table">
 
@@ -10,7 +11,15 @@
         <tr>
             <td>
                 <div class="col-md-12" style="display: flex">
-                    <div class="col-md-6" style="flex: 1; padding: 1em; background-color: #f6fbfd">
+                    @{
+                        var colorLightBlue = "#f6fbfd";
+
+                        // Layaway Items table styling strings
+                        var inputStyle = "display: inline; width: 45%; max-width: 100%";
+                        var inputGroupStyle = "margin: 6px";
+                        var dateStyle = "padding: 5px; line-height: 100%; display: inline; max-width: 45%";
+                    }
+                    <div class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorLightBlue">
                         <style>
                             .layaway-label {
                                 width: 30%
@@ -27,82 +36,84 @@
                                 display: block;
                             }
                         </style>
-                        @{
-                            var inputStyle = "display: inline; width: 65%; max-width: 100%";
-                            var inputGroupStyle = "margin: 6px";
-                        }
                         <form id="layaway-form">
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_CreatedAt">@Html.DisplayNameFor(model => model.CreatedAt)</label>
+                                <label class="control-label layaway-label" for="layaway_CreatedAt" style="width: 45%">@Html.DisplayNameFor(model => model.CreatedAt)</label>
                                 @Html.DisplayFor(model => layaway.CreatedAt, new { htmlAttributes = new { @class = "form-control" } }).ToString().Replace("-07:00", "")
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_CustomerId">@Html.DisplayNameFor(model => model.CustomerId)</label>
-                                @Html.EditorFor(model => layaway.CustomerId, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
+                                <label class="control-label layaway-label" for="layaway_AgreementDate" style="width: 45%">@Html.DisplayNameFor(model => model.AgreementDate)</label>
+                                @Html.EditorFor(model => layaway.AgreementDate, new { htmlAttributes = new { @class = "form-control", @style = @dateStyle, @type = "date" } })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_AgreementDate">@Html.DisplayNameFor(model => model.AgreementDate)</label>
-                                @Html.EditorFor(model => layaway.AgreementDate, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
+                                <label class="control-label layaway-label" for="layaway_DueDate" style="width: 45%">@Html.DisplayNameFor(model => model.DueDate)</label>
+                                @Html.EditorFor(model => layaway.DueDate, new { htmlAttributes = new { @class = "form-control", @style = @dateStyle, @type = "date" } })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_DueDate">@Html.DisplayNameFor(model => model.DueDate)</label>
-                                @Html.EditorFor(model => layaway.DueDate, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
-                            </div>
-                            <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_DownPayment">@Html.DisplayNameFor(model => model.DownPayment)</label>
+                                <label class="control-label layaway-label" for="layaway_DownPayment" style="width: 45%">@Html.DisplayNameFor(model => model.DownPayment)</label>
                                 @Html.EditorFor(model => layaway.DownPayment, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_ServiceFee">@Html.DisplayNameFor(model => model.ServiceFee)</label>
+                                <label class="control-label layaway-label" for="layaway_ServiceFee" style="width: 45%">@Html.DisplayNameFor(model => model.ServiceFee)</label>
                                 @Html.EditorFor(model => layaway.ServiceFee, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_CancellationFee">@Html.DisplayNameFor(model => model.CancellationFee)</label>
+                                <label class="control-label layaway-label" for="layaway_CancellationFee" style="width: 45%">@Html.DisplayNameFor(model => model.CancellationFee)</label>
                                 @Html.EditorFor(model => layaway.CancellationFee, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_OrderStatus">@Html.DisplayNameFor(model => model.OrderStatus)</label>
+                                <label class="control-label layaway-label" for="layaway_OrderStatus" style="width: 45%">@Html.DisplayNameFor(model => model.OrderStatus)</label>
                                 @Html.EditorFor(model => layaway.OrderStatus, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
                             </div>
                             <div style="@inputGroupStyle">
-                                @Html.ActionLink("Save", "Edit", new { id = layaway.Id }) |
-                                @Html.ActionLink("Add Item", "Edit", new { id = layaway.Id }) |
-                                @Html.ActionLink("Scan Item", "Edit", new { id = layaway.Id }) |
-                                @Html.ActionLink("Delete", "Delete", new { id = layaway.Id })
+                                <input type="button" value="Save" class="btn btn-sm btn-default" /> 
+                                <input type="button" value="Scan Barcode" class="btn btn-sm btn-default" /> 
+                                <input type="button" value="Add Item" class="btn btn-sm btn-default" /> 
+                                <input type="button" value="Delete" class="btn btn-sm btn-default btn-danger-text" />
                             </div>
                         </form>
                     </div>
                     @{
-                        var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0; background-color: #f6fbfd; border: none";
-                        var subItemInputStyle2 = "display: inline; max-width: 25%; margin-right: 15px";
+                        var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0; background-color: " + colorLightBlue + "; border: none";
+                        var subItemInputStyle2 = "display: inline; widith: 70%; max-width: 95%; margin: 0 0 5px 0";
                     }
-                    <div class="col-md-6 fixed-header" style="flex: 1; background-color: #f6fbfd">
+                    <div class="col-md-6 fixed-header" style="flex: 1; background-color: @colorLightBlue; padding-left: 0">
                         <h4>Layaway Items</h4>
                         <table class="table">
+                            @{ 
+                                var itemCount = 0;
+                                var rowElementId = "";
+                                ++layawayCount;
+                            }
                             @foreach (var item in layaway.LayawayItems)
                             {
-                                <tr style="margin-top: 20px">
-                                    <td>
+                                ++itemCount;
+                                rowElementId = "row-" + layawayCount + "-" + itemCount;
+                                <tr id=@rowElementId title="test 1" style="margin-top: 20px">                                    
+                                    <td style="position: relative">
                                         <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })">
                                             <img class="img-thumbnail" style="width: 100px" src="~/Content/ProductImages/@item.Image" alt="Image" />
                                         </a>
+                                         @* LawayItem delete button here *@ 
+                                        <input id="layaway-item-delete" 
+                                               type="button" 
+                                               value="Delete" 
+                                               style="margin: 0px 5px 5px 5px; position: absolute; bottom: 5px" 
+                                               class="btn btn-sm btn-default btn-danger-text"
+                                               onclick="deleteLayawayItem(event, @item.Id, '@rowElementId')"
+                                               />
                                     </td>
                                     <td>
                                         <div style="padding-top: 7px">
                                             @Html.EditorFor(m => item.ProductName, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle1, @readonly = "true" } })
                                         </div>
-                                        <div style="margin-bottom: 5px">
-                                            <span style="width: 50%">
-                                                <label class="control-label layaway-label" style="display: inline; margin-right: 10px">Quantity</label>
-                                                @Html.EditorFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
-                                            </span>
-                                            <span style="width: 50%">
-                                                <label class="control-label layaway-label" style="display: inline; margin-right: 10px">Price</label>
-                                                @Html.EditorFor(m => item.Price, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
-                                            </span>
+                                        <div style="padding-top: 7px; width: 50%">
+                                            <label class="control-label layaway-label" style="display: inline; margin-right: 10px">Quantity</label>
+                                            @Html.EditorFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
                                         </div>
-                                        <div>
-                                            @Html.ActionLink("Delete", "Delete", new { id = layaway.Id })
+                                        <div style="margin-bottom: 5px; width: 50%">
+                                            <label class="control-label layaway-label" style="display: inline; margin-right: 10px; margin-top: 10px">Price</label>
+                                            @Html.EditorFor(m => item.Price, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
                                         </div>
                                     </td>
                                 </tr>

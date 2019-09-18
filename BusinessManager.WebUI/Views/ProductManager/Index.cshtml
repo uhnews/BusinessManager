@@ -94,7 +94,7 @@
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id })
                 @if (item.Quantity == 0)
                 {
-                    <div style="display: inline-block"> | @Html.ActionLink("Delete", "Delete", new { id = item.Id })</div>
+                    <div style="display: inline-block"> | @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class="delete-link-danger" })</div>
                 }
                 else
                 {

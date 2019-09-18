@@ -15,9 +15,9 @@ namespace BusinessManager.Services
 
         public const string LayawaySessionName = "layaway";
 
-        public LayawayService(IRepository<Product> productContext, IRepository<Layaway> LayawayContext)
+        public LayawayService(IRepository<Product> productContext, IRepository<Layaway> layawayContext)
         {
-            this.layawayContext = LayawayContext;
+            this.layawayContext = layawayContext;
             this.productContext = productContext;
         }
 
@@ -125,6 +125,7 @@ namespace BusinessManager.Services
                                   Id = b.Id,
                                   Quantity = b.Quantity,
                                   ModifiedAt = b.ModifiedAt,
+                                  ProductId = b.ProductId,
                                   ProductName = p.Name,
                                   UPC = p.UPC,
                                   ProductCode = p.ProductCode,

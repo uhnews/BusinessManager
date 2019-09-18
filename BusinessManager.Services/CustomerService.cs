@@ -65,7 +65,7 @@ namespace BusinessManager.Services
                 City = c.City,
                 State = c.State,
                 ZipCode = c.ZipCode,
-                CreatedAt = new DateTime()
+                CreatedAt = c.CreatedAt
             }).Single();
 
             dataContext.Dispose();
@@ -80,49 +80,7 @@ namespace BusinessManager.Services
             }
         }
 
-        List<Invoice> GetInvoices(string customerId)
-        {
-            List<Invoice> invoices = new List<Invoice>();
-
-            DataContext dataContext = new DataContext();
-            DbSet<Invoice> dbSet = dataContext.Set<Invoice>();
-
-            var query = from m in dbSet
-                        select m;
-            invoices = query.ToList().Where(m => m.Id == customerId).Select(i => new Invoice
-            {
-                //Id = i.Id,
-                //InvoiceNo = i.FirstName,
-                //InvoiceDate = i.LastName,
-                //PayerFirstName = i.Email,
-                //PayerLastName = i.Phone,
-                //PayerCompany = i.CompanyName,
-                //Street = i.Street,
-                //City = i.City,
-                //State = i.State,
-                //ZipCode = i.ZipCode,
-                //CreatedAt = new DateTime()
-            }).ToList();
-
-            dataContext.Dispose();
-
-            if (invoices != null)
-            {
-                return invoices;
-            }
-            else
-            {
-                return new List<Invoice>();
-            }
-
-        }
-
-        List<Layaway> GetLayaways(string customerId)
-        {
-            return new List<Layaway>();
-        }
-
-        List<Order> GetOrders(string customerId)
+        public List<Order> GetOrders(string customerId)
         {
             return new List<Order>();
         }

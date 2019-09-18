@@ -1,0 +1,159 @@
+﻿<script type="text/javascript">
+
+    var clicked = "CLOSED";
+    function SetMsgBoxResponse(response) {
+        document.getElementById("app-alert-box-response").innerText = response;
+        clicked = response;
+    }
+
+    function GetMsgBoxResponse() {
+        return document.getElementById("app-alert-box-response").innerText;
+    }
+    
+    async function ShowMessage(message, title = "", buttons = "") {
+        var promise = new Promise(function (resolve, reject) {
+            try {
+                var messageClosed = false;
+                $("#app-alert-box").on('hidden.bs.modal', function () {
+                    messageClosed = true;
+                });
+                SetMsgBoxResponse("");
+                var arrBtns = new Array();
+                if (!Array.isArray(buttons)) {
+                    arrBtns = buttons.replace(" ", "").split(",");
+                }
+                var btnList = ["yes", "no", "ok", "cancel", "retry"];
+                btnList.forEach(function (item) {
+                    document.getElementById("app-alert-box-btn-" + item).style.display = "none";
+                });
+                arrBtns.forEach(function (btn) {
+                    var btnText = btn.toString().toLowerCase();
+                    if (btnText === "yes") {
+                        document.getElementById("app-alert-box-btn-yes").style.display = "inline";
+                    }
+                    else if (btnText === "no") {
+                        document.getElementById("app-alert-box-btn-no").style.display = "inline";
+                    }
+                    else if (btnText === "ok") {
+                        document.getElementById("app-alert-box-btn-ok").style.display = "inline";
+                    }
+                    else if (btnText === "cancel") {
+                        document.getElementById("app-alert-box-btn-cancel").style.display = "inline";
+                    }
+                    else if (btnText === "retry") {
+                        document.getElementById("app-alert-box-btn-retry").style.display = "inline";
+                    }
+                    else if (btnText === "yesno") {
+                        document.getElementById("app-alert-box-btn-yes").style.display = "inline";
+                        document.getElementById("app-alert-box-btn-no").style.display = "inline";
+                    }
+                    else if (btnText === "okcancel") {
+                        document.getElementById("app-alert-box-btn-ok").style.display = "inline";
+                        document.getElementById("app-alert-box-btn-cancel").style.display = "inline";
+                    }
+                    else {
+                        document.getElementById("app-alert-box-btn-ok").style.display = "inline";
+                    }
+                });
+                document.getElementById("app-alert-box-message").innerHTML  = message;
+                document.getElementById("app-alert-box-title").innerHTML  = title;
+                document.getElementById("app-alert-box-btn-show-msg").click();
+
+                var timer = setInterval(myTimer, 250);
+                function myTimer() {
+                    if (messageClosed) {
+                        clearInterval(timer);
+                        resolve(clicked);
+                    }
+                }            
+            }
+            catch (error) {
+                reject(error);
+            }
+        });
+        var response = await promise;
+        return response;
+    }
+
+</script>
+
+<!-- Modal -->
+<div class="modal fade" id="app-alert-box" role="dialog">
+    <div class="modal-dialog">
+        <button id="app-alert-box-btn-show-msg"
+                type="button"
+                class="btn btn-info btn-lg"
+                data-toggle="modal"
+                data-target="#app-alert-box"
+                style="display: none">
+            Show Message
+        </button>
+
+        <!-- Modal content-->
+        <div class="modal-content" style="padding: 0">
+
+            <div class="modal-header bg-info" style="padding: 5px 10px 3px 15px; border-radius: 4px 4px 0px 0px">
+                <button type="button" 
+                        onClick="SetMsgBoxResponse('Close')" 
+                        class="close" 
+                        data-dismiss="modal">
+                    &times;
+                </button>
+                <h5 id="app-alert-box-title" class="modal-title">Modal Header</h5>
+            </div>
+
+            <div class="modal-body">
+                <p id="app-alert-box-message">
+
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button id="app-alert-box-btn-yes"
+                        type="button"
+                        onClick="SetMsgBoxResponse('Yes')"
+                        class="btn btn-default app-alert-box-btn"
+                        data-dismiss="modal"
+                        style="display: none">
+                    Yes
+                </button>
+
+                <button id="app-alert-box-btn-no"
+                        type="button"
+                        onClick="SetMsgBoxResponse('No')"
+                        class="btn btn-default app-alert-box-btn"
+                        data-dismiss="modal"
+                        style="display: none">
+                    No
+                </button>
+
+                <button id="app-alert-box-btn-ok"
+                        type="button"
+                        onClick="SetMsgBoxResponse('OK')"
+                        class="btn btn-default app-alert-box-btn"
+                        data-dismiss="modal" style="display: none">
+                    OK
+                </button>
+
+                <button id="app-alert-box-btn-retry"
+                        type="button"
+                        onClick="SetMsgBoxResponse('Retry')"
+                        class="btn btn-default app-alert-box-btn"
+                        data-dismiss="modal" style="display: none">
+                    Retry
+                </button>
+
+                <button id="app-alert-box-btn-cancel"
+                        type="button"
+                        onClick="SetMsgBoxResponse('Cancel')"
+                        class="btn btn-default app-alert-box-btn"
+                        data-dismiss="modal" style="display: none">
+                    Cancel
+                </button>
+
+            </div>
+            <div id="app-alert-box-response" style="display: none"></div>
+        </div>
+
+    </div>
+</div>

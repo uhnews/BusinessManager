@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="BasketService.cs" />
     <Compile Include="CustomerService.cs" />
+    <Compile Include="InvoiceService.cs" />
+    <Compile Include="LayawayDataService.cs" />
     <Compile Include="LayawayService.cs" />
     <Compile Include="OrderService.cs" />
     <Compile Include="POSSaleService.cs" />

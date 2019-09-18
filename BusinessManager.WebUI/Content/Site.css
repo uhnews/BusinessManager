@@ -34,10 +34,28 @@ textarea {
         color: #cc9900 !important;
     }
 
-/* custom class to force Bootstrap's Primary text color on an element */
 .text-primary-force {
     color: #428bca !important;
 }
+
+.delete-link-danger {
+    color: #ff6666 !important;
+}
+
+    .delete-link-danger:hover {
+        color: #ff3333 !important;
+    }
+
+.btn-danger-text {
+    color: #ff6666 !important;
+}
+    .btn-danger-text:active {
+        color: #ff3333 !important;
+    }
+    .btn-danger-text:hover {
+        color: #ff3333 !important;
+        font-weight: 500 !important;
+    }
 
 .btn-pill {
     background-color: #428bca;

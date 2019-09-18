@@ -234,6 +234,14 @@
     <Compile Include="Migrations\201909160404234_ChangeFieldNameOnInvoiceModel.Designer.cs">
       <DependentUpon>201909160404234_ChangeFieldNameOnInvoiceModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909160418472_ChangeFieldNamesOnInvoiceModel.cs" />
+    <Compile Include="Migrations\201909160418472_ChangeFieldNamesOnInvoiceModel.Designer.cs">
+      <DependentUpon>201909160418472_ChangeFieldNamesOnInvoiceModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909161016590_SyncMinorChangesRequired.cs" />
+    <Compile Include="Migrations\201909161016590_SyncMinorChangesRequired.Designer.cs">
+      <DependentUpon>201909161016590_SyncMinorChangesRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -341,6 +349,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909160404234_ChangeFieldNameOnInvoiceModel.resx">
       <DependentUpon>201909160404234_ChangeFieldNameOnInvoiceModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909160418472_ChangeFieldNamesOnInvoiceModel.resx">
+      <DependentUpon>201909160418472_ChangeFieldNamesOnInvoiceModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909161016590_SyncMinorChangesRequired.resx">
+      <DependentUpon>201909161016590_SyncMinorChangesRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

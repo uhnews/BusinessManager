@@ -1,5 +1,6 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
+using BusinessManager.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,18 +10,20 @@ namespace BusinessManager.WebUI.Controllers
     [Authorize(Roles = "Admin, POSAttendant")]
     public class CustomerManagerController : Controller
     {
-        IRepository<Customer> context;
+        IRepository<Customer> customerContext;
+        IRepository<LayawayItem> layawayItemContext;
 
         // dependency injection
-        public CustomerManagerController(IRepository<Customer> customerContext)
+        public CustomerManagerController(IRepository<Customer> customerContext, IRepository<LayawayItem> layawayItemContext)
         {
-            context = customerContext;
+            this.customerContext = customerContext;
+            this.layawayItemContext = layawayItemContext;
         }
 
         // GET: Customers
         public ActionResult Index()
         {
-            List<Customer> customers = context.Collection().ToList();
+            List<Customer> customers = customerContext.Collection().ToList();
             return View(customers);
         }
 
@@ -39,15 +42,15 @@ namespace BusinessManager.WebUI.Controllers
             }
             else
             {
-                context.Insert(customer);
-                context.Commit();
+                customerContext.Insert(customer);
+                customerContext.Commit();
                 return RedirectToAction("Index");
             }
         }
 
         public ActionResult Edit(string Id)
         {
-            Customer customer = context.Find(Id);
+            Customer customer = customerContext.Find(Id);
             if (customer == null)
             {
                 return HttpNotFound();
@@ -57,6 +60,9 @@ namespace BusinessManager.WebUI.Controllers
                 // get Invoices
 
                 // get Layaways
+
+                //LayawayDataService layawayService  = new LayawayDataService();
+                //customer.Layaways = layawayService.GetLayaways(Id);
 
                 // get (online) Orders
 
@@ -68,7 +74,7 @@ namespace BusinessManager.WebUI.Controllers
         [HttpPost]
         public ActionResult Edit(Customer customer, string Id)
         {
-            Customer customerToEdit = context.Find(Id);
+            Customer customerToEdit = customerContext.Find(Id);
             if (customerToEdit == null)
             {
                 return HttpNotFound();
@@ -92,14 +98,15 @@ namespace BusinessManager.WebUI.Controllers
                 customerToEdit.Phone2 = customer.Phone2;
                 customerToEdit.Website = customer.Website;
 
-                context.Commit();
+                customerContext.Commit();
                 return RedirectToAction("Index");
             }
         }
 
+        // GET: /CustomerManager/Delete
         public ActionResult Delete(string Id)
         {
-            Customer customerToDelete = context.Find(Id);
+            Customer customerToDelete = customerContext.Find(Id);
             if (customerToDelete == null)
             {
                 return HttpNotFound();
@@ -110,11 +117,12 @@ namespace BusinessManager.WebUI.Controllers
             }
         }
 
+        // POST: /CustomerManager/Delete
         [HttpPost]
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string Id)
         {
-            Customer customerToDelete = context.Find(Id);
+            Customer customerToDelete = customerContext.Find(Id);
 
             if (customerToDelete == null)
             {
@@ -122,10 +130,19 @@ namespace BusinessManager.WebUI.Controllers
             }
             else
             {
-                context.Delete(Id);
-                context.Commit();
+                customerContext.Delete(Id);
+                customerContext.Commit();
                 return RedirectToAction("Index");
             }
+        }
+
+        // GET: /CustomerManager/DeleteLayawayItem
+        public JsonResult DeleteLayawayItem(string Id)
+        {
+            ILayawayDataService dataService = new LayawayDataService();
+            var deleteResult = dataService.RemoveFromLayaway(layawayItemContext, Id);
+
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);
         }
     }
 }

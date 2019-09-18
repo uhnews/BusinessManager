@@ -10,10 +10,6 @@ namespace BusinessManager.Core.Contracts
 
         Customer GetCustomer(string customerId);
 
-        //List<Invoice> GetInvoices(string customerId);
-
-        //List<Layaway> GetLayaways(string customerId);
-
-        //List<Order> GetOrders(string customerId);
+        List<Order> GetOrders(string customerId);
     }
 }

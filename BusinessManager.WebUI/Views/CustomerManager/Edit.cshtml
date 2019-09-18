@@ -15,7 +15,7 @@
         @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model => model.UserId)
 
-        @{ 
+        @{
             var labelStyle = "width: 35%; padding-right: 0";
             var inputBoxStyle = "width: 100%; margin-left: 15px; margin-right: 0";
         }
@@ -35,7 +35,7 @@
                 @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
             </div>
         </div>
-        
+
         <div class="form-group">
             @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-3", @style = @labelStyle })
             <div class="col-md-7" style="padding: 0">
@@ -122,12 +122,60 @@
             </div>
         </div>
     </div>
-    <div class="col-md-8 bg-success" style="height: 300px">
+    <div class="col-md-8 bg-success" style="padding: 0; margin: 0">
+        @{
+            var itemCount = 0;
+            var layawayCount = Model.Layaways.Count;
+            foreach (var layaway in Model.Layaways)
+            {
+                itemCount += layaway.LayawayItems.Count;
+            }
+        }
+        <div style="margin: 0px 0px 5px 25px">
+            <h4>Customer Layaways</h4>
+            <span style="margin:3px">Layaways: @Model.Layaways.Count</span>
+            <span style="margin:3px">Total Items: @itemCount</span>
+        </div>
         @Html.Partial("Layaways", Model.Layaways)
-        <p>@Model.Layaways.Count</p>
     </div>
 }
 
 <div class="col-md-10">
     @Html.ActionLink("Back to List", "Index")
 </div>
+@Html.Partial("AlertBox")
+
+@section Scripts {
+    <script type="text/javascript">       
+        function deleteLayawayItem(event, itemId, rowIndex) {
+            ShowMessage("Click OK to delete item.", "<span class='text-danger'>Warning!<span>", "OkCancel").then(
+                function (response) {
+                    if (response === "OK") {
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState === 4 && this.status === 200) {                        
+                                var responseText = this.responseText;
+                                var responseObject = JSON.parse(responseText);
+                                if (responseObject.Successful === true) {
+                                    var parentRow = document.getElementById(rowIndex);
+                                    parentRow.parentNode.removeChild(parentRow);
+                                    ShowMessage("Item deleted.")
+                                }
+                                else if (responseObject.error) {
+                                    message = responseObject.error;
+                                    ShowMessage(message);
+                                }
+                            }
+                        };
+                        xhttp.open("GET", "/CustomerManager/DeleteLayawayItem/?id=" + itemId, true);
+                        xhttp.send();
+
+                    }
+                },
+                function (error) {
+                    alert("Something went wrong!");
+                }
+            );
+        }
+    </script>
+}
