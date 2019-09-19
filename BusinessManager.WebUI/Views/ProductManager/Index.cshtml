@@ -1,5 +1,183 @@
 ﻿@model IEnumerable<BusinessManager.Core.Models.Product>
 
+@{
+    ViewBag.Title = "Products";
+}
+
+<style>
+    .fixed-header tbody {
+        display: block;
+        overflow: auto;
+        height: 600px;
+        width: 100%;
+    }
+
+    .fixed_header thead tr {
+        display: block;
+    }
+    .search-box-menu {
+        width: 75%; 
+        padding: 0px 20px 10px 20px; 
+        margin: 1px 0px 0px 25%; 
+        border: solid 1px #c3d9ef; 
+        border-radius: 5px;
+        z-index: 5;
+        display: none;
+    }
+
+</style>
+
+<script type="text/javascript">
+    function filterItems() {
+        var searchText = document.getElementById("product-lookup-search-string").value;
+        var table = document.getElementById("product-lookup-table");
+
+    }
+
+    function toggleColSeltMenu(event) {
+        var iconOpen = document.getElementById("search-box-menu-open");
+        var iconClose = document.getElementById("search-box-menu-close");
+        var menu = document.getElementById("search-box-menu");
+
+        if (iconClose.style.display === "none") {
+            iconOpen.style.display = "none";
+            iconClose.style.display = "inline";
+            menu.style.display = "block";
+        }
+        else if (iconOpen.style.display === "none") {
+            iconClose.style.display = "none";
+            iconOpen.style.display = "inline";
+            menu.style.display = "none";
+        }
+        else {
+            // ignore
+        }
+
+
+        if (menu.style.display.indexOf("none") > -1) {
+        }
+    }
+</script>
+
+<div class="col-md-4" style="margin: 0; padding: 0">
+    <div style="padding-bottom: 0; margin-bottom: 0">
+        <h3 style="display: inline-block">Product Search</h3>
+        <div class="form-group" style="width: 100%; margin-bottom: 0">
+            <input id="product-lookup-search-string" type="text" class="form-control" style="display: inline-block; margin: 0; max-width: 75%" />
+            <button class="btn btn-default btn-primary-text"
+                    style="display: inline-block; margin-top:-4px;">
+                <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+            </button>
+            <button class="btn btn-default btn-primary-text"
+                    onclick="toggleColSeltMenu(event)"
+                    style="display: inline-block; margin-top:-4px; padding">
+                <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
+                <span id="search-box-menu-close" class="glyphicon glyphicon-remove" style="margin: 0; display: none"></span>
+            </button>
+        </div>
+    </div>
+    <div id="search-box-menu" class="search-box-menu">
+        <div>
+            <h4 style="margin-top:5px; margin-bottom: 5px">Search In:</h4>
+            <hr style="margin:0 0 5px 0; padding: 0" />
+            <div>
+                <label class="checkbox-container">
+                    Name
+                    <input type="checkbox" checked="checked">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Description
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Category
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    UPC
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    ProductCode
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: flex; margin-top: 3px">
+        <div class="col-md-4 fixed-header" style="flex: 1; padding: 0">
+            <table id="product-lookup-table" class="table table-condensed">
+
+                @foreach (var item in Model)
+                {
+
+                    int halfOfMin = item.QuantityMin / 2;
+                    var cssClass = "";
+                    if (item.Quantity <= item.QuantityMin)
+                    {
+                        cssClass = "bg-danger";
+                    }
+                    else if (item.Quantity <= item.QuantityMin + halfOfMin)
+                    {
+                        cssClass = "bg-warning";
+                    }
+
+                    <tr class="@cssClass">
+                        <td>
+                            <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })">
+                                <img class="img-thumbnail" style="width:400px" src="~/Content/ProductImages/@item.Image" alt="Image" />
+                            </a>
+                        </td>
+                        <td>
+                            <p class="text-primary"><em>@Html.DisplayFor(modelItem => item.Name)</em></p>
+                            <p>@Html.DisplayFor(modelItem => item.Description)</p>
+                            <p>Category: <span class="text-primary">@Html.DisplayFor(modelItem => item.Category)</span></p>
+                            <p>Product Code: <span class="text-primary">@Html.DisplayFor(modelItem => item.ProductCode)</span></p>
+                            <p>UPC : <span class="text-primary">@Html.DisplayFor(modelItem => item.UPC)</span></p>
+                            <p>Is Service: @Html.DisplayFor(modelItem => item.IsService)</p>
+                            <p>Quantity: <strong>@Html.DisplayFor(modelItem => item.Quantity)</strong></p>
+                        </td>
+                        <td>
+                            <strong>@Html.DisplayFor(modelItem => item.Price)</strong>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@model IEnumerable<BusinessManager.Core.Models.Product>
+
     @{
         ViewBag.Title = "Products";
     }
@@ -105,4 +283,4 @@
             </tr>
         }
 
-    </table>
+    </table>*@

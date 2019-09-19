@@ -19,15 +19,17 @@
 <div class="col-md-10">
     <div class="container-fluid ">
         @{ 
-            string imageWidth = "col-md-5 bg-warning";
             string rowWidth = "col-md-5";
         }
         @foreach (var item in Model.Products)
         {
             <div class=@rowWidth style="height: 240px; padding: 10px; margin: 10px; border: solid thin #e6e6e6">
-
-                <div class=@imageWidth style="height: 100%">
-                    <a href="@Url.Action("Details", "Home", new { id = item.Id })"><img class="img" style="height: 200px; max-width: 110%" src="~/Content/ProductImages/@item.Image" alt="Image" /></a>
+                <div class="col-md-5" style="height: 100%">
+                    <div class="container-center-vertical" style="height:90%">
+                        <a href="@Url.Action("Details", "Home", new { id = item.Id })">
+                            <img class="img" style="max-height: 200px; max-width: 105%" src="~/Content/ProductImages/@item.Image" alt="Image" />
+                        </a>
+                    </div>
                 </div>
                 <div>
                     <div>

@@ -23,10 +23,11 @@ textarea {
     max-width: 280px;
 }
 
+/* ************************************************************************************************************ */
+/*                                             CUSTON CSS CLASSES                                               */
+/* ************************************************************************************************************ */
 
-/* ******************************************** Custon CSS Classes ******************************************** */
-
-/* custom warning text color class for <a> tags */
+/* CUSTOM WARNING TEXT COLOR CLASS FOR <a> TAGS *************************************************************** */
 .link-text-warning {
     color: #806000 !important;
 }
@@ -90,3 +91,89 @@ textarea {
     .btn-pill:active {
         background-color: #428bca; /* Green */
     }
+
+
+/* USE THIS TO CENTER AN <a> OR <img> TAG INSIDE A <div> WITH A CLASS 'CONTAINER-CENTER-VERTICAL' *************************************************************** */
+.container-center-vertical {
+    position: relative;
+}
+    .container-center-vertical img, href {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+
+/* USE THIS TO STYLE A CHECKBOX INPUT  *************************************************************** */
+/* The container */
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    /* Hide the browser's default checkbox */
+    .checkbox-container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+/* Create a custom checkbox (out of a span element) */
+.checkmark {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    height: 16px;
+    width: 16px;
+    background-color: #d6e4f5;
+    border-radius: 3px;
+}
+
+/* On mouse-over, add a grey background color */
+.checkbox-container:hover input ~ .checkmark {
+    background-color: #adc9eb;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkbox-container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark (a tiny pseudo element :after rotated) */
+.checkbox-container .checkmark:after {
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
