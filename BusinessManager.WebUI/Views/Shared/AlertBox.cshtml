@@ -10,7 +10,7 @@
         return document.getElementById("app-alert-box-response").innerText;
     }
     
-    async function ShowMessage(message, title = "", buttons = "") {
+    async function ShowMessage(message, title = "Message", buttons = "") {
         var promise = new Promise(function (resolve, reject) {
             try {
                 var messageClosed = false;

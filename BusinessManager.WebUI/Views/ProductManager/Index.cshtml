@@ -15,25 +15,20 @@
     .fixed_header thead tr {
         display: block;
     }
+
     .search-box-menu {
-        width: 75%; 
-        padding: 0px 20px 10px 20px; 
-        margin: 1px 0px 0px 25%; 
-        border: solid 1px #c3d9ef; 
+        width: 75%;
+        padding: 0px 20px 10px 20px;
+        margin: 1px 0px 0px 25%;
+        border: solid 1px #c3d9ef;
         border-radius: 5px;
         z-index: 5;
         display: none;
     }
-
 </style>
 
 <script type="text/javascript">
-    function filterItems() {
-        var searchText = document.getElementById("product-lookup-search-string").value;
-        var table = document.getElementById("product-lookup-table");
-
-    }
-
+    const SHOW_ALL = true;
     function toggleColSeltMenu(event) {
         var iconOpen = document.getElementById("search-box-menu-open");
         var iconClose = document.getElementById("search-box-menu-close");
@@ -50,21 +45,109 @@
             menu.style.display = "none";
         }
         else {
-            // ignore
-        }
-
-
-        if (menu.style.display.indexOf("none") > -1) {
+            // ignore if no match
         }
     }
+
+    function filterItems(showAll = false) {
+        var iconOpen = document.getElementById("search-box-menu-open");
+        var iconClose = document.getElementById("search-box-menu-close");
+        var menu = document.getElementById("search-box-menu");
+        iconClose.style.display = "none";
+        iconOpen.style.display = "inline";
+        menu.style.display = "none";
+
+        var searchText = document.getElementById("product-lookup-search-string").value.toLowerCase();
+        if (searchText === "" && !showAll) {
+            var message = "<span class='text-warning'>Search text missing!</span>"
+            ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", message);
+            return;
+        }
+
+        var table = document.getElementById("product-lookup-table");
+        var searchInName = document.getElementById("search-box-menu").querySelector("input[name='NameCheck']").checked;
+        var searchInDescription = document.getElementById("search-box-menu").querySelector("input[name='DescriptionCheck']").checked;
+        var searchInCategory = document.getElementById("search-box-menu").querySelector("input[name='CategoryCheck']").checked;
+        var searchInProductCode = document.getElementById("search-box-menu").querySelector("input[name='ProductCodeCheck']").checked;
+        var searchInUPC = document.getElementById("search-box-menu").querySelector("input[name='UPCCheck']").checked;
+        var searchInQuantity = document.getElementById("search-box-menu").querySelector("input[name='QuantityCheck']").checked;
+        var searchInPrice = document.getElementById("search-box-menu").querySelector("input[name='PriceCheck']").checked;
+
+        var rows = table.getElementsByTagName("tr");
+        for (i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var nameData = row.querySelector("tr span[name='Name']").innerHTML.toLowerCase();
+            var descriptionData = row.querySelector("tr span[name='Description']").innerHTML.toLowerCase();
+            var categoryData = row.querySelector("tr span[name='Category']").innerHTML.toLowerCase();
+            var productCodeData = row.querySelector("tr span[name='ProductCode']").innerHTML.toLowerCase();
+            var upcData = row.querySelector("tr span[name='UPC']").innerHTML.toLowerCase();
+            var quantityData = row.querySelector("tr span[name='Quantity']").innerHTML.toLowerCase();
+            var pricecData = row.querySelector("tr span[name='Price']").innerHTML.toLowerCase();
+
+            if ((nameData.indexOf(searchText) > -1 && searchInName) || showAll) {
+                row.style.display = "table-row";
+            }
+            else if (descriptionData.indexOf(searchText) > -1 && searchInDescription) {
+                row.style.display = "table-row";
+            }
+            else if (categoryData.indexOf(searchText) > -1 && searchInCategory) {
+                row.style.display = "table-row";
+            }
+            else if (productCodeData.indexOf(searchText) > -1 && searchInProductCode) {
+                row.style.display = "table-row";
+            }
+            else if (upcData.indexOf(searchText) > -1 && searchInUPC) {
+                row.style.display = "table-row";
+            }
+            else if (quantityData.indexOf(searchText) > -1 && searchInQuantity) {
+                row.style.display = "table-row";
+            }
+            else if (pricecData.indexOf(searchText) > -1 && searchInPrice) {
+                row.style.display = "table-row";
+            }
+            else {
+                row.style.display = "none";
+            }
+        }
+    }
+
+    function selectColGroup() {
+        var colNames = ["Name", "Description", "Category", "ProductCode", "UPC", "Quantity", "Price"];
+        var allAreChecked = true;
+
+        colNames.forEach(function (name) {
+            allAreChecked = allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked;
+        });
+
+        if (allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked) {
+            return;
+        }
+
+        colNames.forEach(function (name) {
+            var menu = document.getElementById("search-box-menu");
+            document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked = !allAreChecked;
+        });
+        document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
+    }
+
+    function setAllCheck(event) {
+        if (!event.target.checked) {
+            document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
+        }
+    }
+
 </script>
 
 <div class="col-md-4" style="margin: 0; padding: 0">
     <div style="padding-bottom: 0; margin-bottom: 0">
         <h3 style="display: inline-block">Product Search</h3>
         <div class="form-group" style="width: 100%; margin-bottom: 0">
-            <input id="product-lookup-search-string" type="text" class="form-control" style="display: inline-block; margin: 0; max-width: 75%" />
-            <button class="btn btn-default btn-primary-text"
+            <input id="product-lookup-search-string" 
+                   placeholder="Enter text to find ..." 
+                   type="text" class="form-control" 
+                   style="display: inline-block; margin: 0; max-width: 75%" />
+            <button id="search-box-btn-find" class="btn btn-default btn-primary-text"
+                    onclick="filterItems()"
                     style="display: inline-block; margin-top:-4px;">
                 <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
             </button>
@@ -78,35 +161,57 @@
     </div>
     <div id="search-box-menu" class="search-box-menu">
         <div>
-            <h4 style="margin-top:5px; margin-bottom: 5px">Search In:</h4>
-            <hr style="margin:0 0 5px 0; padding: 0" />
+            <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
+                <span>Search In:</span>
+                <input name="AllCheck" 
+                       type="checkbox"
+                       onchange="selectColGroup()">
+                <span class="checkmark"></span>
+            </label>
+            <hr style="margin: 0 0 5px 0; padding: 0" />
             <div>
                 <label class="checkbox-container">
                     Name
-                    <input type="checkbox" checked="checked">
+                    <input name="NameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
                     <span class="checkmark"></span>
                 </label>
                 <label class="checkbox-container">
                     Description
-                    <input type="checkbox">
+                    <input name="DescriptionCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
                     <span class="checkmark"></span>
                 </label>
                 <label class="checkbox-container">
                     Category
-                    <input type="checkbox">
+                    <input name="CategoryCheck" t type="checkbox" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Product Code
+                    <input name="ProductCodeCheck" type="checkbox" onclick="setAllCheck(event)">
                     <span class="checkmark"></span>
                 </label>
                 <label class="checkbox-container">
                     UPC
-                    <input type="checkbox">
+                    <input name="UPCCheck" type="checkbox" onclick="setAllCheck(event)">
                     <span class="checkmark"></span>
                 </label>
                 <label class="checkbox-container">
-                    ProductCode
-                    <input type="checkbox">
+                    Quantity
+                    <input name="QuantityCheck" type="checkbox" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Price
+                    <input name="PriceCheck" type="checkbox" onclick="setAllCheck(event)">
                     <span class="checkmark"></span>
                 </label>
             </div>
+            <hr style="margin: 10px 0 10px 0; padding: 0" />
+            <button class="btn btn-primary"
+                    onclick="filterItems(SHOW_ALL)"
+                    style="width: 100%">
+                Load All Products
+            </button>
         </div>
     </div>
 
@@ -135,16 +240,16 @@
                             </a>
                         </td>
                         <td>
-                            <p class="text-primary"><em>@Html.DisplayFor(modelItem => item.Name)</em></p>
-                            <p>@Html.DisplayFor(modelItem => item.Description)</p>
-                            <p>Category: <span class="text-primary">@Html.DisplayFor(modelItem => item.Category)</span></p>
-                            <p>Product Code: <span class="text-primary">@Html.DisplayFor(modelItem => item.ProductCode)</span></p>
-                            <p>UPC : <span class="text-primary">@Html.DisplayFor(modelItem => item.UPC)</span></p>
-                            <p>Is Service: @Html.DisplayFor(modelItem => item.IsService)</p>
-                            <p>Quantity: <strong>@Html.DisplayFor(modelItem => item.Quantity)</strong></p>
+                            <p class="text-primary"><em><span name="Name">@Html.DisplayFor(modelItem => item.Name)</span></em></p>
+                            <p><span name="Description">@Html.DisplayFor(modelItem => item.Description)</span></p>
+                            <p>Category: <span name="Category" class="text-primary">@Html.DisplayFor(modelItem => item.Category)</span></p>
+                            <p>Product Code: <span name="ProductCode" class="text-primary">@Html.DisplayFor(modelItem => item.ProductCode)</span></p>
+                            <p>UPC : <span name="UPC" class="text-primary">@Html.DisplayFor(modelItem => item.UPC)</span></p>
+                            <p>Is Service: <span name="UPC">@Html.DisplayFor(modelItem => item.IsService)</span></p>
+                            <p>Quantity: <strong><span name="Quantity">@Html.DisplayFor(modelItem => item.Quantity)</span></strong></p>
                         </td>
                         <td>
-                            <strong>@Html.DisplayFor(modelItem => item.Price)</strong>
+                            <strong><span name="Price">@Html.DisplayFor(modelItem => item.Price)</span></strong>
                         </td>
                     </tr>
                 }
@@ -152,7 +257,7 @@
         </div>
     </div>
 </div>
-
+@Html.Partial("AlertBox")
 
 
 
