@@ -8,7 +8,7 @@
         .fixed-header tbody {
             display: block;
             overflow: auto;
-            height: 600px;
+            height: auto;
             width: 100%;
         }
 
@@ -19,17 +19,22 @@
         .search-box-menu {
             width: 75%;
             padding: 0px 20px 10px 20px;
-            margin: 1px 0px 0px 25%;
+            margin: 1px 0px 0px 15%;
             border: solid 1px #c3d9ef;
             border-radius: 5px;
-            z-index: 5;
             display: none;
+        }
+
+        .product-lookup-item {
+            margin-top: 3px;
+            margin-bottom: 0;
         }
     </style>
 
     <script type="text/javascript">
         const SHOW_ALL = true;
         function toggleColSeltMenu(event) {
+            event.preventDefault(event);
             var iconOpen = document.getElementById("search-box-menu-open");
             var iconClose = document.getElementById("search-box-menu-close");
             var menu = document.getElementById("search-box-menu");
@@ -49,7 +54,8 @@
             }
         }
 
-        function filterItems(showAll = false) {
+        function filterItems(event, showAll = false) {
+            event.preventDefault(event);
             var iconOpen = document.getElementById("search-box-menu-open");
             var iconClose = document.getElementById("search-box-menu-close");
             var menu = document.getElementById("search-box-menu");
@@ -122,7 +128,8 @@
             }
         }
 
-        function selectColGroup() {
+        function selectColGroup(event) {
+            //event.preventDefault();
             var colNames = ["Name", "Description", "Category", "ProductCode", "UPC", "Quantity", "Price"];
             var allAreChecked = true;
 
@@ -142,6 +149,7 @@
         }
 
         function setAllCheck(event) {
+            //event.preventDefault();
             if (!event.target.checked) {
                 document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
             }
@@ -149,34 +157,41 @@
 
     </script>
 
-    <div class="col-md-4" style="margin: 0; padding: 0">
-        <div style="padding-bottom: 0; margin-bottom: 0">
-            <h3 style="display: inline-block">Product Search</h3>
-            <div class="form-group" style="width: 100%; margin-bottom: 0">
+    <div class="col-md-12" style="margin: 0; padding: 0">
+        <div class="bg-warning" style="padding-bottom: 0; padding-top: 0; margin-bottom: 0">
+            <h4 style="display: inline-block; margin: 5px 5px 5px 10px">Product Search</h4>
+            <div class="form-group" style="width: 100%; margin: 0; padding: 3px 0px 3px 3px ">
+
                 <input id="product-lookup-search-string"
                        placeholder="Enter text to find ..."
-                       type="text" class="form-control"
-                       style="display: inline-block; margin: 0; max-width: 75%" />
-                <button id="search-box-btn-find" class="btn btn-default btn-primary-text"
-                        onclick="filterItems()"
-                        style="display: inline-block; margin-top:-4px;">
-                    <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
-                </button>
-                <button class="btn btn-default btn-primary-text"
-                        onclick="toggleColSeltMenu(event)"
-                        style="display: inline-block; margin-top:-4px; padding">
-                    <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
-                    <span id="search-box-menu-close" class="glyphicon glyphicon-remove" style="margin: 0; display: none"></span>
-                </button>
+                       type="text"
+                       class="form-control"
+                       style="display: inline; margin: 0" />
+
+                <div style="display: inline-block">
+                    <button id="search-box-btn-find" class="btn btn-default btn-primary-text"
+                            onclick="filterItems(event)"
+                            style="display: inline-block; margin-top:-4px; margin-right: 0">
+                        <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+                    </button>
+                    <button class="btn btn-default btn-primary-text"
+                            onclick="toggleColSeltMenu(event)"
+                            style="display: inline-block; margin-top:-4px; margin-left: -2px">
+                        <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
+                        <span id="search-box-menu-close" class="glyphicon glyphicon-remove" style="margin: 0; display: none"></span>
+                    </button>
+                </div>
+                <hr style="margin: 3px 3px 3px 3px"/>
+
             </div>
         </div>
-        <div id="search-box-menu" class="search-box-menu">
+        <div id="search-box-menu" class="search-box-menu" style="margin-top: -8px">
             <div>
                 <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
                     <span>Search In:</span>
                     <input name="AllCheck"
                            type="checkbox"
-                           onchange="selectColGroup()">
+                           onchange="selectColGroup(event)">
                     <span class="checkmark"></span>
                 </label>
                 <hr style="margin: 0 0 5px 0; padding: 0" />
@@ -219,16 +234,16 @@
                 </div>
                 <hr style="margin: 10px 0 10px 0; padding: 0" />
                 <button class="btn btn-primary"
-                        onclick="filterItems(SHOW_ALL)"
+                        onclick="filterItems(event, SHOW_ALL)"
                         style="width: 100%">
                     Load All Products
                 </button>
             </div>
         </div>
 
-        <div style="display: flex; margin-top: 3px">
+        <div style="display: flex; margin-top: 0px">
             <div class="col-md-4 fixed-header" style="flex: 1; padding: 0">
-                <table id="product-lookup-table" class="table table-condensed">
+                <table id="product-lookup-table" class="table table-condensed" style="margin: 0">
 
                     @foreach (var item in Model)
                     {
@@ -247,17 +262,18 @@
                         <tr class="@cssClass">
                             <td>
                                 <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })">
-                                    <img class="img-thumbnail" style="width:400px" src="~/Content/ProductImages/@item.Image" alt="Image" />
+                                    <img class="img-thumbnail" style="width:250px" src="~/Content/ProductImages/@item.Image" alt="Image" />
                                 </a>
                             </td>
                             <td>
-                                <p class="text-primary"><em><span name="Name">@Html.DisplayFor(modelItem => item.Name)</span></em></p>
-                                <p><span name="Description">@Html.DisplayFor(modelItem => item.Description)</span></p>
-                                <p>Category: <span name="Category" class="text-primary">@Html.DisplayFor(modelItem => item.Category)</span></p>
-                                <p>Product Code: <span name="ProductCode" class="text-primary">@Html.DisplayFor(modelItem => item.ProductCode)</span></p>
-                                <p>UPC : <span name="UPC" class="text-primary">@Html.DisplayFor(modelItem => item.UPC)</span></p>
-                                <p>Is Service: <span name="UPC">@Html.DisplayFor(modelItem => item.IsService)</span></p>
-                                <p>Quantity: <strong><span name="Quantity">@Html.DisplayFor(modelItem => item.Quantity)</span></strong></p>
+                                <p class="text-primary product-lookup-item"><em><span name="Name">@Html.DisplayFor(modelItem => item.Name)</span></em></p>
+                                <p class="product-lookup-item"><span name="Description">@Html.DisplayFor(modelItem => item.Description)</span></p>
+                                <p class="product-lookup-item">Category: <span name="Category" class="text-primary">@Html.DisplayFor(modelItem => item.Category)</span></p>
+                                <p class="product-lookup-item">Product Code: <span name="ProductCode" class="text-primary">@Html.DisplayFor(modelItem => item.ProductCode)</span></p>
+                                <p class="product-lookup-item">UPC: <span name="UPC" class="text-primary">@Html.DisplayFor(modelItem => item.UPC)</span></p>
+                                <p class="product-lookup-item">Is Service: <span name="UPC">@Html.DisplayFor(modelItem => item.IsService)</span></p>
+                                <p class="product-lookup-item">Quantity: <strong><span name="Quantity">@Html.DisplayFor(modelItem => item.Quantity)</span></strong></p>
+                                <button type="button" class="btn-pill product-lookup-item" style="">To Layaway</button>
                             </td>
                             <td>
                                 <strong><span name="Price">@Html.DisplayFor(modelItem => item.Price)</span></strong>

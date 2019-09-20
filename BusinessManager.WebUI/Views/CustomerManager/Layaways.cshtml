@@ -27,7 +27,7 @@
                         .fixed-header tbody {
                             display: block;
                             overflow: auto;
-                            height: 400px;
+                            height: 550px;
                             width: 100%;
                         }
 
@@ -68,7 +68,7 @@
                             <div style="@inputGroupStyle">
                                 <input type="button" value="Save" class="btn btn-sm btn-default" />
                                 <input type="button" value="Scan Barcode" class="btn btn-sm btn-default" />
-                                <input type="button" value="Add Item" class="btn btn-sm btn-default" onclick="openProductLookup()" />
+                                <input type="button" value="Add Items" class="btn btn-sm btn-default" onclick="openProductLookup(event)" />
                                 <input type="button" value="Delete" class="btn btn-sm btn-default btn-danger-text" />
                             </div>
                         </form>
@@ -102,7 +102,7 @@
                                         <input id="layaway-item-delete"
                                                type="button"
                                                value="Delete"
-                                               style="margin: 0px 5px 5px 5px; position: absolute; bottom: 5px"
+                                               style="margin: -5px 5px 5px 265%; position: absolute; bottom: 5px"
                                                class="btn btn-sm btn-default btn-danger-text"
                                                onclick="deleteLayawayItem(event, @item.Id, '@rowElementId')" />
                                     </td>

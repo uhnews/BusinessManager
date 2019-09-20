@@ -4,15 +4,18 @@
     ViewBag.Title = "Edit Customer";
 }
 
-@using (Html.BeginForm())
+@*//   <form name="myForm" onsubmit="return validateMyForm();">   //
+//   Html.BeginForm( "Login", "Home", FormMethod.Post, new { id=”formname” })   //*@
+
+@using (Html.BeginForm("Edit", "CustomerManager", FormMethod.Post, new { onsubmit = "return false;" }))
 {
     @Html.AntiForgeryToken()
 
     <h2>Edit Customer</h2>
-    <hr />
+    <hr style="margin-top: 0; margin-bottom: 0" />
     <style>
         .product-lookup-popup {
-            z-index: 3;
+            /*z-index: 3;*/
             position: absolute;
             left: 0;
             top: 0;
@@ -129,14 +132,14 @@
                 </div>
             </div>
         </div>
-        <div id="product-lookup" class="product-lookup-popup" style="display: block">
 
-            @*@Html.Partial("ProductLookup")*@
-
-            <button onclick="saveNewLayawayItem()" class="btn btn-default">
-                Add Item to Layawy
+        <div id="product-lookup" class="product-lookup-popup" style="display: none">
+            @Html.Partial("ProductLookup", Model.ProductList)
+            <button onclick="closeProductLookup(event)" class="btn btn-default" style="margin-top: 4px; margin-left: 5px">
+                Close List
             </button>
         </div>
+
     </div>
     <div class="col-md-8 bg-success" style="padding: 0; margin: 0">
         @{
@@ -190,7 +193,6 @@
                         };
                         xhttp.open("GET", "/CustomerManager/DeleteLayawayItem/?id=" + itemId, true);
                         xhttp.send();
-
                     }
                 },
                 function (error) {
@@ -214,19 +216,15 @@
             ShowMessage(html);
         }
 
-        function openProductLookup() {
-            event.preventDefault();
+        function openProductLookup(event, layawayId) {
+            alert(layawayId);
+            //event.preventDefault();
             document.getElementById("customer-info").style.display = "none";
             document.getElementById("product-lookup").style.display = "block";
         }
 
-        function saveNewLayawayItem() {
-            event.preventDefault();
-            closeProductLookup();
-        }
-
-        function closeProductLookup() {
-            event.preventDefault();
+        function closeProductLookup(event) {
+            //event.preventDefault();
             document.getElementById("customer-info").style.display = "block";
             document.getElementById("product-lookup").style.display = "none";
         }

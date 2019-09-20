@@ -17,12 +17,23 @@ namespace BusinessManager.Services
             DataContext dataContext = new DataContext();
             DbSet<Product> dbSet = dataContext.Set<Product>();
 
-            var query = from p in dbSet
-                        select p;
-            var products = query.ToList().Select(c => new Product
+            var query = from m in dbSet
+                        select m;
+            var products = query.ToList().Select(p => new Product
             {
-                Id = c.Id,
-                Name = c.Name
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                SupplierPrice = p.SupplierPrice,
+                Price = p.Price,
+                WholesalePrice = p.WholesalePrice,
+                Category = p.Category,
+                Image = p.Image,
+                Quantity = p.Quantity,
+                QuantityMin = p.QuantityMin,
+                IsService = p.IsService,
+                UPC = p.UPC,
+                ProductCode = p.ProductCode
             }).ToList();
 
             dataContext.Dispose();

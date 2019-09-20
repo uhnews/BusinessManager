@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessManager.Core.Models
 {
@@ -56,6 +57,7 @@ namespace BusinessManager.Core.Models
 
         public virtual ICollection<Order> OnlineOrders { get; set; }
 
+        [NotMapped]
         public virtual ICollection<Product> ProductList { get; set; }
 
         public Customer()

@@ -242,6 +242,18 @@
     <Compile Include="Migrations\201909161016590_SyncMinorChangesRequired.Designer.cs">
       <DependentUpon>201909161016590_SyncMinorChangesRequired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909200310566_AddProductListToCustomer.cs" />
+    <Compile Include="Migrations\201909200310566_AddProductListToCustomer.Designer.cs">
+      <DependentUpon>201909200310566_AddProductListToCustomer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909200316027_RemoveProductListFromCustomer.cs" />
+    <Compile Include="Migrations\201909200316027_RemoveProductListFromCustomer.Designer.cs">
+      <DependentUpon>201909200316027_RemoveProductListFromCustomer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909200320386_AddProductListToCustomer1.cs" />
+    <Compile Include="Migrations\201909200320386_AddProductListToCustomer1.Designer.cs">
+      <DependentUpon>201909200320386_AddProductListToCustomer1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -355,6 +367,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909161016590_SyncMinorChangesRequired.resx">
       <DependentUpon>201909161016590_SyncMinorChangesRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909200310566_AddProductListToCustomer.resx">
+      <DependentUpon>201909200310566_AddProductListToCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909200316027_RemoveProductListFromCustomer.resx">
+      <DependentUpon>201909200316027_RemoveProductListFromCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909200320386_AddProductListToCustomer1.resx">
+      <DependentUpon>201909200320386_AddProductListToCustomer1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

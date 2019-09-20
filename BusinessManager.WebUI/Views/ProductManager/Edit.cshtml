@@ -127,7 +127,18 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @{
+        string prevURL = Request.UrlReferrer == null ? "" : Request.UrlReferrer.ToString();
+        if (prevURL.IndexOf("/CustomerManager/Edit/") > -1)
+        {
+            <a href="javascript: history.go(-1)">Back to Customer Edit</a>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", "Home")">Product List</a>
+            @Html.ActionLink("Back to List", "Index")
+        }
+    }
 </div>
 
 @section Scripts {

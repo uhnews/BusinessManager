@@ -21,7 +21,7 @@
         margin: 1px 0px 0px 4%;
         border: solid 1px #c3d9ef;
         border-radius: 5px;
-        z-index: 5;
+        /*z-index: 5;*/
         display: none;
     }
 </style>
@@ -29,6 +29,7 @@
 <script type="text/javascript">
     const SHOW_ALL = true;
     function toggleColSeltMenu(event) {
+        //event.preventDefault();
         var iconOpen = document.getElementById("search-box-menu-open");
         var iconClose = document.getElementById("search-box-menu-close");
         var menu = document.getElementById("search-box-menu");
@@ -48,7 +49,8 @@
         }
     }
 
-    function filterItems(showAll = false) {
+    function filterItems(event, showAll = false) {
+        //event.preventDefault();
         var iconOpen = document.getElementById("search-box-menu-open");
         var iconClose = document.getElementById("search-box-menu-close");
         var menu = document.getElementById("search-box-menu");
@@ -123,7 +125,8 @@
         }
     }
 
-    function selectColGroup() {
+    function selectColGroup(event) {
+        //event.preventDefault();
         var colNames = ["Name", "Description", "Category", "ProductCode", "UPC", "Quantity", "Price"];
         var allAreChecked = true;
 
@@ -143,6 +146,7 @@
     }
 
     function setAllCheck(event) {
+        //event.preventDefault(event);
         if (!event.target.checked) {
             document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
         }
@@ -162,7 +166,7 @@
                type="text" class="form-control"
                style="display: inline-block; margin: 0; max-width: 25%" />
         <button id="search-box-btn-find" class="btn btn-default btn-primary-text"
-                onclick="filterItems()"
+                onclick="filterItems(event)"
                 style="display: inline-block; margin-top:-4px;">
             <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
         </button>
@@ -180,7 +184,7 @@
             <span>Search In:</span>
             <input name="AllCheck"
                    type="checkbox"
-                   onchange="selectColGroup()">
+                   onchange="selectColGroup(event)">
             <span class="checkmark"></span>
         </label>
         <hr style="margin: 0 0 5px 0; padding: 0" />

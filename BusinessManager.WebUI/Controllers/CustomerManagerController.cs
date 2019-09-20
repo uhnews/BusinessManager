@@ -58,8 +58,14 @@ namespace BusinessManager.WebUI.Controllers
             else
             {
                 // get Invoices
+                // related Invoice records added by EF
 
                 // get Layaways
+                // related Layaway and LayawayItem records added by EF
+
+                // get ProductList
+                IProductRetrieveService productService = new ProductRetrieveService();
+                customer.ProductList = productService.GetProducts();
 
                 //LayawayDataService layawayService  = new LayawayDataService();
                 //customer.Layaways = layawayService.GetLayaways(Id);
