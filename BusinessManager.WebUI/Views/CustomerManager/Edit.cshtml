@@ -19,7 +19,7 @@
         }
     </style>
     <div class="form-horizontal col-md-4">
-        <div>
+        <div id="customer-info">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.Id)
             @Html.HiddenFor(model => model.UserId)
@@ -129,17 +129,13 @@
                 </div>
             </div>
         </div>
-        <div class="product-lookup-popup">
-            <h2>Add my own shit here!!</h2>
-            <h2>Add my own shit here!!</h2>
-            <h2>Add my own shit here!!</h2>
-            <h2>Add my own shit here!!</h2>
-            <h2>Add my own shit here!!</h2>
-            <h2>Add my own shit here!!</h2>
-            <h2>Add my own shit here!!</h2>
-            <h2>Add my own shit here!!</h2>
-            <h2>Add my own shit here!!</h2>
-            <h2>Add my own shit here!!</h2>
+        <div id="product-lookup" class="product-lookup-popup" style="display: block">
+
+            @*@Html.Partial("ProductLookup")*@
+
+            <button onclick="saveNewLayawayItem()" class="btn btn-default">
+                Add Item to Layawy
+            </button>
         </div>
     </div>
     <div class="col-md-8 bg-success" style="padding: 0; margin: 0">
@@ -150,9 +146,14 @@
             {
                 itemCount += layaway.LayawayItems.Count;
             }
+            var fullName = Model.FirstName + ' ' + Model.LastName;
+            var companyName = Model.CompanyName == "" ? "" : " (" + Model.CompanyName + ")";
+            var combinedName = fullName + companyName;
         }
         <div style="margin: 0px 0px 5px 25px">
             <h4>Customer Layaways</h4>
+            <strong><span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@combinedName </span></strong>
+            <span class="text-primary" style="float: right; margin:3px 10px 3px 3px">Customer: </span>
             <span style="margin:3px">Layaways: @Model.Layaways.Count</span>
             <span style="margin:3px">Total Items: @itemCount</span>
         </div>
@@ -199,13 +200,35 @@
         }
 
         function showPic(event, image) {
+            var location = window.location;
+            var protocol = location.protocol;
+            var host = location.host;
+            var baseUrl = protocol + "//" + host
+            var imageUrl = baseUrl + "//Content//ProductImages//" + image;
             var html = "<img " +
                 "class='img-rounded' " +
-                "src='https://localhost:44394//Content/ProductImages//" + image + "' " +
-                "style='height: 300px' " +
+                "src='" + imageUrl + "' " +
+                "style='height: 200px' " +
                 "alt='Image' " +
                 " />"
             ShowMessage(html);
+        }
+
+        function openProductLookup() {
+            event.preventDefault();
+            document.getElementById("customer-info").style.display = "none";
+            document.getElementById("product-lookup").style.display = "block";
+        }
+
+        function saveNewLayawayItem() {
+            event.preventDefault();
+            closeProductLookup();
+        }
+
+        function closeProductLookup() {
+            event.preventDefault();
+            document.getElementById("customer-info").style.display = "block";
+            document.getElementById("product-lookup").style.display = "none";
         }
     </script>
 }

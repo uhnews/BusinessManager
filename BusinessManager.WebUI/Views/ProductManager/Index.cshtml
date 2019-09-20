@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Products";
 }
-
 <style>
     .fixed-header tbody {
         display: block;
@@ -17,9 +16,9 @@
     }
 
     .search-box-menu {
-        width: 75%;
+        width: 30%;
         padding: 0px 20px 10px 20px;
-        margin: 1px 0px 0px 25%;
+        margin: 1px 0px 0px 4%;
         border: solid 1px #c3d9ef;
         border-radius: 5px;
         z-index: 5;
@@ -53,14 +52,16 @@
         var iconOpen = document.getElementById("search-box-menu-open");
         var iconClose = document.getElementById("search-box-menu-close");
         var menu = document.getElementById("search-box-menu");
+
+        // hide the menu before starting search
         iconClose.style.display = "none";
         iconOpen.style.display = "inline";
         menu.style.display = "none";
-
+        
         var searchText = document.getElementById("product-lookup-search-string").value.toLowerCase();
         if (searchText === "" && !showAll) {
-            var message = "<span class='text-warning'>Search text missing!</span>"
-            ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", message);
+            var titleMessage = "<span class='text-warning'>Search text missing!</span>"
+            ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", titleMessage);
             return;
         }
 
@@ -73,8 +74,19 @@
         var searchInQuantity = document.getElementById("search-box-menu").querySelector("input[name='QuantityCheck']").checked;
         var searchInPrice = document.getElementById("search-box-menu").querySelector("input[name='PriceCheck']").checked;
 
+        var columsWereSelected = searchInName || searchInDescription ||
+                                    searchInCategory || searchInProductCode ||
+                                    searchInUPC || searchInQuantity || searchInPrice;
+        
+        if (!columsWereSelected && !showAll) {
+            let titleMessage = "<span class='text-warning'>Missing search input!</span>"
+            ShowMessage("To execute a search you must select at least one of the fields listed in the search box menu.", titleMessage);
+            return;
+        }
+
         var rows = table.getElementsByTagName("tr");
-        for (i = 0; i < rows.length; i++) {
+        //alert(rows.length - 1);
+        for (i = 1; i < rows.length; i++) {
             var row = rows[i];
             var nameData = row.querySelector("tr span[name='Name']").innerHTML.toLowerCase();
             var descriptionData = row.querySelector("tr span[name='Description']").innerHTML.toLowerCase();
@@ -137,255 +149,183 @@
     }
 
 </script>
+<h2>Product Inventory</h2>
 
-<div class="col-md-4" style="margin: 0; padding: 0">
-    <div style="padding-bottom: 0; margin-bottom: 0">
-        <h3 style="display: inline-block">Product Search</h3>
-        <div class="form-group" style="width: 100%; margin-bottom: 0">
-            <input id="product-lookup-search-string" 
-                   placeholder="Enter text to find ..." 
-                   type="text" class="form-control" 
-                   style="display: inline-block; margin: 0; max-width: 75%" />
-            <button id="search-box-btn-find" class="btn btn-default btn-primary-text"
-                    onclick="filterItems()"
-                    style="display: inline-block; margin-top:-4px;">
-                <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
-            </button>
-            <button class="btn btn-default btn-primary-text"
-                    onclick="toggleColSeltMenu(event)"
-                    style="display: inline-block; margin-top:-4px; padding">
-                <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
-                <span id="search-box-menu-close" class="glyphicon glyphicon-remove" style="margin: 0; display: none"></span>
-            </button>
-        </div>
-    </div>
-    <div id="search-box-menu" class="search-box-menu">
-        <div>
-            <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
-                <span>Search In:</span>
-                <input name="AllCheck" 
-                       type="checkbox"
-                       onchange="selectColGroup()">
-                <span class="checkmark"></span>
-            </label>
-            <hr style="margin: 0 0 5px 0; padding: 0" />
-            <div>
-                <label class="checkbox-container">
-                    Name
-                    <input name="NameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Description
-                    <input name="DescriptionCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Category
-                    <input name="CategoryCheck" t type="checkbox" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Product Code
-                    <input name="ProductCodeCheck" type="checkbox" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    UPC
-                    <input name="UPCCheck" type="checkbox" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Quantity
-                    <input name="QuantityCheck" type="checkbox" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Price
-                    <input name="PriceCheck" type="checkbox" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-            </div>
-            <hr style="margin: 10px 0 10px 0; padding: 0" />
-            <button class="btn btn-primary"
-                    onclick="filterItems(SHOW_ALL)"
-                    style="width: 100%">
-                Load All Products
-            </button>
-        </div>
-    </div>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
 
-    <div style="display: flex; margin-top: 3px">
-        <div class="col-md-4 fixed-header" style="flex: 1; padding: 0">
-            <table id="product-lookup-table" class="table table-condensed">
-
-                @foreach (var item in Model)
-                {
-
-                    int halfOfMin = item.QuantityMin / 2;
-                    var cssClass = "";
-                    if (item.Quantity <= item.QuantityMin)
-                    {
-                        cssClass = "bg-danger";
-                    }
-                    else if (item.Quantity <= item.QuantityMin + halfOfMin)
-                    {
-                        cssClass = "bg-warning";
-                    }
-
-                    <tr class="@cssClass">
-                        <td>
-                            <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })">
-                                <img class="img-thumbnail" style="width:400px" src="~/Content/ProductImages/@item.Image" alt="Image" />
-                            </a>
-                        </td>
-                        <td>
-                            <p class="text-primary"><em><span name="Name">@Html.DisplayFor(modelItem => item.Name)</span></em></p>
-                            <p><span name="Description">@Html.DisplayFor(modelItem => item.Description)</span></p>
-                            <p>Category: <span name="Category" class="text-primary">@Html.DisplayFor(modelItem => item.Category)</span></p>
-                            <p>Product Code: <span name="ProductCode" class="text-primary">@Html.DisplayFor(modelItem => item.ProductCode)</span></p>
-                            <p>UPC : <span name="UPC" class="text-primary">@Html.DisplayFor(modelItem => item.UPC)</span></p>
-                            <p>Is Service: <span name="UPC">@Html.DisplayFor(modelItem => item.IsService)</span></p>
-                            <p>Quantity: <strong><span name="Quantity">@Html.DisplayFor(modelItem => item.Quantity)</span></strong></p>
-                        </td>
-                        <td>
-                            <strong><span name="Price">@Html.DisplayFor(modelItem => item.Price)</span></strong>
-                        </td>
-                    </tr>
-                }
-            </table>
-        </div>
+<div style="padding-bottom: 0; margin-bottom: 0">
+    <div class="form-group" style="width: 100%; margin-bottom: 0">
+        <input id="product-lookup-search-string"
+               placeholder="Enter text to find ..."
+               type="text" class="form-control"
+               style="display: inline-block; margin: 0; max-width: 25%" />
+        <button id="search-box-btn-find" class="btn btn-default btn-primary-text"
+                onclick="filterItems()"
+                style="display: inline-block; margin-top:-4px;">
+            <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+        </button>
+        <button class="btn btn-default btn-primary-text"
+                onclick="toggleColSeltMenu(event)"
+                style="display: inline-block; margin-top:-4px; padding">
+            <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
+            <span id="search-box-menu-close" class="glyphicon glyphicon-remove" style="margin: 0; display: none"></span>
+        </button>
     </div>
 </div>
-@Html.Partial("AlertBox")
+<div id="search-box-menu" class="search-box-menu">
+    <div>
+        <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
+            <span>Search In:</span>
+            <input name="AllCheck"
+                   type="checkbox"
+                   onchange="selectColGroup()">
+            <span class="checkmark"></span>
+        </label>
+        <hr style="margin: 0 0 5px 0; padding: 0" />
+        <div>
+            <label class="checkbox-container">
+                Name
+                <input name="NameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                <span class="checkmark"></span>
+            </label>
+            <label class="checkbox-container">
+                Description
+                <input name="DescriptionCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                <span class="checkmark"></span>
+            </label>
+            <label class="checkbox-container">
+                Category
+                <input name="CategoryCheck" t type="checkbox" onclick="setAllCheck(event)">
+                <span class="checkmark"></span>
+            </label>
+            <label class="checkbox-container">
+                Product Code
+                <input name="ProductCodeCheck" type="checkbox" onclick="setAllCheck(event)">
+                <span class="checkmark"></span>
+            </label>
+            <label class="checkbox-container">
+                UPC
+                <input name="UPCCheck" type="checkbox" onclick="setAllCheck(event)">
+                <span class="checkmark"></span>
+            </label>
+            <label class="checkbox-container">
+                Quantity
+                <input name="QuantityCheck" type="checkbox" onclick="setAllCheck(event)">
+                <span class="checkmark"></span>
+            </label>
+            <label class="checkbox-container">
+                Price
+                <input name="PriceCheck" type="checkbox" onclick="setAllCheck(event)">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        <hr style="margin: 10px 0 10px 0; padding: 0" />
+        <button class="btn btn-primary"
+                onclick="filterItems(SHOW_ALL)"
+                style="width: 100%">
+            Load All Products
+        </button>
+    </div>
+</div>
 
+<table id="product-lookup-table" class="table" style="margin-top: 2px">
+    <tr>
+        <th>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UPC)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Category)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsService)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuantityMin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th></th>
+    </tr>
 
+    @foreach (var item in Model)
+    {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@*@model IEnumerable<BusinessManager.Core.Models.Product>
-
-    @{
-        ViewBag.Title = "Products";
-    }
-
-        <h2>Product Inventory</h2>
-
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    <table class="table">
-        <tr>
-            <th>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UPC)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsService)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QuantityMin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
+        int halfOfMin = item.QuantityMin / 2;
+        var cssClass = "";
+        if (item.Quantity <= item.QuantityMin)
         {
-
-            int halfOfMin = item.QuantityMin / 2;
-            var cssClass = "";
-            if (item.Quantity <= item.QuantityMin)
-            {
-                cssClass = "bg-danger";
-            }
-            else if (item.Quantity <= item.QuantityMin + halfOfMin)
-            {
-                cssClass = "bg-warning";
-            }
-
-            <tr class="@cssClass">
-                <td>
-                    <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })">
-                        <img class="img-thumbnail" style="height:50px" src="~/Content/ProductImages/@item.Image" alt="Image" />
-                    </a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductCode)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UPC)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsService)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.QuantityMin)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-                    @if (item.Quantity == 0)
-                    {
-                        <div style="display: inline-block"> | @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class="delete-link-danger" })</div>
-                    }
-                    else
-                    {
-                        <div class="text-muted" style="display: inline-block"> | Delete</div>
-                    }
-
-                </td>
-            </tr>
+            cssClass = "bg-danger";
+        }
+        else if (item.Quantity <= item.QuantityMin + halfOfMin)
+        {
+            cssClass = "bg-warning";
         }
 
-    </table>*@
+        <tr class="@cssClass">
+            <td>
+                <a href="@Url.Action("Edit", "ProductManager", new { id = item.Id })">
+                    <img class="img-thumbnail" style="height:50px" src="~/Content/ProductImages/@item.Image" alt="Image" />
+                </a>
+            </td>
+            <td>
+                <span name="Name">@Html.DisplayFor(modelItem => item.Name)</span>
+            </td>
+            <td>
+                <span name="Description">@Html.DisplayFor(modelItem => item.Description)</span>
+            </td>
+            <td>
+                <span name="ProductCode">@Html.DisplayFor(modelItem => item.ProductCode)</span>
+            </td>
+            <td>
+                <span name="Price">@Html.DisplayFor(modelItem => item.UPC)</span>
+            </td>
+            <td>
+                <span name="UPC">@Html.DisplayFor(modelItem => item.Price)</span>
+            </td>
+            <td>
+                <span name="Category">@Html.DisplayFor(modelItem => item.Category)</span>
+            </td>
+            <td>
+                <span name="IsService">@Html.DisplayFor(modelItem => item.IsService)</span>
+            </td>
+            <td>
+                <span name="QuantityMin">@Html.DisplayFor(modelItem => item.QuantityMin)</span>
+            </td>
+            <td>
+                <span name="Quantity">@Html.DisplayFor(modelItem => item.Quantity)</span>
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                @if (item.Quantity == 0)
+                {
+                    <div style="display: inline-block"> | @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "delete-link-danger" })</div>
+                }
+                else
+                {
+                    <div class="text-muted" style="display: inline-block"> | Delete</div>
+                }
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+@Html.Partial("AlertBox")

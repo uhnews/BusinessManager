@@ -68,7 +68,7 @@
                             <div style="@inputGroupStyle">
                                 <input type="button" value="Save" class="btn btn-sm btn-default" />
                                 <input type="button" value="Scan Barcode" class="btn btn-sm btn-default" />
-                                <input type="button" value="Add Item" class="btn btn-sm btn-default" />
+                                <input type="button" value="Add Item" class="btn btn-sm btn-default" onclick="openProductLookup()" />
                                 <input type="button" value="Delete" class="btn btn-sm btn-default btn-danger-text" />
                             </div>
                         </form>
@@ -89,7 +89,7 @@
                             {
                                 ++itemCount;
                                 rowElementId = "row-" + layawayCount + "-" + itemCount;
-                                <tr id=@rowElementId title="test 1" style="margin-top: 20px">
+                                <tr id=@rowElementId style="margin-top: 20px">
                                     <td style="position: relative">
                                         <div>
                                             <img onClick="showPic(event, '@item.Image')"

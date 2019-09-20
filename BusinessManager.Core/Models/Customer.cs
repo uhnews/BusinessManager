@@ -56,11 +56,14 @@ namespace BusinessManager.Core.Models
 
         public virtual ICollection<Order> OnlineOrders { get; set; }
 
+        public virtual ICollection<Product> ProductList { get; set; }
+
         public Customer()
         {
             this.Layaways = new List<Layaway>();
             this.Invoices = new List<Invoice>();
             this.OnlineOrders = new List<Order>();
+            this.ProductList = new List<Product>();
         }
     }
 }
