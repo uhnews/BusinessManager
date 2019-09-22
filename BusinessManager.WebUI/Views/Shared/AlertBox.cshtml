@@ -17,12 +17,14 @@
                 $("#app-alert-box").on('hidden.bs.modal', function () {
                     messageClosed = true;
                 });
+                
+
                 SetMsgBoxResponse("");
                 var arrBtns = new Array();
                 if (!Array.isArray(buttons)) {
                     arrBtns = buttons.replace(" ", "").split(",");
                 }
-                var btnList = ["yes", "no", "ok", "cancel", "retry"];
+                var btnList = ["yes", "no", "ok", "delete", "cancel", "retry"];
                 btnList.forEach(function (item) {
                     document.getElementById("app-alert-box-btn-" + item).style.display = "none";
                 });
@@ -36,6 +38,9 @@
                     }
                     else if (btnText === "ok") {
                         document.getElementById("app-alert-box-btn-ok").style.display = "inline";
+                    }
+                    else if (btnText === "delete") {
+                        document.getElementById("app-alert-box-btn-delete").style.display = "inline";
                     }
                     else if (btnText === "cancel") {
                         document.getElementById("app-alert-box-btn-cancel").style.display = "inline";
@@ -58,14 +63,14 @@
                 document.getElementById("app-alert-box-message").innerHTML  = message;
                 document.getElementById("app-alert-box-title").innerHTML  = title;
                 document.getElementById("app-alert-box-btn-show-msg").click();
-
+                
                 var timer = setInterval(myTimer, 250);
                 function myTimer() {
                     if (messageClosed) {
                         clearInterval(timer);
                         resolve(clicked);
                     }
-                }            
+                }
             }
             catch (error) {
                 reject(error);
@@ -85,7 +90,8 @@
                 class="btn btn-info btn-lg"
                 data-toggle="modal"
                 data-target="#app-alert-box"
-                style="display: none">
+                style="display: none"
+                >
             Show Message
         </button>
 
@@ -133,6 +139,14 @@
                         class="btn btn-default app-alert-box-btn"
                         data-dismiss="modal" style="display: none">
                     OK
+                </button>
+
+                <button id="app-alert-box-btn-delete"
+                        type="button"
+                        onClick="SetMsgBoxResponse('Delete')"
+                        class="btn btn-default app-alert-box-btn btn-danger-text"
+                        data-dismiss="modal" style="display: none">
+                    Delete
                 </button>
 
                 <button id="app-alert-box-btn-retry"

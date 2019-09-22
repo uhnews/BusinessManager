@@ -27,7 +27,7 @@ textarea {
 /*                                             CUSTON CSS CLASSES                                               */
 /* ************************************************************************************************************ */
 
-/* CUSTOM WARNING TEXT COLOR CLASS FOR <a> TAGS *************************************************************** */
+/* CUSTOM WARNING TEXT COLOR CLASS FOR <a> TAGS ******** */
 .link-text-warning {
     color: #806000 !important;
 }

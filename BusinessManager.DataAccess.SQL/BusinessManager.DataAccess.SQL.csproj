@@ -254,6 +254,10 @@
     <Compile Include="Migrations\201909200320386_AddProductListToCustomer1.Designer.cs">
       <DependentUpon>201909200320386_AddProductListToCustomer1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909210436577_QuantityOnLaywayAddedToProduct.cs" />
+    <Compile Include="Migrations\201909210436577_QuantityOnLaywayAddedToProduct.Designer.cs">
+      <DependentUpon>201909210436577_QuantityOnLaywayAddedToProduct.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -376,6 +380,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909200320386_AddProductListToCustomer1.resx">
       <DependentUpon>201909200320386_AddProductListToCustomer1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909210436577_QuantityOnLaywayAddedToProduct.resx">
+      <DependentUpon>201909210436577_QuantityOnLaywayAddedToProduct.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

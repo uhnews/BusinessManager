@@ -4,8 +4,7 @@
     ViewBag.Title = "Edit Customer";
 }
 
-@*//   <form name="myForm" onsubmit="return validateMyForm();">   //
-//   Html.BeginForm( "Login", "Home", FormMethod.Post, new { id=”formname” })   //*@
+@*@using (Html.BeginForm())*@
 
 @using (Html.BeginForm("Edit", "CustomerManager", FormMethod.Post, new { onsubmit = "return false;" }))
 {
@@ -131,6 +130,7 @@
                     <input type="submit" value="Save" class="btn btn-default" />
                 </div>
             </div>
+            <span id="curr-layaway-id">SOME TEXT</span>
         </div>
 
         <div id="product-lookup" class="product-lookup-popup" style="display: none">
@@ -141,7 +141,7 @@
         </div>
 
     </div>
-    <div class="col-md-8 bg-success" style="padding: 0; margin: 0">
+    <div id="layaway-item-container" class="col-md-8 bg-success" style="padding: 0; margin: 0">
         @{
             var itemCount = 0;
             var layawayCount = Model.Layaways.Count;
@@ -167,14 +167,44 @@
 <div class="col-md-10">
     @Html.ActionLink("Back to List", "Index")
 </div>
-@Html.Partial("AlertBox")
+
 
 @section Scripts {
     <script type="text/javascript">
-        function deleteLayawayItem(event, itemId, rowIndex) {
-            ShowMessage("Click OK to delete item.", "<span class='text-danger'>Warning!<span>", "OkCancel").then(
+        function deleteLayawayItem(event, itemId, rowIndex, image, productName) {
+            let location = window.location;
+            let protocol = location.protocol;
+            let host = location.host;
+            let baseUrl = protocol + "//" + host;
+            let imageUrl = baseUrl + "//Content//ProductImages//" + image;
+            let mesgHtml = "<div>" +
+                               "<div " + 
+                                    "style='display: inline-block; " + 
+                                            "width: 200px; " + 
+                                            "height: 250px; text-align: center; margin-top: auto; margin-bottom: auto'>" +
+                                  "<img " +
+                                          "class='img-thumbnail'" +
+                                          "style='margin: auto; " + 
+                                                   "height: 100%;" +
+                                                   "padding: 3px; " +
+                                                   "border-width: 1px;" +
+                                                   "border-radius: 50%;" +
+                                                   "border-color: #c3d9ef'" +
+                                          "src='" + imageUrl + "'" +
+                                          "alt='Image' " +
+                                      "/>" + 
+                               "</div>" +
+                               "<div style='display: inline-block; margin-left: 10px'>" + 
+                                   "<p>Click Delete to remove</p>" + 
+                                   "<p class='text-danger'><strong>" + productName + "</strong></p>" + 
+                                   "<P>from Layaway.</P>" +
+                               "</div>" +
+                           "</div>" ;
+            let titleHtml =  "<span class='text-danger'>Please confirm delete action...</span>";
+            // "Click Delete to remove item.", "<span class='text-danger'>Warning!<span>"
+            ShowMessage(mesgHtml, titleHtml, "delete, cancel").then(
                 function (response) {
-                    if (response === "OK") {
+                    if (response === "Delete") {
                         var xhttp = new XMLHttpRequest();
                         xhttp.onreadystatechange = function () {
                             if (this.readyState === 4 && this.status === 200) {
@@ -182,8 +212,14 @@
                                 var responseObject = JSON.parse(responseText);
                                 if (responseObject.Successful === true) {
                                     var parentRow = document.getElementById(rowIndex);
-                                    parentRow.parentNode.removeChild(parentRow);
-                                    ShowMessage("Item deleted.")
+                                    var tableBody = parentRow.parentNode;
+                                    tableBody.removeChild(parentRow);
+                                    if (tableBody.childElementCount === 0) {
+                                        ShowMessage("<p class='text-primary'>Item deleted.</p>").then(function (result) { location.reload(); }, function (error) { });   //location.reload();
+                                    }
+                                    else {
+                                        ShowMessage("<p class='text-primary'>Item deleted.</p>")
+                                    }
                                 }
                                 else if (responseObject.error) {
                                     message = responseObject.error;
@@ -217,8 +253,7 @@
         }
 
         function openProductLookup(event, layawayId) {
-            alert(layawayId);
-            //event.preventDefault();
+            document.getElementById("curr-layaway-id").innerHtml = layawayId;
             document.getElementById("customer-info").style.display = "none";
             document.getElementById("product-lookup").style.display = "block";
         }
@@ -227,6 +262,14 @@
             //event.preventDefault();
             document.getElementById("customer-info").style.display = "block";
             document.getElementById("product-lookup").style.display = "none";
+        }
+
+        function addLayawayItem(event, productId) {
+           
+
+
+            // clean up
+            document.getElementById("curr-layaway-id").innerHtml = "";
         }
     </script>
 }

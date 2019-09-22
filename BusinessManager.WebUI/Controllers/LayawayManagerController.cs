@@ -12,7 +12,7 @@ namespace BusinessManager.WebUI.Controllers
     public class LayawayManagerController : Controller
     {
         readonly IRepository<Layaway> layawayContext;
-        readonly ProductRetrieveService productRetrieveService = new ProductRetrieveService();
+        readonly IProductRetrieveService productRetrieveService = new ProductRetrieveService();
 
         // dependency injection
         public LayawayManagerController(IRepository<Layaway> layawayContext)

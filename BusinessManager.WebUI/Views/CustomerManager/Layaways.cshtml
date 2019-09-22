@@ -4,6 +4,7 @@
     ViewBag.Title = "Layaways";
     var layawayCount = 0;
 }
+
 <table class="table">
 
     @foreach (var layaway in Model)
@@ -68,7 +69,7 @@
                             <div style="@inputGroupStyle">
                                 <input type="button" value="Save" class="btn btn-sm btn-default" />
                                 <input type="button" value="Scan Barcode" class="btn btn-sm btn-default" />
-                                <input type="button" value="Add Items" class="btn btn-sm btn-default" onclick="openProductLookup(event)" />
+                                <input type="button" value="Add Item" class="btn btn-sm btn-default" onclick="openProductLookup(event, '@layaway.Id')" />
                                 <input type="button" value="Delete" class="btn btn-sm btn-default btn-danger-text" />
                             </div>
                         </form>
@@ -104,7 +105,7 @@
                                                value="Delete"
                                                style="margin: -5px 5px 5px 265%; position: absolute; bottom: 5px"
                                                class="btn btn-sm btn-default btn-danger-text"
-                                               onclick="deleteLayawayItem(event, @item.Id, '@rowElementId')" />
+                                               onclick="deleteLayawayItem(event, @item.Id, '@rowElementId', '@item.Image', '@item.ProductName')" />
                                     </td>
                                     <td>
                                         <div style="padding-top: 7px">

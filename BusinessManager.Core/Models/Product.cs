@@ -41,6 +41,12 @@ namespace BusinessManager.Core.Models
         [DisplayName("Minimum")]
         public int QuantityMin { get; set; }
 
+        [Required]
+        [DefaultValue(0)]
+        [Range(0, int.MaxValue)]
+        [DisplayName("Layaway")]
+        public int QuantityOnLayaway { get; set; }
+
         [DefaultValue(false)]
         [DisplayName("Service")]
         public bool IsService { get; set; }

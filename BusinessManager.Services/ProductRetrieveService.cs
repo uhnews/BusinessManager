@@ -121,9 +121,9 @@ namespace BusinessManager.Services
             }
         }
 
-        public Product GetProduct(string id)
+        public Product GetProduct(string Id)
         {
-            return GetProduct("Id", id);
+            return GetProduct("Id", Id);
         }
 
         public Product GetProductByUPC(string upc)

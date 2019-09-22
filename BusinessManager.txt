@@ -61,3 +61,8 @@ string baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.A
 
 C:\pagefile.sys
 orderby p.CreatedAt descending
+
+@*//   <form name="myForm" onsubmit="return validateMyForm();">   //
+    //   Html.BeginForm( "Login", "Home", FormMethod.Post, new { id=”formname” })   //*@
+
+@*@using (Html.BeginForm("Edit", "CustomerManager", FormMethod.Post, new { onsubmit = "return false;" }))*@

@@ -44,9 +44,12 @@
     <div class="container body-content">
         @RenderBody()
         <footer class="col-md-12">
-        <hr />
+            <hr />
             <p>&copy; @DateTime.Now.Year - Management Pro Business Tools</p>
         </footer>
+    </div>
+    <div style="z-index:20">
+        @Html.Partial("AlertBox")
     </div>
 
     @Scripts.Render("~/bundles/jquery")

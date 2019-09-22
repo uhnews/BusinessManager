@@ -150,5 +150,13 @@ namespace BusinessManager.WebUI.Controllers
 
             return Json(deleteResult, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult GetProduct(string Id)
+        {
+            IProductRetrieveService productService = new ProductRetrieveService();
+            Product product = productService.GetProduct(Id);
+
+            return Json(product, JsonRequestBehavior.AllowGet);
+        }
     }
-}
+}  
