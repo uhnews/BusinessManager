@@ -1,6 +1,7 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
 using BusinessManager.DataAccess.SQL;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace BusinessManager.Services
             }
         }
 
-        public object RemoveFromLayaway(IRepository<LayawayItem> layawayItemContext, string Id)
+        public object RemoveItemFromLayaway(IRepository<LayawayItem> layawayItemContext, string Id)
         {
             LayawayItem itemToDelete = layawayItemContext.Find(Id);
             if (itemToDelete == null)
@@ -47,6 +48,26 @@ namespace BusinessManager.Services
                 return new { Successful = true, Message = "Item deleted.", ItemId = Id };
             }
 
+        }
+
+        public object AddItemToLayaway(IRepository<LayawayItem> layawayItemContext, LayawayItem item)
+        {
+            try
+            {
+                layawayItemContext.Insert(item);
+                layawayItemContext.Commit();
+
+                // send response object
+                return new { Successful = true, Message = "Item added." };
+            }
+            catch (Exception ex)
+            {
+                // log error;
+                Console.WriteLine(ex);
+
+                // send response object error
+                return new { Successful = false, Message = "Item failed to add." };
+            }
         }
     }
 }

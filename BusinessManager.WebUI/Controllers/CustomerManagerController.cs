@@ -1,6 +1,8 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
 using BusinessManager.Services;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -89,6 +91,14 @@ namespace BusinessManager.WebUI.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    // reload ProductList
+                    IProductRetrieveService productService = new ProductRetrieveService();
+                    customer.ProductList = productService.GetProducts();
+
+                    // reload Layaways
+                    ILayawayDataService layawayService = new LayawayDataService();
+                    customer.Layaways = layawayService.GetLayaways(Id);
+
                     return View(customer);
                 }
 
@@ -146,9 +156,21 @@ namespace BusinessManager.WebUI.Controllers
         public JsonResult DeleteLayawayItem(string Id)
         {
             ILayawayDataService dataService = new LayawayDataService();
-            var deleteResult = dataService.RemoveFromLayaway(layawayItemContext, Id);
+            var deleteResult = dataService.RemoveItemFromLayaway(layawayItemContext, Id);
 
-            return Json(deleteResult, JsonRequestBehavior.AllowGet);
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
+        }
+
+        // GET: /CustomerManager/DeleteLayawayItem
+        public JsonResult AddLayawayItem(string item)
+        {
+            var layawayItem = JsonConvert.DeserializeObject<LayawayItem>(item);
+            layawayItem.Id = Guid.NewGuid().ToString();
+
+            ILayawayDataService dataService = new LayawayDataService();
+            var addResult = dataService.AddItemToLayaway(layawayItemContext, layawayItem);
+
+            return Json(addResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetProduct(string Id)
@@ -157,6 +179,64 @@ namespace BusinessManager.WebUI.Controllers
             Product product = productService.GetProduct(Id);
 
             return Json(product, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult UpdateLayawayItemPrice(string Id, decimal price)
+        {
+            LayawayItem layawayItem = layawayItemContext.Find(Id);
+
+            if (layawayItem != null)
+            {
+                try
+                {
+                    layawayItem.Price = price;
+                    layawayItem.ModifiedAt = DateTime.Now;
+                    layawayItemContext.Update(layawayItem);
+                    layawayItemContext.Commit();
+                    return Json(new { Successful = true, Message = "Item update succeeded." }, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    // log error
+                    Console.WriteLine(ex);
+
+                    // send message
+                    return Json(new { Successful = false, Message = "Item update failed." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                return Json(new { Successful = false, Message = "Item not found." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult UpdateLayawayItemQuantity(string Id, int quantity)
+        {
+            LayawayItem layawayItem = layawayItemContext.Find(Id);
+
+            if (layawayItem != null)
+            {
+                try
+                {
+                    layawayItem.ModifiedAt = DateTime.Now;
+                    layawayItem.Quantity = quantity;
+                    layawayItemContext.Update(layawayItem);
+                    layawayItemContext.Commit();
+                    return Json(new { Successful = true, Message = "Item update succeeded." }, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    // log error
+                    Console.WriteLine(ex);
+
+                    // send message
+                    return Json(new { Successful = false, Message = "Item update failed." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                return Json(new { Successful = false, Message = "Item not found." }, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }  

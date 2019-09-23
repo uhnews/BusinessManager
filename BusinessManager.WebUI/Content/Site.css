@@ -71,6 +71,19 @@ textarea {
         font-weight: 500 !important;
     }
 
+.btn-success-text {
+    color: #5cb85c !important;
+}
+
+    .btn-success-text:active {
+        color: #71c171 !important;
+    }
+
+    .btn-success-text:hover {
+        color: #71c171 !important;
+        font-weight: 500 !important;
+    }
+
 .btn-pill {
     background-color: #428bca;
     border: none;

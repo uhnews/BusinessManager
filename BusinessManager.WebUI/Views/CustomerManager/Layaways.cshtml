@@ -6,7 +6,6 @@
 }
 
 <table class="table">
-
     @foreach (var layaway in Model)
     {
         <tr>
@@ -38,6 +37,8 @@
                     </style>
                     <div class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorLightBlue">
                         <form id="layaway-form">
+                            @* Layaway.Id *@
+                            <div name="layaway-id" style="display: none">@layaway.Id</div>
                             <div style="@inputGroupStyle">
                                 <label class="control-label layaway-label" for="layaway_CreatedAt" style="width: 45%">@Html.DisplayNameFor(model => model.CreatedAt)</label>
                                 @Html.DisplayFor(model => layaway.CreatedAt, new { htmlAttributes = new { @class = "form-control" } }).ToString().Replace("-07:00", "")
@@ -76,7 +77,7 @@
                     </div>
                     @{
                         var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0; background-color: " + colorLightBlue + "; border: none";
-                        var subItemInputStyle2 = "display: inline; widith: 70%; max-width: 95%; margin: 0 0 5px 0";
+                        var subItemInputStyle2 = "display: inline; max-width: 95%; margin: 0 0 5px 0";
                     }
                     <div class="col-md-6 fixed-header" style="flex: 1; background-color: @colorLightBlue; padding-left: 0">
                         <h4>Layaway Items</h4>
@@ -93,7 +94,7 @@
                                 <tr id=@rowElementId style="margin-top: 20px">
                                     <td style="position: relative">
                                         <div>
-                                            <img onClick="showPic(event, '@item.Image')"
+                                            <img onclick="showPic(event, '@item.Image')"
                                                  class="img-thumbnail"
                                                  style="width: 100px; cursor: pointer"
                                                  src="~/Content/ProductImages/@item.Image"
@@ -103,21 +104,56 @@
                                         <input id="layaway-item-delete"
                                                type="button"
                                                value="Delete"
-                                               style="margin: -5px 5px 5px 265%; position: absolute; bottom: 5px"
+                                               style="float: left; margin: 5px"
                                                class="btn btn-sm btn-default btn-danger-text"
-                                               onclick="deleteLayawayItem(event, @item.Id, '@rowElementId', '@item.Image', '@item.ProductName')" />
+                                               onclick="deleteLayawayItem(event, '@item.Id', '@rowElementId', '@item.Image', '@item.ProductName')" />
                                     </td>
                                     <td>
                                         <div style="padding-top: 7px">
-                                            @Html.EditorFor(m => item.ProductName, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle1, @readonly = "true" } })
+
+                                            @* LayawayItem.Id *@
+                                            <div name="layawayitem-item-id" style="display: none">@item.Id</div>
+                                            @* LayawayItem.ProductId *@
+                                            <div name="layawayitem-product-id" style="display: none">@item.ProductId</div>
+                                            @* LayawayItem.Quantity *@
+                                            <div name="layawayitem-quantity" style="display: none">@item.Quantity</div>
+
+                                            <strong>
+                                                @Html.DisplayFor(m => item.ProductName, new
+                                                {
+                                                                                                htmlAttributes = new
+                                                    {
+                                                                                                                        @class = "form-control",
+                                                                                                                        @style = @subItemInputStyle1,
+                                                                                                                        @readonly = "true"
+                                                                                                                    }
+                                                })
+                                            </strong><br />
+                                            @Html.DisplayFor(m => item.ProductDescription, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
                                         </div>
                                         <div style="padding-top: 7px; width: 50%">
-                                            <label class="control-label layaway-label" style="display: inline; margin-right: 10px">Quantity</label>
-                                            @Html.EditorFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
+                                            <label class="control-label layaway-label" style="display: inline; margin-right: 10px">Quantity:</label>
+                                            <p class="text-primary">
+                                                @Html.DisplayFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
+                                            </p>
                                         </div>
                                         <div style="margin-bottom: 5px; width: 50%">
-                                            <label class="control-label layaway-label" style="display: inline; margin-right: 10px; margin-top: 10px">Price</label>
-                                            @Html.EditorFor(m => item.Price, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
+                                            @Html.LabelFor(m => item.Price, htmlAttributes: new { @class = "control-label layaway-label",
+                                                                                                    @style = "display: inline; margin-right: 10px; margin-top: 10px" })
+
+                                            @Html.EditorFor(m => item.Price, new { htmlAttributes = new { @class = "form-control",
+                                                                                                            @style = @subItemInputStyle2,
+                                                                                                            @onkeyup = "showSaveBtn(event)",
+                                                                                                            @onchange = "showSaveBtn(event)"
+                                                                                                        } })
+
+                                            @Html.ValidationMessageFor(m => item.Price, "", new { @class = "text-danger" })
+                                            <input name="layaway-item-save"
+                                                   type="button"
+                                                   value="Save"
+                                                   style="margin: 0; display: none"
+                                                   class="btn btn-sm btn-default btn-success-text"
+                                                   onclick="updateLayawayItemPrice(event, '@item.Id')" />
                                         </div>
                                     </td>
                                 </tr>
@@ -128,5 +164,4 @@
             </td>
         </tr>
     }
-
 </table>

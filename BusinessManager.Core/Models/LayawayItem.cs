@@ -15,8 +15,14 @@ namespace BusinessManager.Core.Models
         public string ProductId { get; set; }
 
         [StringLength(50)]
+        [DisplayName("Product Name")]
         [Required]
         public string ProductName { get; set; }
+
+        [StringLength(70)]
+        [DisplayName("Description")]
+        [Required]
+        public string ProductDescription { get; set; }
 
         [Range(0, 99999999999.99, ErrorMessage = "Value cannot be negative.")]
         [Required]

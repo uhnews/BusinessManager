@@ -6,7 +6,7 @@
 
 @*@using (Html.BeginForm())*@
 
-@using (Html.BeginForm("Edit", "CustomerManager", FormMethod.Post, new { onsubmit = "return false;" }))
+@using (Html.BeginForm("Edit", "CustomerManager", FormMethod.Post, new { onsubmit = "return false", id = "customer-edit-form"}))
 {
     @Html.AntiForgeryToken()
 
@@ -127,10 +127,10 @@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-6">
-                    <input type="submit" value="Save" class="btn btn-default" />
+                    <input onclick="saveCustomer(event)" id="save-customer-btn" type="submit" value="Save" class="btn btn-default" />
                 </div>
             </div>
-            <span id="curr-layaway-id">SOME TEXT</span>
+            <span id="curr-layaway-id" style="display: none"></span>
         </div>
 
         <div id="product-lookup" class="product-lookup-popup" style="display: none">
@@ -171,6 +171,15 @@
 
 @section Scripts {
     <script type="text/javascript">
+        document.onkeypress = function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+            }
+        };
+        function saveCustomer(event) {
+            document.getElementById('customer-edit-form').submit();
+        }
+
         function deleteLayawayItem(event, itemId, rowIndex, image, productName) {
             let location = window.location;
             let protocol = location.protocol;
@@ -189,7 +198,7 @@
                                                    "padding: 3px; " +
                                                    "border-width: 1px;" +
                                                    "border-radius: 50%;" +
-                                                   "border-color: #c3d9ef'" +
+                                                   "border-color: #f1c2c1'" +
                                           "src='" + imageUrl + "'" +
                                           "alt='Image' " +
                                       "/>" + 
@@ -200,8 +209,7 @@
                                    "<P>from Layaway.</P>" +
                                "</div>" +
                            "</div>" ;
-            let titleHtml =  "<span class='text-danger'>Please confirm delete action...</span>";
-            // "Click Delete to remove item.", "<span class='text-danger'>Warning!<span>"
+            let titleHtml = "<span class='text-danger'>Please confirm delete action...</span>";
             ShowMessage(mesgHtml, titleHtml, "delete, cancel").then(
                 function (response) {
                     if (response === "Delete") {
@@ -215,15 +223,15 @@
                                     var tableBody = parentRow.parentNode;
                                     tableBody.removeChild(parentRow);
                                     if (tableBody.childElementCount === 0) {
-                                        ShowMessage("<p class='text-primary'>Item deleted.</p>").then(function (result) { location.reload(); }, function (error) { });   //location.reload();
+                                        //ShowMessage("<p class='text-primary'>Item deleted.</p>").then(function (result) { location.reload(); }, function (error) { });
+                                        location.reload();
                                     }
                                     else {
-                                        ShowMessage("<p class='text-primary'>Item deleted.</p>")
+                                        //ShowMessage("<p class='text-primary'>Item deleted.</p>")
                                     }
                                 }
-                                else if (responseObject.error) {
-                                    message = responseObject.error;
-                                    ShowMessage(message);
+                                else if (responseObject.Message) {
+                                    ShowMessage(responseObject.Message);
                                 }
                             }
                         };
@@ -259,17 +267,135 @@
         }
 
         function closeProductLookup(event) {
-            //event.preventDefault();
             document.getElementById("customer-info").style.display = "block";
             document.getElementById("product-lookup").style.display = "none";
         }
 
-        function addLayawayItem(event, productId) {
-           
+        function copyProductData(event, productId) {
+            var productCopyFoundInLayaway = false;
 
+            var currLayawayId = document.getElementById("curr-layaway-id").innerHtml;
+            var tableRow = (event.target.parentNode).parentNode;
+
+            var layawayItemId = "";
+            var layawaysTable = document.getElementById("layaway-item-container").querySelector("table");
+            
+            // loop over Layaways
+            for (let layawaysRow of layawaysTable.rows) {
+                
+                var layawayIdElement = layawaysRow.querySelector("[name='layaway-id']");
+                var layawayId = layawayIdElement.innerHTML;
+                
+                if (currLayawayId === layawayId) {
+                    var layawayItemsTable = layawaysRow.querySelector("table");
+                    // loop over LayawayItems
+                    for (let layawayItemsRow of layawayItemsTable.rows) {
+                        var layawayItemIdElement = layawayItemsRow.querySelector("[name='layawayitem-item-id']");
+                        layawayItemId = layawayItemIdElement.innerHTML;
+
+                        var layawayProductIdElement = layawayItemsRow.querySelector("[name='layawayitem-product-id']");
+                        var layawayProductId = layawayProductIdElement.innerHTML;
+                        
+                        var layawayItemQuantityElement = layawayItemsRow.querySelector("[name='layawayitem-quantity']");
+                        var layawayItemQuantity = layawayItemQuantityElement.innerHTML;
+                        ++layawayItemQuantity;
+
+                        if (productId === layawayProductId) {
+                            productCopyFoundInLayaway = true;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            if (productCopyFoundInLayaway) {
+                //upload (update) data for Quantity field of Product record
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        var responseText = this.responseText;
+                        var responseObject = JSON.parse(responseText);
+                        if (responseObject.Successful === true) {
+                            //ShowMessage("<p class='text-primary'>Item updated.</p>").then(function (result) { location.reload(); }, function (error) { });
+                            location.reload();
+                        }
+                        else if (responseObject.Message) {
+                            ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                        }
+                        else {
+                            ShowMessage("Oops! Something went wrong.", "<span class='text-warning'>Server Error</span>");
+                        }
+                    }
+                };
+                xhttp.open("GET", "/CustomerManager/UpdateLayawayItemQuantity/?Id=" + layawayItemId + "&quantity=" + layawayItemQuantity, true);
+                xhttp.send();
+            }
+            else {
+                // get product data from the Product Search List UI
+                var item = {
+                    Id : "",
+                    LayawayId: layawayId,
+                    ProductId: tableRow.querySelector("span[name='Id']").innerText,
+                    ProductName: tableRow.querySelector("span[name='Name']").innerText,
+                    ProductDescription: tableRow.querySelector("span[name='Description']").innerText,
+                    Price: tableRow.querySelector("span[name='Price']").innerText,
+                    Quantity: 1,
+                    Image: tableRow.querySelector("span[name='Image']").innerText
+                }
+                //upload (reate) data for entire Product record
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        var responseText = this.responseText;
+                        var responseObject = JSON.parse(responseText);
+                        if (responseObject.Successful === true) {
+                            //ShowMessage("<p class='text-primary'>Item added.</p>").then(function (result) { location.reload(); }, function (error) { });
+                            location.reload();
+                        }
+                        else if (responseObject.Message) {
+                            ShowMessage(responseObject.Message);
+                        }
+                    }
+                };
+                xhttp.open("GET", "/CustomerManager/AddLayawayItem/?item=" + JSON.stringify(item), true);
+                xhttp.send();
+            }
 
             // clean up
             document.getElementById("curr-layaway-id").innerHtml = "";
+        }
+
+        function showSaveBtn(event) {
+            var btn = event.target.parentNode.querySelector("input[name='layaway-item-save']");
+            btn.style.display = "inline";
+        }
+
+        function updateLayawayItemPrice(event, itemId) {
+            var parent = event.target.parentNode;
+            var priceInput = parent.querySelector("input[type='text']");
+            var price = priceInput.value;
+            if (isNaN(price)) {
+                ShowMessage("The price must be a number greater than zero.");
+                return;
+            }
+            //upload data            
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var responseText = this.responseText;
+                    var responseObject = JSON.parse(responseText);
+                    if (responseObject.Successful === true) {
+                        priceInput.value = parseFloat(price).toFixed(2);
+                        event.target.style.display = "none";
+                    }
+                    else if (responseObject.Message) {
+                        ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                    }
+                }
+            };
+            xhttp.open("GET", "/CustomerManager/UpdateLayawayItemPrice/?Id=" + itemId + "&price=" + price, true);
+            xhttp.send();
         }
     </script>
 }

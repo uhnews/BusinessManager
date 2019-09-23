@@ -250,6 +250,7 @@
 
                         int halfOfMin = item.QuantityMin / 2;
                         var cssClass = "";
+                        var itemImage = item.Image;
                         if (item.Quantity <= item.QuantityMin)
                         {
                             cssClass = "bg-danger";
@@ -266,6 +267,8 @@
                                 </a>
                             </td>
                             <td>
+                                <p class="product-lookup-item" style="display: none"><span name="Image">@itemImage</span></p>
+                                <p class="product-lookup-item" style="display: none"><span name="Id">@Html.DisplayFor(modelItem => item.Id)</span></p>
                                 <p class="text-primary product-lookup-item"><em><span name="Name">@Html.DisplayFor(modelItem => item.Name)</span></em></p>
                                 <p class="product-lookup-item"><span name="Description">@Html.DisplayFor(modelItem => item.Description)</span></p>
                                 <p class="product-lookup-item">Category: <span name="Category" class="text-primary">@Html.DisplayFor(modelItem => item.Category)</span></p>
@@ -273,9 +276,9 @@
                                 <p class="product-lookup-item">UPC: <span name="UPC" class="text-primary">@Html.DisplayFor(modelItem => item.UPC)</span></p>
                                 <p class="product-lookup-item">Is Service: <span name="UPC">@Html.DisplayFor(modelItem => item.IsService)</span></p>
                                 <p class="product-lookup-item">Quantity: <strong><span name="Quantity">@Html.DisplayFor(modelItem => item.Quantity)</span></strong></p>
-                                <button type="button" 
-                                        class="btn-pill product-lookup-item" 
-                                        onclick="addLayawayItem(event, '@item.Id')">
+                                <button type="button"
+                                        class="btn-pill product-lookup-item"
+                                        onclick="copyProductData(event, '@item.Id')">
                                     Add To Layaway
                                 </button>
                             </td>
