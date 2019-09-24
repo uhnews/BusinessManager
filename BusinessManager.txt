@@ -66,3 +66,29 @@ orderby p.CreatedAt descending
     //   Html.BeginForm( "Login", "Home", FormMethod.Post, new { id=”formname” })   //*@
 
 @*@using (Html.BeginForm("Edit", "CustomerManager", FormMethod.Post, new { onsubmit = "return false;" }))*@
+
+
+
+
+
+
+<div>Click Delete to remove item</div><div>Woody</div><td style='position: relative'><div><img class='img-thumbnail'style='width: 100px; cursor: pointer'src='https://localhost:44394Content//ProductImages//e1ada533-c617-46ba-b007-4a4a3236237d.jpg'alt='Image' /></div></td>
+
+The  onkeydown event occurs when the user is pressing a key (on the keyboard).
+The onkeypress event occurs when the user presses a key (on the keyboard).
+
+
+
+        [DisplayName("Modified At")]
+        public DateTimeOffset ModifiedAt { get; set; }
+
+POSTransactionItems
+BasketItems
+LayawayItems
+basketId = "70a9eaa6-3320-46d3-94d4-05e2fe843f93"
+BasketService
+LayawayService
+POSTransactionService
+CustomerManagerController
+ve.PropertyName = "BasketId"
+BasketId

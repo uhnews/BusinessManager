@@ -132,6 +132,7 @@ namespace BusinessManager.Services
                                   Price = p.Price
                               }).ToList();
                 return result;
+                return result;
             }
             else
             {

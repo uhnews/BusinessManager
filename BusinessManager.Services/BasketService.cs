@@ -99,6 +99,8 @@ namespace BusinessManager.Services
 
             if (item != null)
             {
+                string basketId = item.BasketId;
+                item.BasketId = basketId;
                 basket.BasketItems.Remove(item);
                 basketContext.Commit();
             }
@@ -115,6 +117,7 @@ namespace BusinessManager.Services
                               select new BasketItemViewModel()
                               {
                                   Id = item.Id,
+                                  BasketId = item.BasketId,
                                   Quantity = item.Quantity,
                                   ModifiedAt = item.ModifiedAt,
                                   ProductName = product.Name,

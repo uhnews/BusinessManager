@@ -262,6 +262,26 @@
     <Compile Include="Migrations\201909220530147_AddDescriptionToLayawayItem.Designer.cs">
       <DependentUpon>201909220530147_AddDescriptionToLayawayItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909231623502_RemoveModifiedAtFrom3Tables.cs" />
+    <Compile Include="Migrations\201909231623502_RemoveModifiedAtFrom3Tables.Designer.cs">
+      <DependentUpon>201909231623502_RemoveModifiedAtFrom3Tables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909231625487_AddModifiedAtToBaseEntity.cs" />
+    <Compile Include="Migrations\201909231625487_AddModifiedAtToBaseEntity.Designer.cs">
+      <DependentUpon>201909231625487_AddModifiedAtToBaseEntity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909241618149_TestRemoveBasketIdRequired.cs" />
+    <Compile Include="Migrations\201909241618149_TestRemoveBasketIdRequired.Designer.cs">
+      <DependentUpon>201909241618149_TestRemoveBasketIdRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909241653290_RestoreBasketIdRequired.cs" />
+    <Compile Include="Migrations\201909241653290_RestoreBasketIdRequired.Designer.cs">
+      <DependentUpon>201909241653290_RestoreBasketIdRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909241659218_TestRemoveBasketIdRequired1.cs" />
+    <Compile Include="Migrations\201909241659218_TestRemoveBasketIdRequired1.Designer.cs">
+      <DependentUpon>201909241659218_TestRemoveBasketIdRequired1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -390,6 +410,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909220530147_AddDescriptionToLayawayItem.resx">
       <DependentUpon>201909220530147_AddDescriptionToLayawayItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909231623502_RemoveModifiedAtFrom3Tables.resx">
+      <DependentUpon>201909231623502_RemoveModifiedAtFrom3Tables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909231625487_AddModifiedAtToBaseEntity.resx">
+      <DependentUpon>201909231625487_AddModifiedAtToBaseEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909241618149_TestRemoveBasketIdRequired.resx">
+      <DependentUpon>201909241618149_TestRemoveBasketIdRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909241653290_RestoreBasketIdRequired.resx">
+      <DependentUpon>201909241653290_RestoreBasketIdRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909241659218_TestRemoveBasketIdRequired1.resx">
+      <DependentUpon>201909241659218_TestRemoveBasketIdRequired1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
