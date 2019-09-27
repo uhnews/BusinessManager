@@ -1,4 +1,5 @@
-﻿using BusinessManager.Core.ViewModels;
+﻿using BusinessManager.Core.Models;
+using BusinessManager.Core.ViewModels;
 using System.Collections.Generic;
 using System.Web;
 

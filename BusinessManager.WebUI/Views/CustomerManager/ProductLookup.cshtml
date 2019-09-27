@@ -32,7 +32,10 @@
     </style>
 
     <script type="text/javascript">
+
         const SHOW_ALL = true;
+
+
         function toggleColSeltMenu(event) {
             event.preventDefault(event);
             var iconOpen = document.getElementById("search-box-menu-open");
@@ -53,6 +56,7 @@
                 // ignore if no match
             }
         }
+
 
         function filterItems(event, showAll = false) {
             event.preventDefault(event);
@@ -128,6 +132,7 @@
             }
         }
 
+
         function selectColGroup(event) {
             //event.preventDefault();
             var colNames = ["Name", "Description", "Category", "ProductCode", "UPC", "Quantity", "Price"];
@@ -147,6 +152,7 @@
             });
             document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
         }
+
 
         function setAllCheck(event) {
             //event.preventDefault();

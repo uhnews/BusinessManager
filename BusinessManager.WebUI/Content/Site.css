@@ -88,7 +88,7 @@ textarea {
     background-color: #428bca;
     border: none;
     color: white;
-    padding: 0 6px 6px 6px;
+    padding: 0px 6px 6px 6px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -98,11 +98,11 @@ textarea {
 }
 
     .btn-pill:hover {
-        background-color: #9cc2e3; /* Green */
+        background-color: #9cc2e3;
     }
 
     .btn-pill:active {
-        background-color: #428bca; /* Green */
+        background-color: #428bca;
     }
 
 

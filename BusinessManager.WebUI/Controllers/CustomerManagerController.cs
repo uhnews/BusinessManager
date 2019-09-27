@@ -13,12 +13,14 @@ namespace BusinessManager.WebUI.Controllers
     public class CustomerManagerController : Controller
     {
         IRepository<Customer> customerContext;
+        IRepository<Layaway> layawayContext;
         IRepository<LayawayItem> layawayItemContext;
 
         // dependency injection
-        public CustomerManagerController(IRepository<Customer> customerContext, IRepository<LayawayItem> layawayItemContext)
+        public CustomerManagerController(IRepository<Customer> customerContext, IRepository<Layaway> layawayContext, IRepository<LayawayItem> layawayItemContext)
         {
             this.customerContext = customerContext;
+            this.layawayContext = layawayContext;
             this.layawayItemContext = layawayItemContext;
         }
 
@@ -74,6 +76,14 @@ namespace BusinessManager.WebUI.Controllers
 
                 // get (online) Orders
 
+                // sort LayawayItems
+                ICollection<Layaway> layaways = customer.Layaways;
+                customer.Layaways = layaways.OrderByDescending(r => r.ModifiedAt).ToList();
+                foreach (Layaway layaway in customer.Layaways)
+                {
+                    ICollection<LayawayItem> layawayItems = layaway.LayawayItems;
+                    layaway.LayawayItems = layawayItems.OrderByDescending(r => r.ModifiedAt).ToList();
+                }
 
                 return View(customer);
             }
@@ -152,6 +162,28 @@ namespace BusinessManager.WebUI.Controllers
             }
         }
 
+        public JsonResult AddLayaway(string customerId)
+        {
+            ILayawayDataService dataService = new LayawayDataService();
+            var inserResult = dataService.AddCustomerLayaway(layawayContext, customerId);
+            return Json(inserResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DeleteLayaway(string Id)
+        {
+            ILayawayDataService dataService = new LayawayDataService();
+            var deleteResult = dataService.DeleteLayaway(layawayContext, Id);
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult UpdateLayaway(string data)
+        {
+            ILayawayDataService dataService = new LayawayDataService();
+
+            var updateResult = dataService.UpdateLayaway(layawayContext, data);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: /CustomerManager/DeleteLayawayItem
         public JsonResult DeleteLayawayItem(string Id)
         {
@@ -162,13 +194,13 @@ namespace BusinessManager.WebUI.Controllers
         }
 
         // GET: /CustomerManager/DeleteLayawayItem
-        public JsonResult AddLayawayItem(string item)
+        public JsonResult AddLayawayItem(string data)
         {
-            var layawayItem = JsonConvert.DeserializeObject<LayawayItem>(item);
-            layawayItem.Id = Guid.NewGuid().ToString();
+            //var layawayItem = JsonConvert.DeserializeObject<LayawayItem>(data);
+            //layawayItem.Id = Guid.NewGuid().ToString();
 
             ILayawayDataService dataService = new LayawayDataService();
-            var addResult = dataService.AddItemToLayaway(layawayItemContext, layawayItem);
+            var addResult = dataService.AddItemToLayaway(layawayItemContext, data);
 
             return Json(addResult, JsonRequestBehavior.AllowGet);
         }
@@ -183,60 +215,16 @@ namespace BusinessManager.WebUI.Controllers
 
         public JsonResult UpdateLayawayItemPrice(string Id, decimal price)
         {
-            LayawayItem layawayItem = layawayItemContext.Find(Id);
-
-            if (layawayItem != null)
-            {
-                try
-                {
-                    layawayItem.Price = price;
-                    layawayItem.ModifiedAt = DateTime.Now;
-                    layawayItemContext.Update(layawayItem);
-                    layawayItemContext.Commit();
-                    return Json(new { Successful = true, Message = "Item update succeeded." }, JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception ex)
-                {
-                    // log error
-                    Console.WriteLine(ex);
-
-                    // send message
-                    return Json(new { Successful = false, Message = "Item update failed." }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            else
-            {
-                return Json(new { Successful = false, Message = "Item not found." }, JsonRequestBehavior.AllowGet);
-            }
+            ILayawayDataService dataService = new LayawayDataService();
+            object updateResult = dataService.UpdateLayawayItemPrice(layawayItemContext, Id, price);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult UpdateLayawayItemQuantity(string Id, int quantity)
         {
-            LayawayItem layawayItem = layawayItemContext.Find(Id);
-
-            if (layawayItem != null)
-            {
-                try
-                {
-                    layawayItem.ModifiedAt = DateTime.Now;
-                    layawayItem.Quantity = quantity;
-                    layawayItemContext.Update(layawayItem);
-                    layawayItemContext.Commit();
-                    return Json(new { Successful = true, Message = "Item update succeeded." }, JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception ex)
-                {
-                    // log error
-                    Console.WriteLine(ex);
-
-                    // send message
-                    return Json(new { Successful = false, Message = "Item update failed." }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            else
-            {
-                return Json(new { Successful = false, Message = "Item not found." }, JsonRequestBehavior.AllowGet);
-            }
+            ILayawayDataService dataService = new LayawayDataService();
+            object updateResult = dataService.UpdateLayawayItemQuantity(layawayItemContext, Id, quantity);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
     }
 }  

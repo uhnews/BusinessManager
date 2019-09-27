@@ -11,6 +11,11 @@ namespace BusinessManager.Core.Contracts
     {
         List<Layaway> GetLayaways(string customerId);
         object RemoveItemFromLayaway(IRepository<LayawayItem> layawayItemContext, string Id);
-        object AddItemToLayaway(IRepository<LayawayItem> layawayItemContext, LayawayItem item);
+        object AddItemToLayaway(IRepository<LayawayItem> layawayItemContext, string data);
+        object AddCustomerLayaway(IRepository<Layaway> layawayContext, string customerId);
+        object UpdateLayawayItemPrice(IRepository<LayawayItem> layawayItemContext, string Id, decimal price);
+        object UpdateLayawayItemQuantity(IRepository<LayawayItem> layawayItemContext, string Id, int quantity);
+        object DeleteLayaway(IRepository<Layaway> layawayContext, string Id);
+        object UpdateLayaway(IRepository<Layaway> layawayContext, string data);
     }
 }

@@ -43,9 +43,9 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <footer class="col-md-12">
+        <footer class="col-md-12" style="margin-top: 10px">
             <hr />
-            <p>&copy; @DateTime.Now.Year - Management Pro Business Tools</p>
+            <p class="col-md-12">&copy; @DateTime.Now.Year - Management Pro Business Tools</p>
         </footer>
     </div>
     <div style="z-index:20">
@@ -55,5 +55,103 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">        
+        // setCookie ======================================================================================
+        function setCookie(cookieName, cookieValue, expDays) {
+            //
+            if (expDays) {
+                var expires_at = new Date();
+                expires_at.setTime(expires_at.getTime() + expDays * 24 * 60 * 60 * 1000);
+
+                var expires = "expires=" + expires_at.toGMTString();
+                document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+            }
+            else {
+                document.cookie = cookieName + "=" + cookieValue + ";path=/";
+            }
+        }
+        // END setCookie ==================================================================================
+
+
+        // getCookie ======================================================================================
+        function getCookie(cookieName) {
+            var name = cookieName + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var cookies = decodedCookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                while (cookie.charAt(0) === ' ') {
+                    cookie = cookie.substring(1);
+                }
+                if (cookie.indexOf(name) === 0) {
+                    return cookie.substring(name.length, cookie.length);
+                }
+            }
+            return "";
+        }
+        // END getCookie ==================================================================================
+
+
+        // expireCookie ===================================================================================
+        function expireCookie(cookieName) {
+            document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+        // END expireCookie ===============================================================================
+
+
+        // dragElement ====================================================================================
+        function dragElement(element, headerChild) {
+            //
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            //
+            //if (document.querySelector("#" + element.id + " #calendar-entry-form-header")) {
+            //    /* if present, the header is where you move the DIV from:*/
+            //    document.querySelector("#" + element.id + " #calendar-entry-form-header").onmousedown = dragMouseDown;
+            //} else {
+            //    /* otherwise, move the DIV from anywhere inside the DIV:*/
+            //    element.onmousedown = dragMouseDown;
+            //}
+
+            if (headerChild) {
+                /* if present, the header is where you move the DIV from:*/
+                headerChild.onmousedown = dragMouseDown;
+            } else {
+                /* otherwise, move the DIV from anywhere inside the DIV:*/
+                element.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                element.style.top = (element.offsetTop - pos2).toString() + "px";
+                element.style.left = (element.offsetLeft - pos1).toString() + "px";
+            }
+
+            function closeDragElement() {
+                /* stop moving when mouse button is released:*/
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+        // END dragElement ================================================================================
+    </script>
 </body>
 </html>

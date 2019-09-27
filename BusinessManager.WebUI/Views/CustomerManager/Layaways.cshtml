@@ -2,13 +2,16 @@
 
 @{
     ViewBag.Title = "Layaways";
-    var layawayCount = 0;
+    var layawayIndex = 0;
+    int layawayCount = Model.Count();
 }
 
-<table class="table">
+<table id="layaways-table" class="table">
     @foreach (var layaway in Model)
     {
-        <tr>
+        ++layawayIndex;
+        string rowStyle = layawayIndex > 1 ? "display: none" : "display: table-row";
+        <tr style="@rowStyle">
             <td>
                 <div class="col-md-12" style="display: flex">
                     @{
@@ -17,6 +20,7 @@
                         // Layaway Items table styling strings
                         var inputStyle = "display: inline; width: 45%; max-width: 100%";
                         var inputGroupStyle = "margin: 6px";
+                        var buttonGroupStyle = "margin: 6px 6px 30x 6px";
                         var dateStyle = "padding: 5px; line-height: 100%; display: inline; max-width: 45%";
                     }
                     <style>
@@ -35,43 +39,115 @@
                             display: block;
                         }
                     </style>
-                    <div class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorLightBlue">
+                    <script type="text/javascript">
+                    </script>
+                    <div id="layaway-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorLightBlue">
                         <form id="layaway-form">
-                            @* Layaway.Id *@
+                            <div name="layaway-customer-id" style="display: none">@layaway.CustomerId</div>
                             <div name="layaway-id" style="display: none">@layaway.Id</div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_CreatedAt" style="width: 45%">@Html.DisplayNameFor(model => model.CreatedAt)</label>
+                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(m => m.CreatedAt)</label>
                                 @Html.DisplayFor(model => layaway.CreatedAt, new { htmlAttributes = new { @class = "form-control" } }).ToString().Replace("-07:00", "")
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_AgreementDate" style="width: 45%">@Html.DisplayNameFor(model => model.AgreementDate)</label>
-                                @Html.EditorFor(model => layaway.AgreementDate, new { htmlAttributes = new { @class = "form-control", @style = @dateStyle, @type = "date" } })
+                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.AgreementDate)</label>
+                                @{
+                                    var testdate = layaway.AgreementDate.ToString("yyyy'-'MM'-'dd");
+                                }
+                                @Html.EditorFor(model => layaway.AgreementDate, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        @style = @dateStyle,
+                                        @type = "date",
+                                        @onchange = "showLayawaySaveBtn(event)"
+                                    }
+                                })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_DueDate" style="width: 45%">@Html.DisplayNameFor(model => model.DueDate)</label>
-                                @Html.EditorFor(model => layaway.DueDate, new { htmlAttributes = new { @class = "form-control", @style = @dateStyle, @type = "date" } })
+                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.DueDate)</label>
+                                @Html.EditorFor(model => layaway.DueDate, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        @style = @dateStyle,
+                                        @type = "date",
+                                        @onchange = "showLayawaySaveBtn(event)"
+                                    }
+                                })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_DownPayment" style="width: 45%">@Html.DisplayNameFor(model => model.DownPayment)</label>
-                                @Html.EditorFor(model => layaway.DownPayment, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
+                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.DownPayment)</label>
+                                @Html.EditorFor(model => layaway.DownPayment, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        @style = @inputStyle,
+                                        @onchange = "showLayawaySaveBtn(event)",
+                                        @onkeyup = "showLayawaySaveBtn(event)"
+                                    }
+                                })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_ServiceFee" style="width: 45%">@Html.DisplayNameFor(model => model.ServiceFee)</label>
-                                @Html.EditorFor(model => layaway.ServiceFee, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
+                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.ServiceFee)</label>
+                                @Html.EditorFor(model => layaway.ServiceFee, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        @style = @inputStyle,
+                                        @onchange = "showLayawaySaveBtn(event)",
+                                        @onkeyup = "showLayawaySaveBtn(event)"
+                                    }
+                                })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_CancellationFee" style="width: 45%">@Html.DisplayNameFor(model => model.CancellationFee)</label>
-                                @Html.EditorFor(model => layaway.CancellationFee, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
+                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.CancellationFee)</label>
+                                @Html.EditorFor(model => layaway.CancellationFee, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        @style = @inputStyle,
+                                        @onchange = "showLayawaySaveBtn(event)",
+                                        @onkeyup = "showLayawaySaveBtn(event)"
+                                    }
+                                })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" for="layaway_OrderStatus" style="width: 45%">@Html.DisplayNameFor(model => model.OrderStatus)</label>
-                                @Html.EditorFor(model => layaway.OrderStatus, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
+                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.OrderStatus)</label>
+                                @Html.EditorFor(model => layaway.OrderStatus, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        @style = @inputStyle,
+                                        @onchange = "showLayawaySaveBtn(event)",
+                                        @onkeyup = "showLayawaySaveBtn(event)"
+                                    }
+                                })
                             </div>
-                            <div style="@inputGroupStyle">
-                                <input type="button" value="Save" class="btn btn-sm btn-default" />
-                                <input type="button" value="Scan Barcode" class="btn btn-sm btn-default" />
+                            <div style="@buttonGroupStyle">
+                                <input type="button" name="layaway-save" value="Save" class="btn btn-sm btn-default btn-success-text" style="display: none" onclick="saveLayaway(event)" />
+                                <input type="button" name="layaway-scan-upc" value="Scan Barcode" class="btn btn-sm btn-default" onclick="toggleBarcodeInput(event)" />
                                 <input type="button" value="Add Item" class="btn btn-sm btn-default" onclick="openProductLookup(event, '@layaway.Id')" />
-                                <input type="button" value="Delete" class="btn btn-sm btn-default btn-danger-text" />
+                                @{
+                                    if (layaway.LayawayItems.Count == 0)
+                                    {
+                                        <input type="button" value="Delete" class="btn btn-sm btn-default btn-danger-text" onclick="deleteLayaway(event)" />
+                                    }
+                                    else
+                                    {
+                                        <input type="button" value="Delete" class="btn btn-sm btn-default btn-danger-text" disabled />
+                                    }
+                                }
+                                <div name="upc-input-container" style="padding: 0; display: none">
+                                    <span class="fas fa-barcode text-primary" style="font-size: 35px; margin: 3px -15px 0 0; padding: 0">&nbsp;&nbsp;</span>
+                                    <input name="upc-input" type="text" class="form-control" style="display: inline; max-width: 70%" onkeypress="getProductByUPC(event, '@layaway.Id')" />
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -83,14 +159,14 @@
                         <h4>Layaway Items</h4>
                         <table class="table">
                             @{
-                                var itemCount = 0;
+                                var itemsCount = layaway.LayawayItems.Count;
+                                var itemIndex = 0;
                                 var rowElementId = "";
-                                ++layawayCount;
                             }
                             @foreach (var item in layaway.LayawayItems)
                             {
-                                ++itemCount;
-                                rowElementId = "row-" + layawayCount + "-" + itemCount;
+                                ++itemIndex;
+                                rowElementId = "row-" + layawayIndex + "-" + itemIndex;
                                 <tr id=@rowElementId style="margin-top: 20px">
                                     <td style="position: relative">
                                         <div>
@@ -138,27 +214,45 @@
                                             </p>
                                         </div>
                                         <div style="margin-bottom: 5px; width: 50%">
-                                            @Html.LabelFor(m => item.Price, htmlAttributes: new { @class = "control-label layaway-label",
-                                                                                                    @style = "display: inline; margin-right: 10px; margin-top: 10px" })
+                                            @Html.LabelFor(m => item.Price, htmlAttributes: new
+                                            {
+                                                @class = "control-label layaway-label",
+                                                                                                    @style = "display: inline; margin-right: 10px; margin-top: 10px"
+                                            })
 
-                                            @Html.EditorFor(m => item.Price, new { htmlAttributes = new { @class = "form-control",
+                                            @Html.EditorFor(m => item.Price, new
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @class = "form-control",
                                                                                                             @style = @subItemInputStyle2,
-                                                                                                            @onkeyup = "showSaveBtn(event)",
-                                                                                                            @onchange = "showSaveBtn(event)"
-                                                                                                        } })
-
-                                            @Html.ValidationMessageFor(m => item.Price, "", new { @class = "text-danger" })
+                                                                                                            @onkeyup = "showLayawayItemSaveBtn(event)",
+                                                                                                            @onchange = "showLayawayItemSaveBtn(event)"
+                                                                                                        }
+                                            })
                                             <input name="layaway-item-save"
                                                    type="button"
                                                    value="Save"
                                                    style="margin: 0; display: none"
                                                    class="btn btn-sm btn-default btn-success-text"
                                                    onclick="updateLayawayItemPrice(event, '@item.Id')" />
+                                            <div style="display: inline" class="text-danger">
+                                                <span name="layawayitems-row-number">@itemIndex</span> / <span name="layawayitems-row-count">@itemsCount</span>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
                             }
                         </table>
+                    </div>
+                </div>
+                <div class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
+                    Layaway <span name="layaways-row-number">@layawayIndex</span> of <span name="layaways-row-count" style="margin-right: 30px">@layawayCount</span>
+                    <div style="display: inline">
+                        <button type="button" class="btn-pill"><span class="glyphicon glyphicon-fast-backward" style="padding: 0 3px 0 3px" onclick="showFirstLayaway(event)"></span></button>
+                        <button type="button" class="btn-pill"><span class="glyphicon glyphicon-arrow-left" style="padding: 0 3px 0 3px" onclick="showPrevLayaway(event)"></span></button>
+                        <button type="button" class="btn-pill"><span class="glyphicon glyphicon-arrow-right" style="padding: 0 3px 0 3px" onclick="showNextLayaway(event)"></span></button>
+                        <button type="button" class="btn-pill"><span class="glyphicon glyphicon-fast-forward" style="padding: 0 3px 0 3px" onclick="showLastLayaway(event)"></span></button>
                     </div>
                 </div>
             </td>
