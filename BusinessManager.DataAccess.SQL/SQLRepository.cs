@@ -29,9 +29,9 @@ namespace BusinessManager.DataAccess.SQL
             {
                 context.SaveChanges();
             }
-            catch(DbEntityValidationException e)
+            catch(DbEntityValidationException ex)
             {
-                foreach (var eve in e.EntityValidationErrors)
+                foreach (var eve in ex.EntityValidationErrors)
                 {
                     Console.WriteLine("Entity of type \"{0}\" in the state \"{1}\" has the following validation errors:",
                         eve.Entry.Entity.GetType().Name, eve.Entry.State);
@@ -49,6 +49,7 @@ namespace BusinessManager.DataAccess.SQL
                             ve.ErrorMessage);
                     }
                 }
+                throw ex;
             }
         }
 

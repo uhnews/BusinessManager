@@ -305,6 +305,7 @@
     <Content Include="Views\CustomerManager\Layaways.cshtml" />
     <Content Include="Views\Shared\AlertBox.cshtml" />
     <Content Include="Views\CustomerManager\ProductLookup.cshtml" />
+    <Content Include="Views\CustomerManager\Invoices.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

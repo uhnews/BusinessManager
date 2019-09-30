@@ -18,7 +18,7 @@
             top: 0;
         }
     </style>
-    <div style="display: flex">
+    <div style="display: flex" class="bg-danger">
         <div class="form-horizontal col-md-4">
             <div id="customer-info">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -126,8 +126,39 @@
 
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input onclick="saveCustomer(event)" id="save-customer-btn" type="submit" value="Save" class="btn btn-default" />
-                        <input onclick="addLayaway(event)" id="save-customer-btn" type="button" value="Add Layaway" class="btn btn-default" />
+                        <button onclick="saveCustomer(event)"
+                                id="save-customer-btn"
+                                type="submit"
+                                class="btn btn-default btn-sm">
+                            Save
+                            <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
+                        </button>
+                        <button onclick="showInvoices(event)"
+                                id="show-invoices-btn"
+                                type="button"
+                                class="btn btn-default btn-sm">
+                            Show Invoices
+                        </button>
+                        <button onclick="showLayaways(event)"
+                                id="show-layaways-btn"
+                                type="button"
+                                value="Show Layaways"
+                                class="btn btn-default btn-sm">
+                            Show Layaways
+                        </button>
+                        <button onclick="addInvoice(event)"
+                                id="add-invoice-btn"
+                                type="button"
+                                class="btn btn-default btn-sm btn-danger-text hidden">
+                            Add Invoice
+                        </button>
+                        <button onclick="addLayaway(event)"
+                                id="add-layaway-btn"
+                                type="button"
+                                value="Add Layaway"
+                                class="btn btn-default btn-sm hidden btn-danger-text">
+                            Add Layaway
+                        </button>
                         <p style="margin: 10px">@Html.ActionLink("Back to Customer List", "Index")</p>
                     </div>
                 </div>
@@ -141,7 +172,10 @@
                 <p style="margin: 10px">@Html.ActionLink("Back to Customer List", "Index")</p>
             </div>
         </div>
-        <div id="layaways-container" class="col-md-8 bg-success" style="padding: 0; margin: 0">
+        <div id="alt-subform-container" class="col-md-8 bg-warning" style="padding: 0; margin: 0">
+           
+        </div>
+        <div id="layaways-container" class="col-md-8 bg-info hidden" style="padding: 0; margin: 0">
             @{
                 var itemCount = 0;
                 var layawayCount = Model.Layaways.Count;
@@ -158,10 +192,32 @@
                 <h4>Customer Layaways</h4>
                 <strong><span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@combinedName </span></strong>
                 <span class="text-primary" style="float: right; margin:3px 10px 3px 3px">Customer: </span>
-                <span style="margin:3px">Layaways: @Model.Layaways.Count</span>
-                <span style="margin:3px">Total Items: @itemCount</span>
+                <span style="margin:3px">Layaways: @layawayCount</span>
+                <span style="margin:3px">Total Layaway Items: @itemCount</span>
             </div>
             @Html.Partial("Layaways", Model.Layaways)
+        </div>
+        <div id="invoices-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: #ffeb99">
+            @{
+                var invoiceItemCount = 0;
+                var invoiceCount = Model.Invoices.Count;
+                foreach (var invoice in Model.Invoices)
+                {
+                    invoiceItemCount += invoice.InvoiceItems.Count;
+                }
+                var invoiceFullName = Model.FirstName + ' ' + Model.LastName;
+                var invoiceCompanyName = Model.CompanyName == "" ? "" : " (" + Model.CompanyName + ")";
+                var invoicecombinedName = invoiceFullName + invoiceCompanyName;
+            }
+            <span id="curr-invoice-id" style="display: none"></span>
+            <div style="margin: 0px 0px 5px 25px">
+                <h4>Customer Invoices</h4>
+                <strong><span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@invoicecombinedName </span></strong>
+                <span class="text-primary" style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                <span style="margin:3px">Invoices: @Model.Invoices.Count</span>
+                <span style="margin:3px">Total Invoice Items: @invoiceItemCount</span>
+            </div>
+            @Html.Partial("Invoices", Model.Invoices)
         </div>
     </div>
 }
@@ -169,15 +225,113 @@
 
 @section Scripts {
     <script type="text/javascript">
-        document.body.onpageshow = (event) => {
-            var currLayawayPgIndex = getCookie("CurrLayawayPgIndex");
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        document.body.onpageshow = function(event) {
+            restorePgState();
+        };
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        setLayawaysDatePickers(event);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        document.onkeypress = function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+            }
+        };
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function savePgState(forceState = null) {
+            state = forceState;
+            if (!state) {
+                state = {
+                    CurrSubForm: getActiveSubForm(),
+                    CurrLayawayPgIndex: getCurrLayawayPgIndex(),
+                    CurrInvoicePgIndex: getCurrInvoicePgIndex()
+                };
+            }
+
+            var btnsVisibility = getCustomerEditBtnsVisibility();
+            Object.keys(btnsVisibility).forEach(key => {
+                state[key] = btnsVisibility[key];
+            });
+
+            setCookie("PageState", JSON.stringify(state), 1);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function getCustomerEditBtnsVisibility() {
+            var result = {};
+
+            var btnElementIdList = [
+               [ "save-customer-btn", "SaveCustomerButton" ],
+               [ "add-invoice-btn", "AddInvoiceButton" ],
+               [ "show-invoices-btn", "ShowInvoicesButton" ],
+               [ "add-layaway-btn", "AddLayawayButton" ],
+               [ "show-layaways-btn", "ShowLayawaysButton" ]
+            ];
+
+            btnElementIdList.forEach(elementDataPair => {
+                //
+                var btnElementId = elementDataPair[0];
+                var statePropertyName = elementDataPair[1];
+                //
+                var btn = document.getElementById(btnElementId);
+                if (btn.classList.contains("hidden")) {
+                    result[statePropertyName] = false;
+                }
+                else {
+                    result[statePropertyName] = true;
+                }
+            });
+            return result;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function restorePgState() {
+            //
+            var state = {};
+            var cookie = getCookie("PageState");
+
+            if (!cookie) {
+                return;
+            }
+            state = JSON.parse(cookie);
+
+            // restore Layaways View state
+            var currLayawayPgIndex = state.CurrLayawayPgIndex;
             if (currLayawayPgIndex) {
-                var table = document.getElementById("layaways-table");
-                var rows = table.rows;
+                let table = document.getElementById("layaways-table");
+                let rows = table.rows;
                 for (let i = 0; i < rows.length; i++) {
-                    var row = rows[i];
-                    var pgIndex = row.querySelector("span[name='layaways-row-number']").innerHTML;
+                    let row = rows[i];
+                    let pgIndex = row.querySelector("span[name='layaways-row-number']").innerHTML;
+                    pgIndex = parseInt(pgIndex);
                     if (pgIndex === currLayawayPgIndex) {
+                        row.style.display = "table-row";
+                    }
+                    else {
+                        row.style.display = "none";
+                    }
+                }
+            }
+            
+            // restore Invoices View state
+            var currInvoicePgIndex = state.CurrInvoicePgIndex;
+            if (currInvoicePgIndex) {
+                let table = document.getElementById("invoices-table");
+                let rows = table.rows;
+                for (let i = 0; i < rows.length; i++) {
+                    let row = rows[i];
+                    let pgIndex = row.querySelector("span[name='invoices-row-number']").innerHTML;
+                    pgIndex = parseInt(pgIndex);
+                    if (pgIndex === currInvoicePgIndex) {
                         row.style.display = "table-row"
                     }
                     else {
@@ -185,23 +339,129 @@
                     }
                 }
             }
-            expireCookie("CurrLayawayPgIndex");
-        };
-
-
-        document.onkeypress = function (event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
+            
+            // restore Alt form's View state
+            var subformElementIds = ["alt-subform-container", "layaways-container", "invoices-container"];
+            subformElementIds.forEach(elementId => {
+                var subform = document.getElementById(elementId);
+                if (elementId === state.CurrSubForm) {
+                    subform.classList.remove("hidden");
+                }
+                else {
+                    subform.classList.add("hidden");
+                }
+            });
+                        
+            // restore Customer Buttons view state
+            var btnsState = {
+                "save-customer-btn": state.SaveCustomerButton,
+                "add-invoice-btn": state.AddInvoiceButton,
+                "show-invoices-btn": state.ShowInvoicesButton,
+                "add-layaway-btn": state.AddLayawayButton,
+                "show-layaways-btn": state.ShowLayawaysButton,
             }
-        };
+            Object.keys(btnsState).forEach(key => {
+                var btn = document.getElementById(key);
+                var btnState = btnsState[key];
+                if (btnState)
+                    btn.classList.remove("hidden");
+                else
+                    btn.classList.add("hidden");
+            });
 
+            expireCookie("PageState");
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
-        setLayawaysDatePickers(event);
+        function getActiveSubForm() {
+            var result = "";
+            var subformElementIds = ["alt-subform-container", "layaways-container", "invoices-container"];
+            subformElementIds.forEach(function (elementId, index) {
+                var subform = document.getElementById(elementId);
+                if (!subform.classList.contains("hidden")) {
+                    result = elementId;
+                }
+            });
+            return result;
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        
+        function getCurrLayawayPgIndex() {
+            var layawaysTable = document.getElementById("layaways-table");
+            var tableRows = layawaysTable.rows;
+            for (let i = 0; i < tableRows.length; i++) {
+                var row = tableRows[i];
+                if (row.style.display !== "none") {
+                    var layawayPgIndex = row.querySelector("span[name='layaways-row-number']").innerHTML;
+                    if (layawayPgIndex) {
+                        layawayPgIndex = parseInt(layawayPgIndex);
+                        return layawayPgIndex;
+                    }
+                }
+            }
+            return null;
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        
+        function getCurrInvoicePgIndex() {
+            var invoicesTable = document.getElementById("invoices-table");
+            var tableRows = invoicesTable.rows;
+            for (let i = 0; i < tableRows.length; i++) {
+                var row = tableRows[i];
+                if (row.style.display !== "none") {
+                    var invoicePgIndex = row.querySelector("span[name='invoices-row-number']").innerHTML;
+                    if (invoicePgIndex) {
+                        invoicePgIndex = parseInt(invoicePgIndex);
+                        return invoicePgIndex;
+                    }
+                }
+            }
+            return null;
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function hideAllSubForms() {
+            document.getElementById("alt-subform-container").classList.add("hidden");
+            document.getElementById("layaways-container").classList.add("hidden");
+            document.getElementById("invoices-container").classList.add("hidden");
+            // also hide all the Add buttons
+            document.getElementById("add-invoice-btn").classList.add("hidden");
+            document.getElementById("add-layaway-btn").classList.add("hidden");
+            // also show all the Show buttons
+            document.getElementById("show-invoices-btn").classList.remove("hidden");
+            document.getElementById("show-layaways-btn").classList.remove("hidden");
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showInvoices(event) {
+            hideAllSubForms();
+            document.getElementById("invoices-container").classList.remove("hidden");
+            document.getElementById("show-invoices-btn").classList.add("hidden");
+            document.getElementById("add-invoice-btn").classList.remove("hidden");
+
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showLayaways(event) {
+            hideAllSubForms();
+            document.getElementById("layaways-container").classList.remove("hidden");
+            document.getElementById("show-layaways-btn").classList.add("hidden");
+            document.getElementById("add-layaway-btn").classList.remove("hidden");
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function saveCustomer(event) {
             document.getElementById('customer-edit-form').submit();
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function setLayawaysDatePickers(event) {
             var container = document.getElementById("layaways-container");
@@ -209,7 +469,6 @@
             var rows = table.getElementsByTagName("tr");
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-
                 var agreementDateEl = row.querySelector("[id='layaway_AgreementDate']");
                 var agreementDate = agreementDateEl.getAttribute("value");
                 var date1 = new Date(agreementDate);
@@ -223,9 +482,18 @@
                 dueDateEl.value = newDueDate; 
             }
         }
-
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function addLayaway(event) {
+            // save page state
+            var state = {
+                CurrSubForm: "layaways-container",
+                CurrLayawayPgIndex: 1,
+                CurrInvoicePgIndex: getCurrInvoicePgIndex()
+            }
+            savePgState(state);
+
             var customerId = document.getElementById("Id").value;
 
             //upload data
@@ -245,9 +513,58 @@
             xhttp.open("GET", "/CustomerManager/AddLayaway/?customerId=" + customerId, true);
             xhttp.send();
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function addInvoice(event) {
+            // save page state
+            var state = {
+                CurrSubForm: "invoices-container",
+                CurrLayawayPgIndex: getCurrLayawayPgIndex(),
+                CurrInvoicePgIndex: 1
+            }
+            savePgState(state);
+            
+            var customerId = document.getElementById("Id").value;
+
+            //upload data
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var responseText = this.responseText;
+                    var responseObject = JSON.parse(responseText);
+                    if (responseObject.Successful === true) {
+                        location.reload();
+                    }
+                    else if (responseObject.Message) {
+                        ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                    }
+                }
+            };
+            xhttp.open("GET", "/CustomerManager/AddInvoice/?customerId=" + customerId, true);
+            xhttp.send();
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function deleteLayaway(event) {
+            // save page state
+            var currPg = getCurrLayawayPgIndex();
+            var newPg = 0;
+            var table = document.getElementById("layaways-table");
+            if (table.rows.length > parseInt(currPg)) {
+                newPg = parseInt(currPg);
+            }
+            else {
+                newPg = parseInt(currPg) - 1;
+            }
+            var state = {
+                CurrSubForm: "layaways-container",
+                CurrLayawayPgIndex: newPg,
+                CurrInvoicePgIndex: getCurrInvoicePgIndex()
+            }
+            savePgState(state);
+
             var layawayId = (event.target.parentNode).parentNode.querySelector("[name='layaway-id']").innerHTML;
 
             //upload data
@@ -267,7 +584,48 @@
             xhttp.open("GET", "/CustomerManager/DeleteLayaway/?Id=" + layawayId, true);
             xhttp.send();
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function deleteInvoice(event) {
+            // save page state
+            var currPg = getCurrInvoicePgIndex();
+            var newPg = 0;
+            var table = document.getElementById("invoices-table");
+            if (table.rows.length > parseInt(currPg)) {
+                newPg = parseInt(currPg);
+            }
+            else {
+                newPg = parseInt(currPg) - 1;
+            }
+            var state = {
+                CurrSubForm: "invoices-container",
+                CurrLayawayPgIndex: getCurrLayawayPgIndex(),
+                CurrInvoicePgIndex: newPg
+            }
+            savePgState(state);
+
+            var invoiceId = (event.target.parentNode).parentNode.querySelector("[name='invoice-id']").innerHTML;
+
+            //upload data
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var responseText = this.responseText;
+                    var responseObject = JSON.parse(responseText);
+                    if (responseObject.Successful === true) {
+                        location.reload();
+                    }
+                    else if (responseObject.Message) {
+                        ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                    }
+                }
+            };
+            xhttp.open("GET", "/CustomerManager/DeleteInvoice/?Id=" + invoiceId, true);
+            xhttp.send();
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function saveLayaway(event) {
             // get data form UI
@@ -301,8 +659,12 @@
             xhttp.send();
         }
 
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function deleteLayawayItem(event, itemId, rowIndex, image, productName) {
+            // save page state
+            savePgState();
+
             let location = window.location;
             let protocol = location.protocol;
             let host = location.host;
@@ -343,16 +705,16 @@
                                 var responseText = this.responseText;
                                 var responseObject = JSON.parse(responseText);
                                 if (responseObject.Successful === true) {
-                                    var parentRow = document.getElementById(rowIndex);
+                                    //
+                                    var layawaysContainer = document.getElementById("layaways-container");
+                                    var parentRow = invoicesContainer.querySelector("[id='" + rowIndex + "']");
+
                                     var deletedItemIndex = parseInt(parentRow.querySelector("[name='layawayitems-row-number']").innerHTML);
                                     var itemsTable = parentRow.parentNode;
                                     itemsTable.removeChild(parentRow);
+
                                     if (itemsTable.childElementCount === 0) {
                                         //ShowMessage("<p class='text-primary'>Item deleted.</p>").then(function (result) { location.reload(); }, function (error) { });
-                                        var currLayawayPgIndex = getCurrLayawayPgIndex();
-                                        if (currLayawayPgIndex) {
-                                            setCookie("CurrLayawayPgIndex", currLayawayPgIndex, 1);
-                                        }
                                         location.reload();
                                     }
                                     else {
@@ -388,6 +750,98 @@
             );
         }
 
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function deleteInvoiceItem(event, itemId, rowIndex, image, productName) {
+            // save page state
+            savePgState();
+            
+            let location = window.location;
+            let protocol = location.protocol;
+            let host = location.host;
+            let baseUrl = protocol + "//" + host;
+            let imageUrl = baseUrl + "//Content//ProductImages//" + image;
+            let mesgHtml =
+                "<div>" +
+                    "<div " +
+                            "style='display: inline-block; " +
+                            "width: 200px; " +
+                            "height: 250px; text-align: center; margin-top: auto; margin-bottom: auto'>" +
+                        "<img " +
+                                "class='img-thumbnail'" +
+                                "style='margin: auto; " +
+                                "height: 100%;" +
+                                "padding: 3px; " +
+                                "border-width: 1px;" +
+                                "border-radius: 50%;" +
+                                "border-color: #f1c2c1'" +
+                                "src='" + imageUrl + "'" +
+                                "alt='Image' " +
+                                "/>" +
+                    "</div>" +
+                    "<div style='display: inline-block; margin-left: 10px'>" +
+                        "<p>Click Delete to remove</p>" +
+                        "<p class='text-danger'><strong>" + productName + "</strong></p>" +
+                        "<P>from Invoice.</P>" +
+                    "</div>" +
+                "</div>";
+
+            let titleHtml = "<span class='text-danger'>Please confirm delete action...</span>";
+            ShowMessage(mesgHtml, titleHtml, "delete, cancel").then(
+                function (response) {
+                    if (response === "Delete") {
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState === 4 && this.status === 200) {
+                                var responseText = this.responseText;
+                                var responseObject = JSON.parse(responseText);
+                                if (responseObject.Successful === true) {
+                                    //
+                                    var invoicesContainer = document.getElementById("invoices-container");
+                                    var parentRow = invoicesContainer.querySelector("[id='" + rowIndex + "']");
+
+                                    var deletedItemIndex = parseInt(parentRow.querySelector("[name='invoiceitems-row-number']").innerHTML);
+                                    var itemsTable = parentRow.parentNode;
+                                    itemsTable.removeChild(parentRow);
+
+                                    if (itemsTable.childElementCount === 0) {
+                                        //ShowMessage("<p class='text-primary'>Item deleted.</p>").then(function (result) { location.reload(); }, function (error) { });
+                                        location.reload();
+                                    }
+                                    else {
+                                        var rows = itemsTable.rows;
+                                        for (let i = 0; i < rows.length; i++) {
+                                            var row = rows[i];
+
+                                            var rowIndexSpan = row.querySelector("span[name='invoiceitems-row-number']");
+                                            var itemIndex = parseInt(rowIndexSpan.innerHTML);
+                                            if (deletedItemIndex < itemIndex) {
+                                                rowIndexSpan.innerHTML = itemIndex - 1;
+                                            }
+
+                                            var rowCountSpan = row.querySelector("span[name='invoiceitems-row-count']");
+                                            var rowCount = parseInt(rowCountSpan.innerHTML);
+                                            rowCountSpan.innerHTML = rowCount - 1;
+                                        }
+                                        //ShowMessage("<p class='text-primary'>Item deleted.</p>")
+                                    }
+                                }
+                                else if (responseObject.Message) {
+                                    ShowMessage(responseObject.Message);
+                                }
+                            }
+                        };
+                        xhttp.open("GET", "/CustomerManager/DeleteInvoiceItem/?id=" + itemId, true);
+                        xhttp.send();
+                    }
+                },
+                function (error) {
+                    alert("Something went wrong!");
+                }
+            );
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showPic(event, image) {
             var location = window.location;
@@ -403,27 +857,64 @@
                 " />"
             ShowMessage(html);
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
-
-        function openProductLookup(event, layawayId) {
-            document.getElementById("curr-layaway-id").innerHtml = layawayId;
+        function openProductLookup(event, currTargetRecordId, targetform) {
+            //
+            switch (targetform) {
+                case "Invoices": 
+                    document.getElementById("curr-invoice-id").innerHtml = currTargetRecordId;
+                    break;                
+                case "Layaways":
+                    document.getElementById("curr-layaway-id").innerHtml = currTargetRecordId;
+                    break;
+                default:
+                    return;
+            }
 
             document.getElementById("customer-info").style.opacity = 0;
             document.getElementById("product-lookup").style.display = "block";
         }
-
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function closeProductLookup(event) {
             document.getElementById("customer-info").style.opacity = 1;
             document.getElementById("product-lookup").style.display = "none";
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function copyProductData(event, productId, productTableRow = null, currTargetRecordId = "") {
+            //
+            event.preventDefault();
+            var activeSubform = getActiveSubForm();
 
-        function copyProductData(event, productId, productTableRow = null, currLayawayId = "" ) {
-            var productCopyFoundInLayaway = false;
+            // layaways-container
+            switch (activeSubform) {
+                case "invoices-container":
+                    addProductToInvoice(event, productId, productTableRow, currTargetRecordId);
+                    break;
 
-            var currLayawayId = currLayawayId || document.getElementById("curr-layaway-id").innerHtml;
-            
+                case "layaways-container":
+                    addProductToLayaway(event, productId, productTableRow, currTargetRecordId);
+                    break;
+
+                default:
+                    return;
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function addProductToInvoice(event, productId, productTableRow = null, currInvoiceId = "") {
+            // save page state
+            savePgState();
+        
+            var currInvoiceId = currInvoiceId || document.getElementById("curr-invoice-id").innerHtml;
+
+            var tableRow
             if (!productTableRow) {
                 var tableRow = (event.target.parentNode).parentNode;
             }
@@ -431,6 +922,111 @@
                 tableRow = productTableRow;
             }
 
+            var productCopyFoundInInvoice = false;
+            var invoiceItemId = "";
+            var invoicesTable = document.getElementById("invoices-container").querySelector("table");
+            
+            // loop over Invoices
+            for (let invoicesRow of invoicesTable.rows) {
+                var invoiceIdElement = invoicesRow.querySelector("[name='invoice-id']");
+                var invoiceId = invoiceIdElement.innerHTML;
+                if (currInvoiceId === invoiceId) {
+                    var invoiceItemsTable = invoicesRow.querySelector("table");
+                    // loop over InvoiceItems
+                    for (let invoiceItemsRow of invoiceItemsTable.rows) {
+                        var invoiceItemIdElement = invoiceItemsRow.querySelector("[name='invoiceitem-item-id']");
+                        invoiceItemId = invoiceItemIdElement.innerHTML;
+
+                        var invoiceProductIdElement = invoiceItemsRow.querySelector("[name='invoiceitem-product-id']");
+                        var invoiceProductId = invoiceProductIdElement.innerHTML;
+
+                        var invoiceItemQuantityElement = invoiceItemsRow.querySelector("[name='invoiceitem-quantity']");
+                        var invoiceItemQuantity = invoiceItemQuantityElement.innerHTML;
+                        ++invoiceItemQuantity;
+
+                        if (productId === invoiceProductId) {
+                            productCopyFoundInInvoice = true;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            if (productCopyFoundInInvoice) {
+                //upload (update) data for Quantity field of Product record
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        var responseText = this.responseText;
+                        var responseObject = JSON.parse(responseText);
+                        if (responseObject.Successful === true) {
+                            //ShowMessage("<p class='text-primary'>Item updated.</p>").then(function (result) { location.reload(); }, function (error) { });
+                            location.reload();
+                        }
+                        else if (responseObject.Message) {
+                            ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                        }
+                        else {
+                            ShowMessage("Oops! Something went wrong.", "<span class='text-warning'>Server Error</span>");
+                        }
+                    }
+                };
+                xhttp.open("GET", "/CustomerManager/UpdateInvoiceItemQuantity/?Id=" + invoiceItemId + "&quantity=" + invoiceItemQuantity, true);
+                xhttp.send();
+            }
+            else {
+                // get product data from the Product Search List UI
+                var invoiceItem = {
+                    Id: "",
+                    InvoiceId: invoiceId,
+                    ProductId: tableRow.querySelector("span[name='Id']").innerText,
+                    ProductName: tableRow.querySelector("span[name='Name']").innerText,
+                    ProductDescription: tableRow.querySelector("span[name='Description']").innerText,
+                    Price: tableRow.querySelector("span[name='Price']").innerText,
+                    Quantity: 1,
+                    Image: tableRow.querySelector("span[name='Image']").innerText
+                }
+                //upload (reate) data for entire Product record
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        var responseText = this.responseText;
+                        var responseObject = JSON.parse(responseText);
+                        if (responseObject.Successful === true) {
+                            //ShowMessage("<p class='text-primary'>Item added.</p>").then(function (result) { location.reload(); }, function (error) { });
+                            location.reload();
+                        }
+                        else if (responseObject.Message) {
+                            ShowMessage(responseObject.Message);
+                        }
+                    }
+                };
+                xhttp.open("GET", "/CustomerManager/AddInvoiceItem/?data=" + JSON.stringify(invoiceItem), true);
+                xhttp.send();
+            }
+
+            // clean up
+            document.getElementById("curr-invoice-id").innerHtml = "";
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function addProductToLayaway(event, productId, productTableRow = null, currLayawayId = "") {
+            // save page state
+            savePgState();
+
+            var currLayawayId = currLayawayId || document.getElementById("curr-layaway-id").innerHtml;
+
+            var tableRow
+            if (!productTableRow) {
+                var tableRow = (event.target.parentNode).parentNode;
+            }
+            else {
+                tableRow = productTableRow;
+            }
+
+            var productCopyFoundInLayaway = false;
             var layawayItemId = "";
             var layawaysTable = document.getElementById("layaways-container").querySelector("table");
 
@@ -470,10 +1066,6 @@
                         var responseObject = JSON.parse(responseText);
                         if (responseObject.Successful === true) {
                             //ShowMessage("<p class='text-primary'>Item updated.</p>").then(function (result) { location.reload(); }, function (error) { });
-                            var currLayawayPgIndex = getCurrLayawayPgIndex();
-                            if (currLayawayPgIndex) {
-                                setCookie("CurrLayawayPgIndex", currLayawayPgIndex, 1);
-                            }
                             location.reload();
                         }
                         else if (responseObject.Message) {
@@ -507,10 +1099,6 @@
                         var responseObject = JSON.parse(responseText);
                         if (responseObject.Successful === true) {
                             //ShowMessage("<p class='text-primary'>Item added.</p>").then(function (result) { location.reload(); }, function (error) { });
-                            var currLayawayPgIndex = getCurrLayawayPgIndex();
-                            if (currLayawayPgIndex) {
-                                setCookie("CurrLayawayPgIndex", currLayawayPgIndex, 1);
-                            }
                             location.reload();
                         }
                         else if (responseObject.Message) {
@@ -525,26 +1113,24 @@
             // clean up
             document.getElementById("curr-layaway-id").innerHtml = "";
         }
-
         
-        function getCurrLayawayPgIndex() {
-            var layawaysTable = document.getElementById("layaways-table");
-            var tableRows = layawaysTable.rows;
-            for (let i = 0; i < tableRows.length; i++) {
-                var row = tableRows[i];
-                if (row.style.display !== "none") {
-                    var layawayPgIndex = row.querySelector("span[name='layaways-row-number']").innerHTML;
-                    if (layawayPgIndex) {
-                        layawayPgIndex = parseInt(layawayPgIndex);
-                        return layawayPgIndex;
-                    }
-                }
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function navFirst(event, subform) {
+            //
+            var cssSelector = "";
+            switch (subform) {
+                case "Invoices":
+                    cssSelector = "[name='invoices-row-number']";
+                    break;
+
+                case "Layaways":
+                    cssSelector = "[name='layaways-row-number']";
+                    break;
+
+                default:
+                    return;
             }
-            return null;
-        }
-
-
-        function showFirstLayaway(event) {
             var parent1 = event.target.parentNode;
             var parent2 = parent1.parentNode;
             var parent3 = parent2.parentNode;
@@ -557,7 +1143,7 @@
             var rows = table.rows;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var rowIndex = row.querySelector("[name='layaways-row-number']").innerText;
+                var rowIndex = row.querySelector(cssSelector).innerText;
                 if (parseInt(rowIndex) !== 1) {
                     // hide row
                     row.style.display = "none";
@@ -568,16 +1154,31 @@
                 }
             }
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function navPrev(event, subform) {
+            //
+            var cssSelector = "";
+            switch (subform) {
+                case "Invoices":
+                    cssSelector = "[name='invoices-row-number']";
+                    break;
 
-        function showPrevLayaway(event) {
+                case "Layaways":
+                    cssSelector = "[name='layaways-row-number']";
+                    break;
+
+                default:
+                    return;
+            }
             var parent1 = event.target.parentNode;
             var parent2 = parent1.parentNode;
             var parent3 = parent2.parentNode;
             var parent4 = parent3.parentNode;
 
             var currRow = parent4.parentNode;
-            var currRowIndex = parseInt(currRow.querySelector("[name='layaways-row-number']").innerText);
+            var currRowIndex = parseInt(currRow.querySelector(cssSelector).innerText);
             if (currRowIndex === 1) return;
 
             var tableSection = currRow.parentNode;
@@ -586,7 +1187,7 @@
             var rows = table.rows;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var rowIndex = parseInt(row.querySelector("[name='layaways-row-number']").innerText);
+                var rowIndex = parseInt(row.querySelector(cssSelector).innerText);
                 if (rowIndex !== currRowIndex - 1) {
                     // hide row
                     row.style.display = "none";
@@ -597,16 +1198,32 @@
                 }
             }
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function navNext(event, subform) {
+            //
+            var cssSelector = "";
+            switch (subform) {
+                case "Invoices":
+                    cssSelector = "[name='invoices-row-number']";
+                    break;
 
-        function showNextLayaway(event) {
+                case "Layaways":
+                    cssSelector = "[name='layaways-row-number']";
+                    break;
+
+                default:
+                    return;
+            }
+
             var parent1 = event.target.parentNode;
             var parent2 = parent1.parentNode;
             var parent3 = parent2.parentNode;
             var parent4 = parent3.parentNode;
 
             var currRow = parent4.parentNode;
-            var currRowIndex = parseInt(currRow.querySelector("[name='layaways-row-number']").innerText);
+            var currRowIndex = parseInt(currRow.querySelector(cssSelector).innerText);
 
             var tableSection = currRow.parentNode;
             var table = tableSection.parentNode;
@@ -616,7 +1233,7 @@
 
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var rowIndex = parseInt(row.querySelector("[name='layaways-row-number']").innerText);
+                var rowIndex = parseInt(row.querySelector(cssSelector).innerText);
                 if (rowIndex !== currRowIndex + 1) {
                     // hide row
                     row.style.display = "none";
@@ -627,9 +1244,24 @@
                 }
             }
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function navLast(event, subform) {
+            //
+            var cssSelector = "";
+            switch (subform) {
+                case "Invoices":
+                    cssSelector = "[name='invoices-row-number']";
+                    break;
 
-        function showLastLayaway(event) {
+                case "Layaways":
+                    cssSelector = "[name='layaways-row-number']";
+                    break;
+
+                default:
+                    return;
+            }
             var parent1 = event.target.parentNode;
             var parent2 = parent1.parentNode;
             var parent3 = parent2.parentNode;
@@ -642,7 +1274,7 @@
             var rows = table.rows;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var rowIndex = row.querySelector("[name='layaways-row-number']").innerText;
+                var rowIndex = row.querySelector(cssSelector).innerText;
                 if (parseInt(rowIndex) !== rows.length) {
                     // hide row
                     row.style.display = "none";
@@ -653,25 +1285,54 @@
                 }
             }
         }
-
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function toggleBarcodeInput(event) {
+            var parentElement1 = event.target.parentNode;            
+            var parentElement2 = parentElement1.parentNode;
+            var toggleBtnId = "";
+            
+            if (parentElement2.id.toLowerCase().indexOf("invoice") > -1) {
+                toggleBtnId = "invoice-scan-upc";                
+            }
+            else if (parentElement2.id.toLowerCase().indexOf("layaway") > -1) {
+                toggleBtnId = "layaway-scan-upc";
+            }
+            else {
+                return;
+            }
+
             var container = event.target.parentNode.querySelector("[name='upc-input-container']")
             if (container.style.display == "none") {
                 container.style.display = "block";
-                event.target.parentNode.querySelector("[name='layaway-scan-upc']").classList.add("active");
+                event.target.parentNode.querySelector("[name='" + toggleBtnId + "']").classList.add("active");
                 container.querySelector("[name='upc-input']").focus();
             }
             else {
                 container.style.display = "none";
-                event.target.parentNode.querySelector("[name='layaway-scan-upc']").classList.remove("active");
+                event.target.parentNode.querySelector("[name='" + toggleBtnId + "']").classList.remove("active");
             }
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
-
-        function getProductByUPC(event, layawayId) {
+        function getProductByUPC(event, requestorId, requestingForm) {
             if (event.keyCode !== 13) return;
-            document.getElementById("curr-layaway-id").innerHTML = layawayId;
+            
+            var currIdElement = "";
+            switch (requestingForm) {
+                case "Invoice":
+                    currIdElement = "curr-invoice-id";
+                    break;
+                case "Layaway":
+                    currIdElement = "curr-layaway-id";
+                    break;
+                default:
+                    return;
+            }
+
+            document.getElementById(currIdElement).innerHTML = requestorId;
             var searchUPC = event.target.value;
             event.target.value = "";
 
@@ -682,24 +1343,39 @@
                 var row = rows[i];
                 var upc = row.querySelector("span[name='UPC']").innerHTML;
                 if (upc === searchUPC) {
-                    // add product to current Layaway                    
+                    // add product to current subform record                    
                     var productId = row.querySelector("span[name='Id']").innerHTML;
-                    copyProductData(event, productId, row, layawayId);
+                    copyProductData(event, productId, row, requestorId);
                     break;
                 }
             }
             ShowMessage("<h3 class='text-primary'>Product not found.</h3>")
         }
-
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showLayawayItemSaveBtn(event) {
-            var btn = event.target.parentNode.querySelector("input[name='layaway-item-save']");
+            var btn = event.target.parentNode.querySelector("input[name='layaway-item-save'], button[name='layaway-item-save']");
             btn.style.display = "inline";
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function showInvoiceItemSaveBtn(event) {
+            var btn = event.target.parentNode.querySelector("input[name='invoice-item-save'], button[name='invoice-item-save']");
+            btn.style.display = "inline";
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateLayawayItemPrice(event, itemId) {
             var parent = event.target.parentNode;
+            var parentNodeTag = parent.nodeName;
+            if (parentNodeTag !== "DIV") {
+                parent = parent.parentNode;
+            }
+            var btn = parent.querySelector("button");
+
             var priceInput = parent.querySelector("input[type='text']");
             var price = priceInput.value;
             if (isNaN(price) || price === "" || parseFloat(price) < 0) {
@@ -714,7 +1390,7 @@
                     var responseObject = JSON.parse(responseText);
                     if (responseObject.Successful === true) {
                         priceInput.value = parseFloat(price).toFixed(2);
-                        event.target.style.display = "none";
+                        btn.style.display = "none";
                     }
                     else if (responseObject.Message) {
                         ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
@@ -724,13 +1400,50 @@
             xhttp.open("GET", "/CustomerManager/UpdateLayawayItemPrice/?Id=" + itemId + "&price=" + price, true);
             xhttp.send();
         }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function updateInvoiceItemPrice(event, itemId) {
+            var parent = event.target.parentNode;
+            var parentNodeTag = parent.nodeName;
+            if (parentNodeTag !== "DIV") {
+                parent = parent.parentNode;
+            }
+            var btn = parent.querySelector("button");
+
+            var priceInput = parent.querySelector("input[type='text']");
+            var price = priceInput.value;
+            if (isNaN(price) || price === "" || parseFloat(price) < 0) {
+                ShowMessage("The price must be a number greater than zero.");
+                return;
+            }
+            //upload data
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var responseText = this.responseText;
+                    var responseObject = JSON.parse(responseText);
+                    if (responseObject.Successful === true) {
+                        priceInput.value = parseFloat(price).toFixed(2);
+                        btn.style.display = "none";
+                    }
+                    else if (responseObject.Message) {
+                        ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                    }
+                }
+            };
+            xhttp.open("GET", "/CustomerManager/UpdateInvoiceItemPrice/?Id=" + itemId + "&price=" + price, true);
+            xhttp.send();
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showLayawaySaveBtn(event) {
-            var btn = (event.target.parentNode).parentNode.querySelector("input[name='layaway-save']");
+            var btn = (event.target.parentNode).parentNode.querySelector("input[name='layaway-save'], button[name='layaway-save']");
             btn.style.display = "inline";
         }
-
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateLayaway(event, itemId) {
             var parent = event.target.parentNode;
@@ -758,5 +1471,7 @@
             xhttp.open("GET", "/CustomerManager/UpdateLayawayItemPrice/?Id=" + itemId + "&price=" + price, true);
             xhttp.send();
         }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
     </script>
 }

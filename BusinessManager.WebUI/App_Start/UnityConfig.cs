@@ -65,6 +65,7 @@ namespace BusinessManager.WebUI
             container.RegisterType<IRepository<Layaway>, SQLRepository<Layaway>>();
             container.RegisterType<IRepository<LayawayItem>, SQLRepository<LayawayItem>>();
             container.RegisterType<IRepository<Payment>, SQLRepository<Payment>>();
+            container.RegisterType<IRepository<Sequence>, SQLRepository<Sequence>>();
 
             // Data Service Contracts
             container.RegisterType<IBasketService, BasketService>();

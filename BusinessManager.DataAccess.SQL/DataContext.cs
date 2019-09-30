@@ -27,5 +27,6 @@ namespace BusinessManager.DataAccess.SQL
         public DbSet<Layaway> Layaways { get; set; }
         public DbSet<LayawayItem> LayawayItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Sequence> Sequences { get; set; }
     }
 }

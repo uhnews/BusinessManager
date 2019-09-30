@@ -54,8 +54,8 @@ namespace BusinessManager.Services
             DataContext dataContext = new DataContext();
             DbSet<Product> dbSet = dataContext.Set<Product>();
 
-            var query = from p in dbSet
-                        select p;
+            var query = from m in dbSet
+                        select m;
             try
             {
                 if (property == "Id")
@@ -143,8 +143,8 @@ namespace BusinessManager.Services
             DataContext dataContext = new DataContext();
             DbSet<Product> dbSet = dataContext.Set<Product>();
 
-            var query = from p in dbSet
-                        select p;
+            var query = from m in dbSet
+                        select m;
             try
             {
                 if (exceptId == "")
@@ -197,8 +197,8 @@ namespace BusinessManager.Services
             DataContext dataContext = new DataContext();
             DbSet<Product> dbSet = dataContext.Set<Product>();
 
-            var query = from p in dbSet
-                        select p;
+            var query = from m in dbSet
+                        select m;
             try
             {
                 if (exceptId == "")

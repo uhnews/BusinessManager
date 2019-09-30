@@ -6,9 +6,6 @@
 
     <h2><span class="fas fa-gifts text-primary">&nbsp;&nbsp;</span>Layaway Management</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
 
     @foreach (var layaway in Model)
@@ -68,12 +65,6 @@
                                 <label class="control-label layaway-label" for="layaway_OrderStatus">@Html.DisplayNameFor(model => model.OrderStatus)</label>
                                 @Html.EditorFor(model => layaway.OrderStatus, new { htmlAttributes = new { @class = "form-control", @style = @inputStyle } })
                             </div>
-                            <div style="@inputGroupStyle">
-                                @Html.ActionLink("Save", "Edit", new { id = layaway.Id }) |
-                                @Html.ActionLink("Add Item", "Edit", new { id = layaway.Id }) |
-                                @Html.ActionLink("Scan Item", "Edit", new { id = layaway.Id }) |
-                                @Html.ActionLink("Delete", "Delete", new { id = layaway.Id })
-                            </div>
                         </form>
                     </div>
                     @{
@@ -104,9 +95,6 @@
                                                 <label class="control-label layaway-label" style="display: inline; margin-right: 10px">Price</label>
                                                 @Html.EditorFor(m => item.Price, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
                                             </span>
-                                        </div>
-                                        <div>
-                                            @Html.ActionLink("Delete", "Delete", new { id = layaway.Id })
                                         </div>
                                     </td>
                                 </tr>

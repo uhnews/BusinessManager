@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="BasketService.cs" />
     <Compile Include="CustomerService.cs" />
+    <Compile Include="InvoiceDataService.cs" />
     <Compile Include="InvoiceService.cs" />
     <Compile Include="LayawayDataService.cs" />
     <Compile Include="LayawayService.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="POSTransactionService.cs" />
     <Compile Include="ProductRetrieveService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SequenceService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BusinessManager.Core\BusinessManager.Core.csproj">

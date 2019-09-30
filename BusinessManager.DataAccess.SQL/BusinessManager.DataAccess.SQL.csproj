@@ -282,6 +282,42 @@
     <Compile Include="Migrations\201909241659218_TestRemoveBasketIdRequired1.Designer.cs">
       <DependentUpon>201909241659218_TestRemoveBasketIdRequired1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909271548069_AddImageToInvoiceItem.cs" />
+    <Compile Include="Migrations\201909271548069_AddImageToInvoiceItem.Designer.cs">
+      <DependentUpon>201909271548069_AddImageToInvoiceItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909271551268_AddOrderStatusToInvoice.cs" />
+    <Compile Include="Migrations\201909271551268_AddOrderStatusToInvoice.Designer.cs">
+      <DependentUpon>201909271551268_AddOrderStatusToInvoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909271558040_AddProductDescriptionToInvoiceItem.cs" />
+    <Compile Include="Migrations\201909271558040_AddProductDescriptionToInvoiceItem.Designer.cs">
+      <DependentUpon>201909271558040_AddProductDescriptionToInvoiceItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909271830377_CreateSquenceModel.cs" />
+    <Compile Include="Migrations\201909271830377_CreateSquenceModel.Designer.cs">
+      <DependentUpon>201909271830377_CreateSquenceModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909271834190_AddRequiredToSquenceModel.cs" />
+    <Compile Include="Migrations\201909271834190_AddRequiredToSquenceModel.Designer.cs">
+      <DependentUpon>201909271834190_AddRequiredToSquenceModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909271852538_ChangeFieldSizeOnSquenceModel.cs" />
+    <Compile Include="Migrations\201909271852538_ChangeFieldSizeOnSquenceModel.Designer.cs">
+      <DependentUpon>201909271852538_ChangeFieldSizeOnSquenceModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909272024323_FixFieldNameOnSequence.cs" />
+    <Compile Include="Migrations\201909272024323_FixFieldNameOnSequence.Designer.cs">
+      <DependentUpon>201909272024323_FixFieldNameOnSequence.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909272224008_ChangeInvoiceNoToInvoiceNumberOnInvoice.cs" />
+    <Compile Include="Migrations\201909272224008_ChangeInvoiceNoToInvoiceNumberOnInvoice.Designer.cs">
+      <DependentUpon>201909272224008_ChangeInvoiceNoToInvoiceNumberOnInvoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909280829251_RemoveLengthFromInvoiceNo.cs" />
+    <Compile Include="Migrations\201909280829251_RemoveLengthFromInvoiceNo.Designer.cs">
+      <DependentUpon>201909280829251_RemoveLengthFromInvoiceNo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -425,6 +461,33 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909241659218_TestRemoveBasketIdRequired1.resx">
       <DependentUpon>201909241659218_TestRemoveBasketIdRequired1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909271548069_AddImageToInvoiceItem.resx">
+      <DependentUpon>201909271548069_AddImageToInvoiceItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909271551268_AddOrderStatusToInvoice.resx">
+      <DependentUpon>201909271551268_AddOrderStatusToInvoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909271558040_AddProductDescriptionToInvoiceItem.resx">
+      <DependentUpon>201909271558040_AddProductDescriptionToInvoiceItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909271830377_CreateSquenceModel.resx">
+      <DependentUpon>201909271830377_CreateSquenceModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909271834190_AddRequiredToSquenceModel.resx">
+      <DependentUpon>201909271834190_AddRequiredToSquenceModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909271852538_ChangeFieldSizeOnSquenceModel.resx">
+      <DependentUpon>201909271852538_ChangeFieldSizeOnSquenceModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909272024323_FixFieldNameOnSequence.resx">
+      <DependentUpon>201909272024323_FixFieldNameOnSequence.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909272224008_ChangeInvoiceNoToInvoiceNumberOnInvoice.resx">
+      <DependentUpon>201909272224008_ChangeInvoiceNoToInvoiceNumberOnInvoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909280829251_RemoveLengthFromInvoiceNo.resx">
+      <DependentUpon>201909280829251_RemoveLengthFromInvoiceNo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

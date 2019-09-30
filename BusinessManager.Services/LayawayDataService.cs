@@ -34,7 +34,7 @@ namespace BusinessManager.Services
             }
         }
 
-        public object AddCustomerLayaway(IRepository<Layaway> layawayContext, string customerId)
+        public object AddLayaway(IRepository<Layaway> layawayContext, string customerId)
         {
             try
             {
@@ -79,6 +79,7 @@ namespace BusinessManager.Services
                 return new { Successful = false, Message = "Layaway failed to delete." };
             }
         }
+
         public object UpdateLayaway(IRepository<Layaway> layawayContext, string data)
         {
             try
@@ -111,7 +112,7 @@ namespace BusinessManager.Services
                 Console.WriteLine(ex);
 
                 // send response object error
-                return new { Successful = false, Message = "Item failed to update." };
+                return new { Successful = false, Message = "Layaway failed to update." };
             }
         }
 

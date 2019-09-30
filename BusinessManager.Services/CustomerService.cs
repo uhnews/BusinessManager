@@ -21,8 +21,8 @@ namespace BusinessManager.Services
             DataContext dataContext = new DataContext();
             DbSet<Customer> dbSet = dataContext.Set<Customer>();
 
-            var query = from p in dbSet
-                        select p;
+            var query = from m in dbSet
+                        select m;
             var customers = query.ToList().Select(c => new CustomerViewModel
             {
                 Id = c.Id,

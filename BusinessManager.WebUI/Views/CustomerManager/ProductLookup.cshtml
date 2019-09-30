@@ -32,9 +32,11 @@
     </style>
 
     <script type="text/javascript">
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         const SHOW_ALL = true;
-
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function toggleColSeltMenu(event) {
             event.preventDefault(event);
@@ -56,7 +58,8 @@
                 // ignore if no match
             }
         }
-
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function filterItems(event, showAll = false) {
             event.preventDefault(event);
@@ -131,7 +134,8 @@
                 }
             }
         }
-
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function selectColGroup(event) {
             //event.preventDefault();
@@ -152,7 +156,8 @@
             });
             document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
         }
-
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function setAllCheck(event) {
             //event.preventDefault();
@@ -160,7 +165,8 @@
                 document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
             }
         }
-
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
     </script>
 
     <div class="col-md-12" style="margin: 0; padding: 0">

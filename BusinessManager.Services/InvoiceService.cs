@@ -32,7 +32,7 @@ namespace BusinessManager.Services
             invoices = query.ToList().Where(m => m.Id == customerId).Select(i => new Invoice
             {
                 Id = i.Id,
-                InvoiceNo = i.InvoiceNo,
+                InvoiceNumber = i.InvoiceNumber,
                 InvoiceDate = i.InvoiceDate,
                 PayerFirstName = i.PayerFirstName,
                 PayerLastName = i.PayerLastName,

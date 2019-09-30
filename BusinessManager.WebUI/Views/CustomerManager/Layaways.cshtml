@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Layaways";
-    var layawayIndex = 0;
+    int layawayIndex = 0;
     int layawayCount = Model.Count();
 }
 
@@ -39,8 +39,6 @@
                             display: block;
                         }
                     </style>
-                    <script type="text/javascript">
-                    </script>
                     <div id="layaway-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorLightBlue">
                         <form id="layaway-form">
                             <div name="layaway-customer-id" style="display: none">@layaway.CustomerId</div>
@@ -50,7 +48,7 @@
                                 @Html.DisplayFor(model => layaway.CreatedAt, new { htmlAttributes = new { @class = "form-control" } }).ToString().Replace("-07:00", "")
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.AgreementDate)</label>
+                                <label onclick="focusMatchingInput('layaway_AgreementDate')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.AgreementDate)</label>
                                 @{
                                     var testdate = layaway.AgreementDate.ToString("yyyy'-'MM'-'dd");
                                 }
@@ -66,7 +64,7 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.DueDate)</label>
+                                <label onclick="focusMatchingInput('layaway_DueDate')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.DueDate)</label>
                                 @Html.EditorFor(model => layaway.DueDate, new
                                 {
                                     htmlAttributes = new
@@ -79,7 +77,7 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.DownPayment)</label>
+                                <label onclick="focusMatchingInput('layaway_DownPayment')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.DownPayment)</label>
                                 @Html.EditorFor(model => layaway.DownPayment, new
                                 {
                                     htmlAttributes = new
@@ -92,7 +90,7 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.ServiceFee)</label>
+                                <label onclick="focusMatchingInput('layaway_ServiceFee')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.ServiceFee)</label>
                                 @Html.EditorFor(model => layaway.ServiceFee, new
                                 {
                                     htmlAttributes = new
@@ -105,7 +103,7 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.CancellationFee)</label>
+                                <label onclick="focusMatchingInput('layaway_CancellationFee')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.CancellationFee)</label>
                                 @Html.EditorFor(model => layaway.CancellationFee, new
                                 {
                                     htmlAttributes = new
@@ -118,7 +116,7 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.OrderStatus)</label>
+                                <label onclick="focusMatchingInput('layaway_OrderStatus')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.OrderStatus)</label>
                                 @Html.EditorFor(model => layaway.OrderStatus, new
                                 {
                                     htmlAttributes = new
@@ -131,22 +129,55 @@
                                 })
                             </div>
                             <div style="@buttonGroupStyle">
-                                <input type="button" name="layaway-save" value="Save" class="btn btn-sm btn-default btn-success-text" style="display: none" onclick="saveLayaway(event)" />
-                                <input type="button" name="layaway-scan-upc" value="Scan Barcode" class="btn btn-sm btn-default" onclick="toggleBarcodeInput(event)" />
-                                <input type="button" value="Add Item" class="btn btn-sm btn-default" onclick="openProductLookup(event, '@layaway.Id')" />
+                                <button type="button" 
+                                        name="layaway-save" 
+                                        class="btn btn-sm btn-default btn-success-text" 
+                                        style="display: none" 
+                                        onclick="saveLayaway(event)">
+                                    <strong>Save</strong>
+                                    <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
+                                </button>
+                                <button type="button" 
+                                        name="layaway-scan-upc" 
+                                        value="Scan Barcode" 
+                                        class="btn btn-sm btn-default" 
+                                        onclick="toggleBarcodeInput(event)">
+                                    Scan Barcode
+                                </button>
+                                <button type="button" 
+                                        value="Add Item" 
+                                        class="btn btn-sm btn-default" 
+                                        onclick="openProductLookup(event, '@layaway.Id', 'Layaways')">
+                                    Add Item
+                                </button>
                                 @{
                                     if (layaway.LayawayItems.Count == 0)
                                     {
-                                        <input type="button" value="Delete" class="btn btn-sm btn-default btn-danger-text" onclick="deleteLayaway(event)" />
+                                        <button type="button" 
+                                                value="Delete" 
+                                                class="btn btn-sm btn-default btn-danger-text" 
+                                                onclick="deleteLayaway(event)" >
+                                            Delete
+                                        </button>
                                     }
                                     else
                                     {
-                                        <input type="button" value="Delete" class="btn btn-sm btn-default btn-danger-text" disabled />
+                                        <button type="button" 
+                                                value="Delete" 
+                                                class="btn btn-sm btn-default btn-danger-text" 
+                                                disabled >
+                                            Delete
+                                        </button>
                                     }
                                 }
                                 <div name="upc-input-container" style="padding: 0; display: none">
                                     <span class="fas fa-barcode text-primary" style="font-size: 35px; margin: 3px -15px 0 0; padding: 0">&nbsp;&nbsp;</span>
-                                    <input name="upc-input" type="text" class="form-control" style="display: inline; max-width: 70%" onkeypress="getProductByUPC(event, '@layaway.Id')" />
+                                    <input name="upc-input" 
+                                           type="text" 
+                                           class="form-control" 
+                                           style="display: inline; max-width: 70%" 
+                                           onkeypress="getProductByUPC(event, '@layaway.Id', 'Layaway')" 
+                                           />
                                 </div>
                             </div>
                         </form>
@@ -197,12 +228,12 @@
                                             <strong>
                                                 @Html.DisplayFor(m => item.ProductName, new
                                                 {
-                                                                                                htmlAttributes = new
+                                                    htmlAttributes = new
                                                     {
-                                                                                                                        @class = "form-control",
-                                                                                                                        @style = @subItemInputStyle1,
-                                                                                                                        @readonly = "true"
-                                                                                                                    }
+                                                        @class = "form-control",
+                                                        @style = @subItemInputStyle1,
+                                                        @readonly = "true"
+                                                    }
                                                 })
                                             </strong><br />
                                             @Html.DisplayFor(m => item.ProductDescription, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
@@ -217,7 +248,7 @@
                                             @Html.LabelFor(m => item.Price, htmlAttributes: new
                                             {
                                                 @class = "control-label layaway-label",
-                                                                                                    @style = "display: inline; margin-right: 10px; margin-top: 10px"
+                                                @style = "display: inline; margin-right: 10px; margin-top: 10px"
                                             })
 
                                             @Html.EditorFor(m => item.Price, new
@@ -225,17 +256,19 @@
                                                 htmlAttributes = new
                                                 {
                                                     @class = "form-control",
-                                                                                                            @style = @subItemInputStyle2,
-                                                                                                            @onkeyup = "showLayawayItemSaveBtn(event)",
-                                                                                                            @onchange = "showLayawayItemSaveBtn(event)"
-                                                                                                        }
+                                                    @style = @subItemInputStyle2,
+                                                    @onkeyup = "showLayawayItemSaveBtn(event)",
+                                                    @onchange = "showLayawayItemSaveBtn(event)"
+                                                }
                                             })
-                                            <input name="layaway-item-save"
-                                                   type="button"
-                                                   value="Save"
-                                                   style="margin: 0; display: none"
-                                                   class="btn btn-sm btn-default btn-success-text"
-                                                   onclick="updateLayawayItemPrice(event, '@item.Id')" />
+                                            <button name="layaway-item-save"
+                                                    type="button"
+                                                    style="margin: 0; display: none"
+                                                    class="btn btn-sm btn-default btn-success-text"
+                                                    onclick="updateLayawayItemPrice(event, '@item.Id')">
+                                                <strong>Save</strong>
+                                                <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
+                                            </button>
                                             <div style="display: inline" class="text-danger">
                                                 <span name="layawayitems-row-number">@itemIndex</span> / <span name="layawayitems-row-count">@itemsCount</span>
                                             </div>
@@ -246,13 +279,33 @@
                         </table>
                     </div>
                 </div>
-                <div class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
+                <div name="layaway-nav-group" class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
                     Layaway <span name="layaways-row-number">@layawayIndex</span> of <span name="layaways-row-count" style="margin-right: 30px">@layawayCount</span>
                     <div style="display: inline">
-                        <button type="button" class="btn-pill"><span class="glyphicon glyphicon-fast-backward" style="padding: 0 3px 0 3px" onclick="showFirstLayaway(event)"></span></button>
-                        <button type="button" class="btn-pill"><span class="glyphicon glyphicon-arrow-left" style="padding: 0 3px 0 3px" onclick="showPrevLayaway(event)"></span></button>
-                        <button type="button" class="btn-pill"><span class="glyphicon glyphicon-arrow-right" style="padding: 0 3px 0 3px" onclick="showNextLayaway(event)"></span></button>
-                        <button type="button" class="btn-pill"><span class="glyphicon glyphicon-fast-forward" style="padding: 0 3px 0 3px" onclick="showLastLayaway(event)"></span></button>
+                        <button type="button" class="btn-pill">
+                            <span class="glyphicon glyphicon-fast-backward" 
+                                  style="padding: 0 3px 0 3px" 
+                                  onclick="navFirst(event, 'Layaways')">
+                            </span>
+                        </button>
+                        <button type="button" class="btn-pill">
+                            <span class="glyphicon glyphicon-arrow-left" 
+                                  style="padding: 0 3px 0 3px" 
+                                  onclick="navPrev(event, 'Layaways')">
+                            </span>
+                        </button>
+                        <button type="button" class="btn-pill">
+                            <span class="glyphicon glyphicon-arrow-right" 
+                                  style="padding: 0 3px 0 3px" 
+                                  onclick="navNext(event, 'Layaways')">
+                            </span>
+                        </button>
+                        <button type="button" class="btn-pill">
+                            <span class="glyphicon glyphicon-fast-forward" 
+                                  style="padding: 0 3px 0 3px" 
+                                  onclick="navLast(event, 'Layaways')">
+                            </span>
+                        </button>
                     </div>
                 </div>
             </td>

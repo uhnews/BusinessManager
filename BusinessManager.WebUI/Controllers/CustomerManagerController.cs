@@ -15,13 +15,26 @@ namespace BusinessManager.WebUI.Controllers
         IRepository<Customer> customerContext;
         IRepository<Layaway> layawayContext;
         IRepository<LayawayItem> layawayItemContext;
+        IRepository<Invoice> invoiceContext;
+        IRepository<InvoiceItem> invoiceItemContext;
+        IRepository<Sequence> sequenceContext;
 
         // dependency injection
-        public CustomerManagerController(IRepository<Customer> customerContext, IRepository<Layaway> layawayContext, IRepository<LayawayItem> layawayItemContext)
+        public CustomerManagerController(
+                                            IRepository<Customer> customerContext, 
+                                            IRepository<Layaway> layawayContext, 
+                                            IRepository<LayawayItem> layawayItemContext,
+                                            IRepository<Invoice> invoiceContext,
+                                            IRepository<InvoiceItem> invoiceItemContext,
+                                            IRepository<Sequence> sequenceContext
+                                        )
         {
             this.customerContext = customerContext;
             this.layawayContext = layawayContext;
             this.layawayItemContext = layawayItemContext;
+            this.invoiceContext = invoiceContext;
+            this.invoiceItemContext = invoiceItemContext;
+            this.sequenceContext = sequenceContext;
         }
 
         // GET: Customers
@@ -64,6 +77,15 @@ namespace BusinessManager.WebUI.Controllers
                 // get Invoices
                 // related Invoice records added by EF
 
+                // sort InvoicesItems
+                ICollection<Invoice> invoices = customer.Invoices;
+                customer.Invoices = invoices.OrderByDescending(i => i.ModifiedAt).ToList();
+                foreach (Invoice invoice in customer.Invoices)
+                {
+                    ICollection<InvoiceItem> invoiceItems = invoice.InvoiceItems;
+                    invoice.InvoiceItems = invoiceItems.OrderByDescending(i => i.ModifiedAt).ToList();
+                }
+
                 // get Layaways
                 // related Layaway and LayawayItem records added by EF
 
@@ -78,11 +100,11 @@ namespace BusinessManager.WebUI.Controllers
 
                 // sort LayawayItems
                 ICollection<Layaway> layaways = customer.Layaways;
-                customer.Layaways = layaways.OrderByDescending(r => r.ModifiedAt).ToList();
+                customer.Layaways = layaways.OrderByDescending(i => i.ModifiedAt).ToList();
                 foreach (Layaway layaway in customer.Layaways)
                 {
                     ICollection<LayawayItem> layawayItems = layaway.LayawayItems;
-                    layaway.LayawayItems = layawayItems.OrderByDescending(r => r.ModifiedAt).ToList();
+                    layaway.LayawayItems = layawayItems.OrderByDescending(i => i.ModifiedAt).ToList();
                 }
 
                 return View(customer);
@@ -162,10 +184,64 @@ namespace BusinessManager.WebUI.Controllers
             }
         }
 
+        public JsonResult AddInvoice(string customerId)
+        {
+            IInvoiceDataService dataService = new InvoiceDataService();
+            var inserResult = dataService.AddInvoice(invoiceContext, sequenceContext, customerId);
+            return Json(inserResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DeleteInvoice(string Id)
+        {
+            IInvoiceDataService dataService = new InvoiceDataService();
+            var deleteResult = dataService.DeleteInvoice(invoiceContext, Id);
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult UpdateInvoice(string data)
+        {
+            IInvoiceDataService dataService = new InvoiceDataService();
+
+            var updateResult = dataService.UpdateInvoice(invoiceContext, data);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /CustomerManager/DeleteLayawayItem
+        public JsonResult AddInvoiceItem(string data)
+        {
+            IInvoiceDataService dataService = new InvoiceDataService();
+            var addResult = dataService.AddItemToInvoice(invoiceItemContext, data);
+
+            return Json(addResult, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /CustomerManager/DeleteLayawayItem
+        public JsonResult DeleteInvoiceItem(string Id)
+        {
+            IInvoiceDataService dataService = new InvoiceDataService();
+            var deleteResult = dataService.RemoveItemFromInvoice(invoiceItemContext, Id);
+
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
+        }
+
+        public JsonResult UpdateInvoiceItemPrice(string Id, decimal price)
+        {
+            IInvoiceDataService dataService = new InvoiceDataService();
+            object updateResult = dataService.UpdateInvoiceItemPrice(invoiceItemContext, Id, price);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult UpdateInvoiceItemQuantity(string Id, int quantity)
+        {
+            IInvoiceDataService dataService = new InvoiceDataService();
+            object updateResult = dataService.UpdateInvoiceItemQuantity(invoiceItemContext, Id, quantity);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult AddLayaway(string customerId)
         {
             ILayawayDataService dataService = new LayawayDataService();
-            var inserResult = dataService.AddCustomerLayaway(layawayContext, customerId);
+            var inserResult = dataService.AddLayaway(layawayContext, customerId);
             return Json(inserResult, JsonRequestBehavior.AllowGet);
         }
 
@@ -185,32 +261,21 @@ namespace BusinessManager.WebUI.Controllers
         }
 
         // GET: /CustomerManager/DeleteLayawayItem
-        public JsonResult DeleteLayawayItem(string Id)
-        {
-            ILayawayDataService dataService = new LayawayDataService();
-            var deleteResult = dataService.RemoveItemFromLayaway(layawayItemContext, Id);
-
-            return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
-        }
-
-        // GET: /CustomerManager/DeleteLayawayItem
         public JsonResult AddLayawayItem(string data)
         {
-            //var layawayItem = JsonConvert.DeserializeObject<LayawayItem>(data);
-            //layawayItem.Id = Guid.NewGuid().ToString();
-
             ILayawayDataService dataService = new LayawayDataService();
             var addResult = dataService.AddItemToLayaway(layawayItemContext, data);
 
             return Json(addResult, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetProduct(string Id)
+        // GET: /CustomerManager/DeleteLayawayItem
+        public JsonResult DeleteLayawayItem(string Id)
         {
-            IProductRetrieveService productService = new ProductRetrieveService();
-            Product product = productService.GetProduct(Id);
+            ILayawayDataService dataService = new LayawayDataService();
+            var deleteResult = dataService.RemoveItemFromLayaway(layawayItemContext, Id);
 
-            return Json(product, JsonRequestBehavior.AllowGet);
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
         }
 
         public JsonResult UpdateLayawayItemPrice(string Id, decimal price)
@@ -225,6 +290,14 @@ namespace BusinessManager.WebUI.Controllers
             ILayawayDataService dataService = new LayawayDataService();
             object updateResult = dataService.UpdateLayawayItemQuantity(layawayItemContext, Id, quantity);
             return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetProduct(string Id)
+        {
+            IProductRetrieveService productService = new ProductRetrieveService();
+            Product product = productService.GetProduct(Id);
+
+            return Json(product, JsonRequestBehavior.AllowGet);
         }
     }
 }  

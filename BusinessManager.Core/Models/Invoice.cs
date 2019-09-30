@@ -8,9 +8,8 @@ namespace BusinessManager.Core.Models
     public class Invoice : BaseEntity
     {
         [DisplayName("Invoice")]
-        [StringLength(50)]
         [Required]
-        public string InvoiceNo { get; set; }
+        public int InvoiceNumber { get; set; }
 
         [StringLength(128)]
         [Required]
@@ -57,6 +56,10 @@ namespace BusinessManager.Core.Models
         [DisplayName("Telephone")]
         [StringLength(50)]
         public string PayerPhone { get; set; }
+
+        [DisplayName("Order Status")]
+        [StringLength(50)]
+        public string OrderStatus { get; set; }
 
         public virtual ICollection<InvoiceItem> InvoiceItems { get; set; }
 
