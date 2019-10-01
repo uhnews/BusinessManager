@@ -64,7 +64,9 @@
                 @Html.DropDownListFor(
                     model => model.Product.Category,
                     new SelectList(Model.ProductCategories, "Category", "Category"),
-                    htmlAttributes: new { @class = "control-label", @style = "width: 75%; max-width: " + @maxFieldWidth }
+                    htmlAttributes: new {
+                        @class = "control-label col-md-11",
+                        @style = "border-radius: 4px 4px 0px 0px; border-width: thin; padding: 5px 0 5px 8px; text-align: left" }
                 )
             </div>
         </div>

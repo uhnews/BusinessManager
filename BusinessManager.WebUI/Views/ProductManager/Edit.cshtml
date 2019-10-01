@@ -63,7 +63,13 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Product.Category, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.Product.Category, new SelectList(Model.ProductCategories, "Category", "Category"), htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.DropDownListFor(
+                        model => model.Product.Category,
+                        new SelectList(Model.ProductCategories, "Category", "Category"),
+                        htmlAttributes: new {
+                            @class = "control-label col-md-5",
+                            @style ="border-radius: 4px 4px 0px 0px; border-width: thin; padding: 5px 0 5px 8px; text-align: left"
+                        });
                 </div>
             </div>
 

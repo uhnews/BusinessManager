@@ -18,7 +18,7 @@
             top: 0;
         }
     </style>
-    <div style="display: flex" class="bg-danger">
+    <div style="display: flex; background-color: #f5fff5">
         <div class="form-horizontal col-md-4">
             <div id="customer-info">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -149,14 +149,17 @@
                         <button onclick="addInvoice(event)"
                                 id="add-invoice-btn"
                                 type="button"
-                                class="btn btn-default btn-sm btn-danger-text hidden">
+                                class="btn btn-default btn-sm btn-danger-text hidden"
+                                style="margin-left: 5px"
+                                >
                             Add Invoice
                         </button>
                         <button onclick="addLayaway(event)"
                                 id="add-layaway-btn"
                                 type="button"
-                                value="Add Layaway"
-                                class="btn btn-default btn-sm hidden btn-danger-text">
+                                class="btn btn-default btn-sm hidden btn-danger-text"
+                                style="margin-left: 5px"
+                                >
                             Add Layaway
                         </button>
                         <p style="margin: 10px">@Html.ActionLink("Back to Customer List", "Index")</p>
@@ -190,14 +193,16 @@
             <span id="curr-layaway-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
                 <h4>Customer Layaways</h4>
-                <strong><span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@combinedName </span></strong>
-                <span class="text-primary" style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                <strong>
+                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@combinedName </span>
+                    <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                </strong>
                 <span style="margin:3px">Layaways: @layawayCount</span>
                 <span style="margin:3px">Total Layaway Items: @itemCount</span>
             </div>
             @Html.Partial("Layaways", Model.Layaways)
         </div>
-        <div id="invoices-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: #ffeb99">
+        <div id="invoices-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: #ffeea8">  @* #ffeea8 = yellow 1 *@
             @{
                 var invoiceItemCount = 0;
                 var invoiceCount = Model.Invoices.Count;
@@ -212,8 +217,10 @@
             <span id="curr-invoice-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
                 <h4>Customer Invoices</h4>
-                <strong><span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@invoicecombinedName </span></strong>
-                <span class="text-primary" style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                <strong>
+                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@invoicecombinedName </span>
+                    <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                </strong>
                 <span style="margin:3px">Invoices: @Model.Invoices.Count</span>
                 <span style="margin:3px">Total Invoice Items: @invoiceItemCount</span>
             </div>
@@ -229,11 +236,14 @@
 
         document.body.onpageshow = function(event) {
             restorePgState();
+            savePgState();
         };
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
+        setInvoicesDatePickers(event);
         setLayawaysDatePickers(event);
+        setCustomerTotals(event);
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -242,13 +252,25 @@
                 event.preventDefault();
             }
         };
-        
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+                
+        function focusMatchingInput(input_id) {
+            var parentElement1 = event.target.parentNode;
+            var parentElement2 = parentElement1.parentNode;
+            if (parentElement2.querySelector("#" + input_id).type === "text") 
+                parentElement2.querySelector("#" + input_id).select();
+            else if (parentElement2.querySelector("#" + input_id).type === "date") 
+                parentElement2.querySelector("#" + input_id).focus();
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function savePgState(forceState = null) {
+            //
             state = forceState;
             if (!state) {
                 state = {
+                    CustomerId: getCurrCustomerId(),
                     CurrSubForm: getActiveSubForm(),
                     CurrLayawayPgIndex: getCurrLayawayPgIndex(),
                     CurrInvoicePgIndex: getCurrInvoicePgIndex()
@@ -259,7 +281,6 @@
             Object.keys(btnsVisibility).forEach(key => {
                 state[key] = btnsVisibility[key];
             });
-
             setCookie("PageState", JSON.stringify(state), 1);
         }
 
@@ -303,6 +324,10 @@
                 return;
             }
             state = JSON.parse(cookie);
+
+            if (state.CustomerId !== getCurrCustomerId()) {
+                return;
+            }
 
             // restore Layaways View state
             var currLayawayPgIndex = state.CurrLayawayPgIndex;
@@ -370,6 +395,12 @@
             });
 
             expireCookie("PageState");
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function getCurrCustomerId() {
+            return document.getElementById("Id").value;
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -443,7 +474,7 @@
             document.getElementById("invoices-container").classList.remove("hidden");
             document.getElementById("show-invoices-btn").classList.add("hidden");
             document.getElementById("add-invoice-btn").classList.remove("hidden");
-
+            savePgState();
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -453,6 +484,7 @@
             document.getElementById("layaways-container").classList.remove("hidden");
             document.getElementById("show-layaways-btn").classList.add("hidden");
             document.getElementById("add-layaway-btn").classList.remove("hidden");
+            savePgState();
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -463,10 +495,26 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function setInvoicesDatePickers(event) {
+            var container = document.getElementById("invoices-container");
+            var table = container.querySelector("table");
+            var rows = table.rows;
+            for (let i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var invoiceDateEl = row.querySelector("[id='invoice_InvoiceDate']");
+                var invoiceDate = invoiceDateEl.getAttribute("value");
+                var date1 = new Date(invoiceDate);
+                var newInvoiceDate = date1.getFullYear() + "-" + (date1.getMonth() + 1).toString().padStart(2, '0') + "-" + date1.getDate().toString().padStart(2, '0');
+                invoiceDateEl.value = newInvoiceDate; 
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
         function setLayawaysDatePickers(event) {
             var container = document.getElementById("layaways-container");
             var table = container.querySelector("table");
-            var rows = table.getElementsByTagName("tr");
+            var rows = table.rows;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 var agreementDateEl = row.querySelector("[id='layaway_AgreementDate']");
@@ -480,6 +528,56 @@
                 var date2 = new Date(dueDate);
                 var newDueDate = date2.getFullYear() + "-" + (date2.getMonth() + 1).toString().padStart(2, '0') + "-" + date2.getDate().toString().padStart(2, '0');
                 dueDateEl.value = newDueDate; 
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function setCustomerTotals(event) {
+            // Invoices
+            var table = document.getElementById("invoices-table");
+            var rows = table.rows;
+            let row = rows[rows.length - 1]; 
+            var customerInvoiceChargesTotal = row.querySelector("[name='charges-accumulator']").innerHTML;
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                row.querySelector("[name='all-pending-transaction-charges']").innerHTML = customerInvoiceChargesTotal;
+            }            
+
+            // Layaways
+            var table2 = document.getElementById("layaways-table");
+            rows = table2.rows;
+            row = rows[rows.length - 1];
+            var customerLayawayChargesTotal = row.querySelector("[name='charges-accumulator']").innerHTML;
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                row.querySelector("[name='all-pending-transaction-charges']").innerHTML = customerLayawayChargesTotal;
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function updateCustomerTotals(table_id, amountAdded = null, rowIndex = null) {
+            if (!amountAdded || !rowIndex) {
+                return;
+            }
+            amountAdded = parseFloat(amountAdded).toFixed(2);
+
+            var table = document.getElementById(table_id);
+            var rows = table.rows;
+            for (let i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                if (i === (rowIndex - 1)) {
+                    var oldTransactionCharges = (row.querySelector("span[name='transaction-charges']").innerHTML).replace("$ ", "");          //remove leading '$ ' from UI data
+                    oldTransactionCharges = parseFloat(oldTransactionCharges);
+                    var newTransactionCharges = parseFloat(oldTransactionCharges) + parseFloat(amountAdded);
+                    row.querySelector("span[name='transaction-charges']").innerHTML = parseFloat(newTransactionCharges).toFixed(2);
+                }
+
+                var oldAllTransactionCharges = (row.querySelector("[name='all-pending-transaction-charges']").innerHTML).replace("$ ", "");   //remove leading '$ ' from UI data
+                var newAllTransactionCharges = parseFloat(oldAllTransactionCharges) + parseFloat(amountAdded);
+
+                row.querySelector("[name='all-pending-transaction-charges']").innerHTML = parseFloat(newAllTransactionCharges).toFixed(2);
             }
         }
         
@@ -657,20 +755,27 @@
             };
             xhttp.open("GET", "/CustomerManager/UpdateLayaway/?data=" + JSON.stringify(layaway), true);
             xhttp.send();
-        }
+        } 
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function deleteLayawayItem(event, itemId, rowIndex, image, productName) {
-            // save page state
-            savePgState();
-
+        function deleteSubItemConfirmHTML(subform, productName, image) {
+            //            
             let location = window.location;
             let protocol = location.protocol;
             let host = location.host;
             let baseUrl = protocol + "//" + host;
             let imageUrl = baseUrl + "//Content//ProductImages//" + image;
-            let mesgHtml =
+
+            switch(subform) {
+                case "Invoice":
+                case "Layaway":
+                    break;
+
+                default:
+                    return "";
+            }
+            let mesgHtml = 
                 "<div>" +
                     "<div " +
                             "style='display: inline-block; " +
@@ -691,10 +796,20 @@
                     "<div style='display: inline-block; margin-left: 10px'>" +
                         "<p>Click Delete to remove</p>" +
                         "<p class='text-danger'><strong>" + productName + "</strong></p>" +
-                        "<P>from Layaway.</P>" +
+                        "<P>from " + subform + ".</P>" +
                     "</div>" +
                 "</div>";
 
+            return mesgHtml;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function deleteLayawayItem(event, itemId, rowIndex, image, productName) {
+            // save page state
+            savePgState();
+
+            let mesgHtml = deleteSubItemConfirmHTML("Layaway", productName, image);
             let titleHtml = "<span class='text-danger'>Please confirm delete action...</span>";
             ShowMessage(mesgHtml, titleHtml, "delete, cancel").then(
                 function (response) {
@@ -707,7 +822,10 @@
                                 if (responseObject.Successful === true) {
                                     //
                                     var layawaysContainer = document.getElementById("layaways-container");
-                                    var parentRow = invoicesContainer.querySelector("[id='" + rowIndex + "']");
+                                    var parentRow = layawaysContainer.querySelector("[id='" + rowIndex + "']");
+                                    
+                                    var quantity = parentRow.querySelector("[name='item-quantity']").innerHTML;
+                                    var price = parentRow.querySelector("[id='item_Price']").value;
 
                                     var deletedItemIndex = parseInt(parentRow.querySelector("[name='layawayitems-row-number']").innerHTML);
                                     var itemsTable = parentRow.parentNode;
@@ -732,6 +850,7 @@
                                             var rowCount = parseInt(rowCountSpan.innerHTML);
                                             rowCountSpan.innerHTML = rowCount - 1;
                                         }
+                                        updateCustomerTotals("layaways-table", (quantity*price)*-1, getCurrLayawayPgIndex());
                                         //ShowMessage("<p class='text-primary'>Item deleted.</p>")
                                     }
                                 }
@@ -756,36 +875,7 @@
             // save page state
             savePgState();
             
-            let location = window.location;
-            let protocol = location.protocol;
-            let host = location.host;
-            let baseUrl = protocol + "//" + host;
-            let imageUrl = baseUrl + "//Content//ProductImages//" + image;
-            let mesgHtml =
-                "<div>" +
-                    "<div " +
-                            "style='display: inline-block; " +
-                            "width: 200px; " +
-                            "height: 250px; text-align: center; margin-top: auto; margin-bottom: auto'>" +
-                        "<img " +
-                                "class='img-thumbnail'" +
-                                "style='margin: auto; " +
-                                "height: 100%;" +
-                                "padding: 3px; " +
-                                "border-width: 1px;" +
-                                "border-radius: 50%;" +
-                                "border-color: #f1c2c1'" +
-                                "src='" + imageUrl + "'" +
-                                "alt='Image' " +
-                                "/>" +
-                    "</div>" +
-                    "<div style='display: inline-block; margin-left: 10px'>" +
-                        "<p>Click Delete to remove</p>" +
-                        "<p class='text-danger'><strong>" + productName + "</strong></p>" +
-                        "<P>from Invoice.</P>" +
-                    "</div>" +
-                "</div>";
-
+            let mesgHtml = deleteSubItemConfirmHTML("Invoice", productName, image);
             let titleHtml = "<span class='text-danger'>Please confirm delete action...</span>";
             ShowMessage(mesgHtml, titleHtml, "delete, cancel").then(
                 function (response) {
@@ -799,6 +889,9 @@
                                     //
                                     var invoicesContainer = document.getElementById("invoices-container");
                                     var parentRow = invoicesContainer.querySelector("[id='" + rowIndex + "']");
+
+                                    var quantity = parentRow.querySelector("[name='item-quantity']").innerHTML;
+                                    var price = parentRow.querySelector("[id='item_Price']").value;                                    
 
                                     var deletedItemIndex = parseInt(parentRow.querySelector("[name='invoiceitems-row-number']").innerHTML);
                                     var itemsTable = parentRow.parentNode;
@@ -823,6 +916,7 @@
                                             var rowCount = parseInt(rowCountSpan.innerHTML);
                                             rowCountSpan.innerHTML = rowCount - 1;
                                         }
+                                        updateCustomerTotals("invoices-table", (quantity*price)*-1, getCurrInvoicePgIndex());
                                         //ShowMessage("<p class='text-primary'>Item deleted.</p>")
                                     }
                                 }
@@ -862,17 +956,23 @@
 
         function openProductLookup(event, currTargetRecordId, targetform) {
             //
+            var recordType = "";
             switch (targetform) {
                 case "Invoices": 
                     document.getElementById("curr-invoice-id").innerHtml = currTargetRecordId;
+                    recordType = "Invoice"
                     break;                
                 case "Layaways":
                     document.getElementById("curr-layaway-id").innerHtml = currTargetRecordId;
+                    recordType = "Layaway"
                     break;
                 default:
                     return;
             }
-
+            var addBtns = document.querySelectorAll("[name='add-item-to-subform']");
+            for (let i = 0; i < addBtns.length; i++) {
+                addBtns[i].innerText = "Add To " + recordType;
+            }
             document.getElementById("customer-info").style.opacity = 0;
             document.getElementById("product-lookup").style.display = "block";
         }
@@ -1153,6 +1253,7 @@
                     row.style.display = "table-row";
                 }
             }
+            savePgState();
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1197,6 +1298,7 @@
                     row.style.display = "table-row";
                 }
             }
+            savePgState();
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1243,6 +1345,7 @@
                     row.style.display = "table-row";
                 }
             }
+            savePgState();
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1284,6 +1387,7 @@
                     row.style.display = "table-row";
                 }
             }
+            savePgState();
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1363,7 +1467,7 @@
 
         function showInvoiceItemSaveBtn(event) {
             var btn = event.target.parentNode.querySelector("input[name='invoice-item-save'], button[name='invoice-item-save']");
-            btn.style.display = "inline";
+            btn.style.display = "block";
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1391,6 +1495,7 @@
                     if (responseObject.Successful === true) {
                         priceInput.value = parseFloat(price).toFixed(2);
                         btn.style.display = "none";
+                        updateCustomerTotals("layaways-table")
                     }
                     else if (responseObject.Message) {
                         ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
@@ -1424,8 +1529,10 @@
                     var responseText = this.responseText;
                     var responseObject = JSON.parse(responseText);
                     if (responseObject.Successful === true) {
+                        var oldPrice = responseObject.OldValue;
                         priceInput.value = parseFloat(price).toFixed(2);
                         btn.style.display = "none";
+                        updateCustomerTotals();
                     }
                     else if (responseObject.Message) {
                         ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");

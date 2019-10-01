@@ -4,18 +4,23 @@
     ViewBag.Title = "Invoices";
     int invoiceIndex = 0;
     int invoiceCount = Model.Count();
+    decimal invoiceCharges = 0;
+    decimal customerCharges = 0;
 }
+
 <table id="invoices-table" class="table">
     @foreach (var invoice in Model)
     {
         ++invoiceIndex;
         string rowStyle = invoiceIndex > 1 ? "display: none" : "display: table-row";
+        invoiceCharges = invoice.InvoiceItems.Sum(item => item.Quantity * item.Price);
+        var invoiceChargesStr  = "$ " + String.Format("{0:###,###,###.00}", invoiceCharges);
+        customerCharges += invoiceCharges;
+        var customerChargesStr = String.Format("$ {0:#,###.00}", customerCharges);
         <tr style="@rowStyle">
             <td>
                 <div class="col-md-12" style="display: flex">
                     @{
-                        var colorLightBlue = "#f6fbfd";
-
                         // Invoice Items table styling strings
                         var inputStyle = "display: inline; width: 45%; max-width: 100%";
                         var inputGroupStyle = "margin: 6px";
@@ -36,19 +41,11 @@
 
                         .fixed_header thead tr {
                             display: block;
-                        }
+                        }                       
                     </style>
                     <script>
-                        function focusMatchingInput(input_id) {
-                            var parentElement1 = event.target.parentNode;
-                            var parentElement2 = parentElement1.parentNode;
-                            if (parentElement2.querySelector("#" + input_id).type === "text") 
-                                parentElement2.querySelector("#" + input_id).select();
-                            else if (parentElement2.querySelector("#" + input_id).type === "date") 
-                                parentElement2.querySelector("#" + input_id).focus();
-                        }
                     </script>
-                    <div id="invoice-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: #fff5cc"> @* yellow 2 *@
+                    <div id="invoice-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: #fff5cc"> @* #fff5cc = yellow 2 *@
                         <form id="invoice-form">
                             <div name="invoice-customer-id" style="display: none">@invoice.CustomerId</div>
                             <div name="invoice-id" style="display: none">@invoice.Id</div>
@@ -98,7 +95,7 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label  onclick="focusMatchingInput('invoice_PayerLastName')" class="control-label invoice-label" style="width: 45%">@Html.DisplayNameFor(model => model.PayerLastName)</label>
+                                <label onclick="focusMatchingInput('invoice_PayerLastName')" class="control-label invoice-label" style="width: 45%">@Html.DisplayNameFor(model => model.PayerLastName)</label>
                                 @Html.EditorFor(model => invoice.PayerLastName, new
                                 {
                                     htmlAttributes = new
@@ -175,10 +172,36 @@
                                     }
                                 })
                             </div>
+                            <div name="invoice-summary" style="position: relative; margin: 0px 0px 5px 0px">
+                                <hr style="margin:  10px 0 0 0; border-width: 2px" />
+                                <h5 style="margin: 10px 0 5px 15px; text-decoration: underline; font-size: 15px">This Invoice </h5>
+                                <h4 style="margin: 0px 0 0 40px; font-size: 17px">
+                                    <span>Total Charges: </span>
+                                    <span name="transaction-charges"
+                                          class="pull-right"
+                                          style="margin-right: 25px">@invoiceChargesStr</span>
+                                </h4>
+                                <h4 style="margin: 3px 0 0 40px; font-size: 17px">
+                                    <span>Payments: </span>
+                                    <span name="invoice-payments"
+                                          class="pull-right"
+                                          style="margin-right: 25px">$ 0.00</span>
+                                </h4>
+
+                                <h5 style="margin: 10px 0 5px 15px; text-decoration: underline; font-size: 15px">All Customer Invoices</h5>
+                                <h4 style="margin: 0px 0 0 40px; font-size: 17px">
+                                    <span name="charges-accumulator" class="hidden">@customerChargesStr</span>
+                                    <span>Amount Pending:</span>
+                                    <span name="all-pending-transaction-charges"
+                                          class="pull-right"
+                                          style="margin-right: 25px; font-size: 17px"></span>
+                                </h4>
+                                <hr style="margin: 3px 0 10px 0; border-width: 2px" />
+                            </div>
                             <div style="@buttonGroupStyle">
                                 <button type="button"
                                         name="invoice-save"
-                                        value="Save" 
+                                        value="Save"
                                         class="btn btn-sm btn-default btn-success-text"
                                         style="display: none" onclick="saveInvoice(event)">
                                     <strong>Save</strong>
@@ -198,29 +221,28 @@
                                 @{
                                     if (invoice.InvoiceItems.Count == 0)
                                     {
-                                        <button type="button" 
-                                                class="btn btn-sm btn-default btn-danger-text" 
-                                                onclick="deleteInvoice(event)" >
+                                        <button type="button"
+                                                class="btn btn-sm btn-default btn-danger-text"
+                                                onclick="deleteInvoice(event)">
                                             Delete
                                         </button>
                                     }
                                     else
                                     {
-                                        <button type="button"  
-                                                class="btn btn-sm btn-default btn-danger-text" 
-                                                disabled >
+                                        <button type="button"
+                                                class="btn btn-sm btn-default btn-danger-text"
+                                                disabled>
                                             Delete
                                         </button>
                                     }
                                 }
                                 <div name="upc-input-container" style="padding: 0; display: none">
                                     <span class="fas fa-barcode text-primary" style="font-size: 35px; margin: 3px -15px 0 0; padding: 0">&nbsp;&nbsp;</span>
-                                    <input name="upc-input" 
-                                           type="text" 
-                                           class="form-control" 
-                                           style="display: inline; max-width: 70%" 
-                                           onkeypress="getProductByUPC(event, '@invoice.Id', 'Invoice')" 
-                                           />
+                                    <input name="upc-input"
+                                           type="text"
+                                           class="form-control"
+                                           style="display: inline; max-width: 70%"
+                                           onkeypress="getProductByUPC(event, '@invoice.Id', 'Invoice')" />
                                 </div>
                             </div>
                         </form>
@@ -229,7 +251,7 @@
                         var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0; border: none";
                         var subItemInputStyle2 = "display: inline; max-width: 95%; margin: 0 0 5px 0";
                     }
-                <div class="col-md-6 invoices-fixed-header" style="flex: 1; background-color: #fff5cc; padding-left: 0">
+                <div class="col-md-6 invoices-fixed-header" style="flex: 1; background-color: #fff5cc; padding-left: 0">  @* #fff5cc = yellow 2 *@
                     <h4 style="margin-left: 10px">Invoice Items</h4>
                     <table class="table">
                         @{
@@ -241,7 +263,7 @@
                         {
                             ++itemIndex;
                             rowElementId = "row-" + invoiceIndex + "-" + itemIndex;
-                            <tr id=@rowElementId style="margin-top: 20px; background-color: #fffcf0">
+                            <tr id=@rowElementId style="margin-top: 20px; background-color: #fffcf0">  @* #fffcf0 = yellow 3 *@
                                 <td style="position: relative">
                                     <div>
                                         <img onclick="showPic(event, '@item.Image')"
@@ -283,7 +305,7 @@
                                     </div>
                                     <div style="padding-top: 7px; width: 50%">
                                         <label class="control-label invoice-label" style="display: inline; margin-right: 10px">Quantity:</label>
-                                        <p class="text-primary">
+                                        <p name="item-quantity" class="text-primary">
                                             @Html.DisplayFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
                                         </p>
                                     </div>
@@ -291,7 +313,7 @@
                                         @Html.LabelFor(m => item.Price, htmlAttributes: new
                                         {
                                             @class = "control-label invoice-label",
-                                                                                                @style = "display: inline; margin-right: 10px; margin-top: 10px"
+                                            @style = "display: inline; margin-right: 10px; margin-top: 10px"
                                         })
 
                                         @Html.EditorFor(m => item.Price, new
@@ -306,7 +328,7 @@
                                         })
                                         <button name="invoice-item-save"
                                                type="button"
-                                               style="margin: 0; display: none"
+                                               style="margin: 0 0 3px 0; display: none"
                                                class="btn btn-sm btn-default btn-success-text"
                                                onclick="updateInvoiceItemPrice(event, '@item.Id')" >
                                             <strong>Save</strong>
@@ -325,25 +347,25 @@
                 <div name="invoice-nav-group" class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
                     Invoice <span name="invoices-row-number">@invoiceIndex</span> of <span name="invoices-row-count" style="margin-right: 30px">@invoiceCount</span>
                     <div style="display: inline">
-                        <button type="button" class="btn-pill">
+                        <button type="button" class="btn-pill-golden">
                             <span class="glyphicon glyphicon-fast-backward" 
                                   style="padding: 0 3px 0 3px" 
                                   onclick="navFirst(event, 'Invoices')">
                             </span>
                         </button>
-                        <button type="button" class="btn-pill">
+                        <button type="button" class="btn-pill-golden">
                             <span class="glyphicon glyphicon-arrow-left" 
                                   style="padding: 0 3px 0 3px" 
                                   onclick="navPrev(event, 'Invoices')">
                             </span>
                         </button>
-                        <button type="button" class="btn-pill">
+                        <button type="button" class="btn-pill-golden">
                             <span class="glyphicon glyphicon-arrow-right" 
                                   style="padding: 0 3px 0 3px" 
                                   onclick="navNext(event, 'Invoices')">
                             </span>
                         </button>
-                        <button type="button" class="btn-pill">
+                        <button type="button" class="btn-pill-golden">
                             <span class="glyphicon glyphicon-fast-forward" 
                                   style="padding: 0 3px 0 3px" 
                                   onclick="navLast(event, 'Invoices')">

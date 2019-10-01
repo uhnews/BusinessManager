@@ -4,6 +4,8 @@
     ViewBag.Title = "Layaways";
     int layawayIndex = 0;
     int layawayCount = Model.Count();
+    decimal layawayCharges = 0;
+    decimal customerCharges = 0;
 }
 
 <table id="layaways-table" class="table">
@@ -11,6 +13,10 @@
     {
         ++layawayIndex;
         string rowStyle = layawayIndex > 1 ? "display: none" : "display: table-row";
+        layawayCharges = layaway.LayawayItems.Sum(item => item.Quantity * item.Price);
+        var layawayChargesStr  = "$ " + String.Format("{0:###,###,###.00}", layawayCharges);
+        customerCharges += layawayCharges;
+        var customerChargesStr = String.Format("$ {0:#,###.00}", customerCharges);
         <tr style="@rowStyle">
             <td>
                 <div class="col-md-12" style="display: flex">
@@ -128,59 +134,84 @@
                                     }
                                 })
                             </div>
-                            <div style="@buttonGroupStyle">
-                                <button type="button" 
-                                        name="layaway-save" 
-                                        class="btn btn-sm btn-default btn-success-text" 
-                                        style="display: none" 
-                                        onclick="saveLayaway(event)">
-                                    <strong>Save</strong>
-                                    <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
-                                </button>
-                                <button type="button" 
-                                        name="layaway-scan-upc" 
-                                        value="Scan Barcode" 
-                                        class="btn btn-sm btn-default" 
-                                        onclick="toggleBarcodeInput(event)">
-                                    Scan Barcode
-                                </button>
-                                <button type="button" 
-                                        value="Add Item" 
-                                        class="btn btn-sm btn-default" 
-                                        onclick="openProductLookup(event, '@layaway.Id', 'Layaways')">
-                                    Add Item
-                                </button>
-                                @{
-                                    if (layaway.LayawayItems.Count == 0)
-                                    {
-                                        <button type="button" 
-                                                value="Delete" 
-                                                class="btn btn-sm btn-default btn-danger-text" 
-                                                onclick="deleteLayaway(event)" >
-                                            Delete
-                                        </button>
-                                    }
-                                    else
-                                    {
-                                        <button type="button" 
-                                                value="Delete" 
-                                                class="btn btn-sm btn-default btn-danger-text" 
-                                                disabled >
-                                            Delete
-                                        </button>
-                                    }
-                                }
-                                <div name="upc-input-container" style="padding: 0; display: none">
-                                    <span class="fas fa-barcode text-primary" style="font-size: 35px; margin: 3px -15px 0 0; padding: 0">&nbsp;&nbsp;</span>
-                                    <input name="upc-input" 
-                                           type="text" 
-                                           class="form-control" 
-                                           style="display: inline; max-width: 70%" 
-                                           onkeypress="getProductByUPC(event, '@layaway.Id', 'Layaway')" 
-                                           />
+                            <div name="layaway-summary" style="position: relative; margin: 0px 0px 5px 0px">
+                                <hr style="margin:  10px 0 0 0; border-width: 2px" />
+                                <h5 style="margin: 10px 0 5px 15px; text-decoration: underline; font-size: 15px">This Layaway </h5>
+                                <h4 style="margin: 0px 0 0 40px; font-size: 17px">
+                                    <span>Total Charges: </span>
+                                    <span name="transaction-charges"
+                                          class="pull-right"
+                                          style="margin-right: 25px">@layawayChargesStr</span>
+                                    </h4>
+                                    <h4 style="margin: 3px 0 0 40px; font-size: 17px">
+                                        <span>Payments: </span>
+                                        <span name="layaway-payments"
+                                              class="pull-right"
+                                              style="margin-right: 25px">$ 0.00</span>
+                                    </h4>
+
+                                    <h5 style="margin: 10px 0 5px 15px; text-decoration: underline; font-size: 15px">All Customer Layaways</h5>
+                                    <h4 style="margin: 0px 0 0 40px; font-size: 17px">
+                                        <span name="charges-accumulator" class="hidden">@customerChargesStr</span>
+                                        <span>Amount Pending:</span>
+                                        <span name="all-pending-transaction-charges"
+                                              class="pull-right"
+                                              style="margin-right: 25px; font-size: 17px"></span>
+                                    </h4>
+                                    <hr style="margin: 3px 0 10px 0; border-width: 2px" />
                                 </div>
-                            </div>
-                        </form>
+                                <div style="@buttonGroupStyle">
+                                    <button type="button"
+                                            name="layaway-save"
+                                            class="btn btn-sm btn-default btn-success-text"
+                                            style="display: none"
+                                            onclick="saveLayaway(event)">
+                                        <strong>Save</strong>
+                                        <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
+                                    </button>
+                                    <button type="button"
+                                            name="layaway-scan-upc"
+                                            value="Scan Barcode"
+                                            class="btn btn-sm btn-default"
+                                            onclick="toggleBarcodeInput(event)">
+                                        Scan Barcode
+                                    </button>
+                                    <button type="button"
+                                            value="Add Item"
+                                            class="btn btn-sm btn-default"
+                                            onclick="openProductLookup(event, '@layaway.Id', 'Layaways')">
+                                        Add Item
+                                    </button>
+                                    @{
+                                        if (layaway.LayawayItems.Count == 0)
+                                        {
+                                            <button type="button"
+                                                    value="Delete"
+                                                    class="btn btn-sm btn-default btn-danger-text"
+                                                    onclick="deleteLayaway(event)">
+                                                Delete
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button"
+                                                    value="Delete"
+                                                    class="btn btn-sm btn-default btn-danger-text"
+                                                    disabled>
+                                                Delete
+                                            </button>
+                                        }
+                                    }
+                                    <div name="upc-input-container" style="padding: 0; display: none">
+                                        <span class="fas fa-barcode text-primary" style="font-size: 35px; margin: 3px -15px 0 0; padding: 0">&nbsp;&nbsp;</span>
+                                        <input name="upc-input"
+                                               type="text"
+                                               class="form-control"
+                                               style="display: inline; max-width: 70%"
+                                               onkeypress="getProductByUPC(event, '@layaway.Id', 'Layaway')" />
+                                    </div>
+                                </div>
+                            </form>
                     </div>
                     @{
                         var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0; background-color: " + colorLightBlue + "; border: none";
@@ -240,7 +271,7 @@
                                         </div>
                                         <div style="padding-top: 7px; width: 50%">
                                             <label class="control-label layaway-label" style="display: inline; margin-right: 10px">Quantity:</label>
-                                            <p class="text-primary">
+                                            <p name="item-quantity" class="text-primary">
                                                 @Html.DisplayFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
                                             </p>
                                         </div>

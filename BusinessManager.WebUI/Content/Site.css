@@ -105,6 +105,27 @@ textarea {
         background-color: #428bca;
     }
 
+.btn-pill-golden {
+    background-color: #997a00;
+    border: none;
+    color: white;
+    padding: 0px 6px 6px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    max-height: 20px;
+    border-radius: 20px
+}
+
+    .btn-pill-golden:hover {
+        background-color: #cca300;
+    }
+
+    .btn-pill-golden:active {
+        background-color: #997a00;
+    }
+
 
 /* USE THIS TO CENTER AN <a> OR <img> TAG INSIDE A <div> WITH A CLASS 'CONTAINER-CENTER-VERTICAL' *************************************************************** */
 .container-center-vertical {

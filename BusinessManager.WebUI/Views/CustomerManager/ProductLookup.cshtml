@@ -220,7 +220,7 @@
                     </label>
                     <label class="checkbox-container">
                         Category
-                        <input name="CategoryCheck" t type="checkbox" onclick="setAllCheck(event)">
+                        <input name="CategoryCheck" t type="checkbox" checked="checked" onclick="setAllCheck(event)">
                         <span class="checkmark"></span>
                     </label>
                     <label class="checkbox-container">
@@ -288,10 +288,11 @@
                                 <p class="product-lookup-item">UPC: <span name="UPC" class="text-primary">@Html.DisplayFor(modelItem => item.UPC)</span></p>
                                 <p class="product-lookup-item">Is Service: <span name="UPC">@Html.DisplayFor(modelItem => item.IsService)</span></p>
                                 <p class="product-lookup-item">Quantity: <strong><span name="Quantity">@Html.DisplayFor(modelItem => item.Quantity)</span></strong></p>
-                                <button type="button"
+                                <button name="add-item-to-subform" 
+                                        type="button"
                                         class="btn-pill product-lookup-item"
                                         onclick="copyProductData(event, '@item.Id')">
-                                    Add To Layaway
+                                    Add To
                                 </button>
                             </td>
                             <td>

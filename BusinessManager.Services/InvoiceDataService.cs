@@ -189,17 +189,18 @@ namespace BusinessManager.Services
 
         public object UpdateInvoiceItemPrice(IRepository<InvoiceItem> invoiceItemContext, string Id, decimal price)
         {
-            InvoiceItem invoiceItem = invoiceItemContext.Find(Id);
+            InvoiceItem invoiceItem = invoiceItemContext.Find(Id);       
 
             if (invoiceItem != null)
             {
                 try
                 {
+                    decimal oldPrice = invoiceItem.Price;
                     invoiceItem.Price = price;
                     invoiceItem.ModifiedAt = DateTime.Now;
                     invoiceItemContext.Update(invoiceItem);
                     invoiceItemContext.Commit();
-                    return new { Successful = true, Message = "Item update succeeded." };
+                    return new { Successful = true, Message = "Item update succeeded.", OldValue = oldPrice };
                 }
                 catch (Exception ex)
                 {
