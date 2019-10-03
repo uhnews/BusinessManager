@@ -44,7 +44,7 @@ namespace BusinessManager.Core.Models
         [DisplayName("Source")]
         [StringLength(50)]
         [Required]
-        public string ReceivableSource { get; set; }    // Online Orders, POS Sales, Layaway, Invoices
+        public string ReceivableSource { get; set; }    // Online Orders, POS Sales, Layaway, Invoices; tells system where to apply payment
 
         [DisplayName("Source Id")]
         [StringLength(128)]

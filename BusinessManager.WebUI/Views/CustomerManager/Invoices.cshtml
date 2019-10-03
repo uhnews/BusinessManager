@@ -19,7 +19,7 @@
         var customerChargesStr = String.Format("$ {0:#,###.00}", customerCharges);
         <tr style="@rowStyle">
             <td>
-                <div class="col-md-12" style="display: flex">
+                <div class="col-md-12" style="display: flex; height: 625px">
                     @{
                         // Invoice Items table styling strings
                         var inputStyle = "display: inline; width: 45%; max-width: 100%";
@@ -188,7 +188,7 @@
                                           style="margin-right: 25px">$ 0.00</span>
                                 </h4>
 
-                                <h5 style="margin: 10px 0 5px 15px; text-decoration: underline; font-size: 15px">All Customer Invoices</h5>
+                                <h5 style="margin: 10px 0 5px 15px; text-decoration: underline; font-size: 15px">All Invoices</h5>
                                 <h4 style="margin: 0px 0 0 40px; font-size: 17px">
                                     <span name="charges-accumulator" class="hidden">@customerChargesStr</span>
                                     <span>Amount Pending:</span>

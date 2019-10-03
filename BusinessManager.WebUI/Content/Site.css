@@ -211,3 +211,53 @@ textarea {
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
+
+/* USE THIS TO STYLE ELEMENT BORDERS  *************************************************************** */
+
+.border {
+    border: solid;
+    border-width: thin;
+    /*border-color: #cca300;*/
+}
+
+/* set boder colors here */
+.border-golden {
+    border-color: #cca300;
+}
+
+.border-primary {
+    border-color: #0275d8;
+}
+
+.border-warning {
+    border-color: #f0ad4e;
+}
+
+.border-danger {
+    border-color: #d9534f;
+}
+
+.border-success {
+    border-color: #5bc0de ;
+}
+
+.border-info {
+    border-color: #5bc0de;
+}
+
+/* remove boder edges here */
+.border-remove-top {
+    border-top: 0;
+}
+
+.border-remove-bottom {
+    border-right: 0;
+}
+
+.border-remove-right {
+    border-right: 0;
+}
+
+.border-remove-left {
+    border-right: 0;
+}

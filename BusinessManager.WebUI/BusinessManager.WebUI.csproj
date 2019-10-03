@@ -195,6 +195,7 @@
     <Compile Include="Controllers\LayawayManagerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderManagerController.cs" />
+    <Compile Include="Controllers\PaymentManagerController.cs" />
     <Compile Include="Controllers\POSSaleManagerController.cs" />
     <Compile Include="Controllers\POSTransactionController.cs" />
     <Compile Include="Controllers\ProductCategoryManagerController.cs" />
@@ -310,6 +311,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\ProductImages\" />
+    <Folder Include="Views\PaymentManager\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

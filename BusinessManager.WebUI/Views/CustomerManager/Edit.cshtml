@@ -12,14 +12,13 @@
     <hr style="margin-top: 0; margin-bottom: 0" />
     <style>
         .product-lookup-popup {
-            /*z-index: 3;*/
             position: absolute;
             left: 0;
             top: 0;
         }
     </style>
-    <div style="display: flex; background-color: #f5fff5">
-        <div class="form-horizontal col-md-4">
+    <div style="display: flex">
+        <div id="customer-section" class="form-horizontal col-md-4 border border-warning border-remove-right " style="padding: 10px; background-color: #f5fff5">
             <div id="customer-info">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.Id)
@@ -27,7 +26,7 @@
 
                 @{
                     var labelStyle = "width: 35%; padding-right: 0";
-                    var inputBoxStyle = "width: 100%; margin-left: 15px; margin-right: 0";
+                    var inputBoxStyle = "width: 95%; margin-left: 15px; margin-right: 0";
                 }
                 <div class="form-group">
                     @Html.LabelFor(model => model.CreatedAt, htmlAttributes: new { @class = "control-label col-md-3", @style = @labelStyle })
@@ -234,7 +233,7 @@
     <script type="text/javascript">
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        document.body.onpageshow = function(event) {
+        document.body.onpageshow = function (event) {
             restorePgState();
             savePgState();
         };
@@ -273,7 +272,8 @@
                     CustomerId: getCurrCustomerId(),
                     CurrSubForm: getActiveSubForm(),
                     CurrLayawayPgIndex: getCurrLayawayPgIndex(),
-                    CurrInvoicePgIndex: getCurrInvoicePgIndex()
+                    CurrInvoicePgIndex: getCurrInvoicePgIndex(),
+                    CustomerEditBorder: getCustomerEditBorderState()
                 };
             }
 
@@ -317,18 +317,15 @@
 
         function restorePgState() {
             //
-            var state = {};
             var cookie = getCookie("PageState");
-
             if (!cookie) {
                 return;
             }
-            state = JSON.parse(cookie);
-
+            var state = JSON.parse(cookie);
+            
             if (state.CustomerId !== getCurrCustomerId()) {
                 return;
             }
-
             // restore Layaways View state
             var currLayawayPgIndex = state.CurrLayawayPgIndex;
             if (currLayawayPgIndex) {
@@ -346,7 +343,6 @@
                     }
                 }
             }
-            
             // restore Invoices View state
             var currInvoicePgIndex = state.CurrInvoicePgIndex;
             if (currInvoicePgIndex) {
@@ -363,8 +359,7 @@
                         row.style.display = "none"
                     }
                 }
-            }
-            
+            }            
             // restore Alt form's View state
             var subformElementIds = ["alt-subform-container", "layaways-container", "invoices-container"];
             subformElementIds.forEach(elementId => {
@@ -376,7 +371,6 @@
                     subform.classList.add("hidden");
                 }
             });
-                        
             // restore Customer Buttons view state
             var btnsState = {
                 "save-customer-btn": state.SaveCustomerButton,
@@ -394,6 +388,11 @@
                     btn.classList.add("hidden");
             });
 
+            // restore Customer fields border
+            //alert(document.getElementById("customer-section").className);
+            //alert(state.CustomerEditBorder);
+            document.getElementById("customer-section").className = state.CustomerEditBorder;
+
             expireCookie("PageState");
         }
         
@@ -401,6 +400,12 @@
 
         function getCurrCustomerId() {
             return document.getElementById("Id").value;
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function getCustomerEditBorderState() {
+            return document.getElementById("customer-section").className;
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -469,11 +474,35 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function addCustomerSectionBorder(subform) {
+            //select Customer-Edit section
+            var customerSection = document.getElementById("customer-section");
+            // clear all borders from it
+            var removeTheseFirst = ["border-golden", "border-primary", "border-warning"];
+            removeTheseFirst.forEach((item) => {
+                customerSection.classList.remove(item);
+            });
+            // now select specified border
+            if (subform.toLowerCase().indexOf("invoice") > -1) {
+                customerSection.classList.add("border-golden");
+            }
+            else if (subform.toLowerCase().indexOf("layaway") > -1) {
+                customerSection.classList.add("border-primary");
+            }
+            else {
+                customerSection.classList.add("border-warning");
+                return;
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
         function showInvoices(event) {
             hideAllSubForms();
             document.getElementById("invoices-container").classList.remove("hidden");
             document.getElementById("show-invoices-btn").classList.add("hidden");
             document.getElementById("add-invoice-btn").classList.remove("hidden");
+            addCustomerSectionBorder("Invoice");
             savePgState();
         }
         
@@ -484,6 +513,7 @@
             document.getElementById("layaways-container").classList.remove("hidden");
             document.getElementById("show-layaways-btn").classList.add("hidden");
             document.getElementById("add-layaway-btn").classList.remove("hidden");
+            addCustomerSectionBorder("Layaway");
             savePgState();
         }
         
@@ -586,9 +616,11 @@
         function addLayaway(event) {
             // save page state
             var state = {
+                CustomerId: getCurrCustomerId(),
                 CurrSubForm: "layaways-container",
                 CurrLayawayPgIndex: 1,
-                CurrInvoicePgIndex: getCurrInvoicePgIndex()
+                CurrInvoicePgIndex: getCurrInvoicePgIndex(),
+                CustomerEditBorder: getCustomerEditBorderState()
             }
             savePgState(state);
 
@@ -617,9 +649,11 @@
         function addInvoice(event) {
             // save page state
             var state = {
+                CustomerId: getCurrCustomerId(),
                 CurrSubForm: "invoices-container",
                 CurrLayawayPgIndex: getCurrLayawayPgIndex(),
-                CurrInvoicePgIndex: 1
+                CurrInvoicePgIndex: 1,
+                CustomerEditBorder: getCustomerEditBorderState()
             }
             savePgState(state);
             
@@ -657,9 +691,11 @@
                 newPg = parseInt(currPg) - 1;
             }
             var state = {
+                CustomerId: getCurrCustomerId(),
                 CurrSubForm: "layaways-container",
                 CurrLayawayPgIndex: newPg,
-                CurrInvoicePgIndex: getCurrInvoicePgIndex()
+                CurrInvoicePgIndex: getCurrInvoicePgIndex(),
+                CustomerEditBorder: getCustomerEditBorderState()
             }
             savePgState(state);
 
@@ -697,9 +733,11 @@
                 newPg = parseInt(currPg) - 1;
             }
             var state = {
+                CustomerId: getCurrCustomerId(),
                 CurrSubForm: "invoices-container",
                 CurrLayawayPgIndex: getCurrLayawayPgIndex(),
-                CurrInvoicePgIndex: newPg
+                CurrInvoicePgIndex: newPg,
+                CustomerEditBorder: getCustomerEditBorderState()
             }
             savePgState(state);
 
