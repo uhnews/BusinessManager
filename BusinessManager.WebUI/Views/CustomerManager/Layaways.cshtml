@@ -48,13 +48,18 @@
                     <div id="layaway-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorLightBlue">
                         <form id="layaway-form">
                             <div name="layaway-customer-id" style="display: none">@layaway.CustomerId</div>
-                            <div name="layaway-id" style="display: none">@layaway.Id</div>
+                            <div id="receivable-source-id" name="layaway-id" style="display: none">@layaway.Id</div>
                             <div style="@inputGroupStyle">
                                 <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(m => m.CreatedAt)</label>
                                 @Html.DisplayFor(model => layaway.CreatedAt, new { htmlAttributes = new { @class = "form-control" } }).ToString().Replace("-07:00", "")
                             </div>
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('layaway_AgreementDate')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.AgreementDate)</label>
+                                <label onclick="focusMatchingInput('layaway_AgreementDate')" 
+                                       class="control-label layaway-label" 
+                                       style="width: 45%"
+                                       >
+                                    @Html.DisplayNameFor(model => model.AgreementDate)
+                                </label>
                                 @{
                                     var testdate = layaway.AgreementDate.ToString("yyyy'-'MM'-'dd");
                                 }
@@ -62,23 +67,28 @@
                                 {
                                     htmlAttributes = new
                                     {
-                                        @class = "form-control",
+                                        @class = "form-control input-sm",
                                         @style = @dateStyle,
                                         @type = "date",
-                                        @onchange = "showLayawaySaveBtn(event)"
+                                        @onchange = "showSubformSaveBtn(event)"
                                     }
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('layaway_DueDate')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.DueDate)</label>
+                                <label onclick="focusMatchingInput('layaway_DueDate')" 
+                                       class="control-label layaway-label" 
+                                       style="width: 45%"
+                                       >
+                                    @Html.DisplayNameFor(model => model.DueDate)
+                                </label>
                                 @Html.EditorFor(model => layaway.DueDate, new
                                 {
                                     htmlAttributes = new
                                     {
-                                        @class = "form-control",
+                                        @class = "form-control input-sm",
                                         @style = @dateStyle,
                                         @type = "date",
-                                        @onchange = "showLayawaySaveBtn(event)"
+                                        @onchange = "showSubformSaveBtn(event)"
                                     }
                                 })
                             </div>
@@ -88,10 +98,10 @@
                                 {
                                     htmlAttributes = new
                                     {
-                                        @class = "form-control",
+                                        @class = "form-control input-sm",
                                         @style = @inputStyle,
-                                        @onchange = "showLayawaySaveBtn(event)",
-                                        @onkeyup = "showLayawaySaveBtn(event)"
+                                        @onchange = "showSubformSaveBtn(event)",
+                                        @onkeyup = "showSubformSaveBtn(event)"
                                     }
                                 })
                             </div>
@@ -101,10 +111,10 @@
                                 {
                                     htmlAttributes = new
                                     {
-                                        @class = "form-control",
+                                        @class = "form-control input-sm",
                                         @style = @inputStyle,
-                                        @onchange = "showLayawaySaveBtn(event)",
-                                        @onkeyup = "showLayawaySaveBtn(event)"
+                                        @onchange = "showSubformSaveBtn(event)",
+                                        @onkeyup = "showSubformSaveBtn(event)"
                                     }
                                 })
                             </div>
@@ -114,10 +124,10 @@
                                 {
                                     htmlAttributes = new
                                     {
-                                        @class = "form-control",
+                                        @class = "form-control input-sm",
                                         @style = @inputStyle,
-                                        @onchange = "showLayawaySaveBtn(event)",
-                                        @onkeyup = "showLayawaySaveBtn(event)"
+                                        @onchange = "showSubformSaveBtn(event)",
+                                        @onkeyup = "showSubformSaveBtn(event)"
                                     }
                                 })
                             </div>
@@ -127,10 +137,10 @@
                                 {
                                     htmlAttributes = new
                                     {
-                                        @class = "form-control",
+                                        @class = "form-control input-sm",
                                         @style = @inputStyle,
-                                        @onchange = "showLayawaySaveBtn(event)",
-                                        @onkeyup = "showLayawaySaveBtn(event)"
+                                        @onchange = "showSubformSaveBtn(event)",
+                                        @onkeyup = "showSubformSaveBtn(event)"
                                     }
                                 })
                             </div>
@@ -162,15 +172,14 @@
                                 </div>
                                 <div style="@buttonGroupStyle">
                                     <button type="button"
-                                            name="layaway-save"
-                                            class="btn btn-sm btn-default btn-success-text"
-                                            style="display: none"
-                                            onclick="saveLayaway(event)">
+                                            name="subform-save"
+                                            class="btn btn-sm btn-default btn-success-text hidden"
+                                            onclick="saveSubformData(event, 'UpdateLayaway', getLayawayData)">
                                         <strong>Save</strong>
                                         <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                                     </button>
                                     <button type="button"
-                                            name="layaway-scan-upc"
+                                            name="scan-upc"
                                             value="Scan Barcode"
                                             class="btn btn-sm btn-default"
                                             onclick="toggleBarcodeInput(event)">
@@ -202,12 +211,12 @@
                                             </button>
                                         }
                                     }
-                                    <div name="upc-input-container" style="padding: 0; display: none">
+                                    <div name="upc-input-container" style="padding: 0" class="hidden">
                                         <span class="fas fa-barcode text-primary" style="font-size: 35px; margin: 3px -15px 0 0; padding: 0">&nbsp;&nbsp;</span>
                                         <input name="upc-input"
                                                type="text"
-                                               class="form-control"
-                                               style="display: inline; max-width: 70%"
+                                               class="form-control input-sm"
+                                               style="display: inline; max-width: 70%; transform: translateY(-8px)"
                                                onkeypress="getProductByUPC(event, '@layaway.Id', 'Layaway')" />
                                     </div>
                                 </div>
@@ -217,8 +226,8 @@
                         var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0; background-color: " + colorLightBlue + "; border: none";
                         var subItemInputStyle2 = "display: inline; max-width: 95%; margin: 0 0 5px 0";
                     }
-                    <div class="col-md-6 fixed-header" style="flex: 1; background-color: @colorLightBlue; padding-left: 0">
-                        <h4>Layaway Items</h4>
+                    <div id="layaway-items-table" class="col-md-6 fixed-header" style="flex: 1; background-color: @colorLightBlue; padding-left: 0">
+                        <h4 style="margin-left: 10px">Layaway Items</h4>
                         <table class="table">
                             @{
                                 var itemsCount = layaway.LayawayItems.Count;
@@ -286,7 +295,7 @@
                                             {
                                                 htmlAttributes = new
                                                 {
-                                                    @class = "form-control",
+                                                    @class = "form-control input-sm",
                                                     @style = @subItemInputStyle2,
                                                     @onkeyup = "showLayawayItemSaveBtn(event)",
                                                     @onchange = "showLayawayItemSaveBtn(event)"

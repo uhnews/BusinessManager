@@ -6,6 +6,7 @@ namespace BusinessManager.Core.Models
 {
     public class Payment : BaseEntity
     {
+        [DisplayName("Payment Date")]
         [Required]
         public DateTimeOffset PaymentDate { get; set; }
 
@@ -15,9 +16,9 @@ namespace BusinessManager.Core.Models
         [DisplayName("Payment Mode")]
         [StringLength(50)]
         [Required]
-        public string PaymentMode { get; set; }         // cash, check, credit-debit card
+        public string PaymentMode { get; set; }         // cash, credit-debit card, check
 
-        [DisplayName("Check Num")]
+        [DisplayName("Check Number")]
         [StringLength(50)]
         public string CheckNo { get; set; }
 
@@ -25,7 +26,7 @@ namespace BusinessManager.Core.Models
         [StringLength(200)]
         public string CheckImage { get; set; }
 
-        [DisplayName("Check Writer")]
+        [DisplayName("Issuer")]
         [StringLength(50)]
         public string CheckWriter { get; set; }         // Juan García, etc.
 
@@ -33,7 +34,7 @@ namespace BusinessManager.Core.Models
         [StringLength(50)]
         public string CreditCardHolder { get; set; }    // Juan García, etc.
 
-        [DisplayName("Credit Card Num")]
+        [DisplayName("Card Number")]
         [StringLength(50)]
         public string CreditCardNo { get; set; }
 

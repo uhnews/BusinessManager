@@ -18,7 +18,7 @@
         }
     </style>
     <div style="display: flex">
-        <div id="customer-section" class="form-horizontal col-md-4 border border-warning border-remove-right " style="padding: 10px; background-color: #f5fff5">
+        <div id="customer-section" class="form-horizontal col-md-4 border border-warning border-remove-right " style="padding: 10px; background-color: GhostWhite">
             <div id="customer-info">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.Id)
@@ -124,54 +124,53 @@
                 </div>
 
                 <div class="form-group">
-                    <div class="col-md-12">
-                        <button onclick="saveCustomer(event)"
-                                id="save-customer-btn"
-                                type="submit"
-                                class="btn btn-default btn-sm">
-                            Save
-                            <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
-                        </button>
-                        <button onclick="showInvoices(event)"
-                                id="show-invoices-btn"
-                                type="button"
-                                class="btn btn-default btn-sm">
-                            Show Invoices
-                        </button>
-                        <button onclick="showLayaways(event)"
-                                id="show-layaways-btn"
-                                type="button"
-                                value="Show Layaways"
-                                class="btn btn-default btn-sm">
-                            Show Layaways
-                        </button>
-                        <button onclick="addInvoice(event)"
-                                id="add-invoice-btn"
-                                type="button"
-                                class="btn btn-default btn-sm btn-danger-text hidden"
-                                style="margin-left: 5px"
-                                >
-                            Add Invoice
-                        </button>
-                        <button onclick="addLayaway(event)"
-                                id="add-layaway-btn"
-                                type="button"
-                                class="btn btn-default btn-sm hidden btn-danger-text"
-                                style="margin-left: 5px"
-                                >
-                            Add Layaway
-                        </button>
-                        <p style="margin: 10px">@Html.ActionLink("Back to Customer List", "Index")</p>
+                    <div class="col-md-12" style="text-align: center">
+                        <div class="btn-group">
+                            <button onclick="saveCustomer(event)"
+                                    id="save-customer-btn"
+                                    type="submit"
+                                    class="btn btn-default btn-sm">
+                                Save
+                                <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button onclick="showInvoices(event)"
+                                    id="show-invoices-btn"
+                                    type="button"
+                                    class="btn btn-default btn-sm">
+                                Show Invoices
+                            </button>
+                            <button onclick="showLayaways(event)"
+                                    id="show-layaways-btn"
+                                    type="button"
+                                    value="Show Layaways"
+                                    class="btn btn-default btn-sm">
+                                Show Layaways
+                            </button>
+                            <button onclick="addInvoice(event)"
+                                    id="add-invoice-btn"
+                                    type="button"
+                                    class="btn btn-default btn-sm btn-danger-text hidden">
+                                Add Invoice
+                            </button>
+                            <button onclick="addLayaway(event)"
+                                    id="add-layaway-btn"
+                                    type="button"
+                                    class="btn btn-default btn-sm hidden btn-danger-text">
+                                Add Layaway
+                            </button>
+                        </div>
                     </div>
+                    <p class="col-md-12" style="margin: 30px 10px 10px 10px">@Html.ActionLink("Back to Customer List", "Index")</p>
                 </div>
             </div>
 
             <div id="product-lookup" class="product-lookup-popup" style="display: none">
                 @Html.Partial("ProductLookup", Model.ProductList)
-                <button onclick="closeProductLookup(event)" class="btn btn-default" style="margin-top: 4px; margin-left: 5px; margin-top: 3px">
+                <hr style="border-width: 2px; border-color: red" />
+                <button onclick="closeProductLookup(event)" class="btn btn-default btn-sm pull-right" style="margin: 6px 20px 3px 5px">
                     Close List
                 </button>
-                <p style="margin: 10px">@Html.ActionLink("Back to Customer List", "Index")</p>
+                <div style="margin: 0 0 0 25px">@Html.ActionLink("Back to Customer List", "Index")</div>
             </div>
         </div>
         <div id="alt-subform-container" class="col-md-8 bg-warning" style="padding: 0; margin: 0">
@@ -389,8 +388,6 @@
             });
 
             // restore Customer fields border
-            //alert(document.getElementById("customer-section").className);
-            //alert(state.CustomerEditBorder);
             document.getElementById("customer-section").className = state.CustomerEditBorder;
 
             expireCookie("PageState");
@@ -763,20 +760,33 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function saveLayaway(event) {
+        function saveSubformData(event, route, getData) {
+            function getParent(element, tagName) {
+                var parent = element.parentNode;
+                if (parent.nodeName.toLowerCase() === tagName.toLowerCase()) {
+                    result = parent;
+                    return parent;
+                }
+                else {
+                    return getParent(parent, tagName);
+                }
+            }
+
+            var clickedElement = event.target;
+
             // get data form UI
-            var parent1 = event.target.parentNode;
-            var parent2 = parent1.parentNode;
-            var layaway = {
-                Id: parent2.querySelector("[name='layaway-id']").innerHTML,
-                CustomerId: parent2.querySelector("[name='layaway-customer-id']").innerHTML,
-                AgreementDate: parent2.querySelector("[id='layaway_AgreementDate']").value,
-                DueDate: parent2.querySelector("[id='layaway_DueDate']").value,
-                DownPayment: parent2.querySelector("[id='layaway_DownPayment']").value,
-                ServiceFee: parent2.querySelector("[id='layaway_ServiceFee']").value,
-                CancellationFee: parent2.querySelector("[id='layaway_CancellationFee']").value,
-                OrderStatus: parent2.querySelector("[id='layaway_OrderStatus']").value
-            };
+            var tableRow = getParent(clickedElement, "tr");
+            var data = getData(tableRow);
+
+            // reference actual button clicked (not its child elements)
+            var btn = clickedElement;
+            if (btn.nodeName.toLowerCase() !== "button") {
+                btn = getParent(clickedElement, "button");
+            }
+
+            // reference 'Scan Bardcode' button
+            var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
+
             //upload data
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
@@ -784,16 +794,71 @@
                     var responseText = this.responseText;
                     var responseObject = JSON.parse(responseText);
                     if (responseObject.Successful === true) {
-                        event.target.style.display = "none";
+                        btn.classList.add("hidden");
+                        scanUpcBtn.classList.remove("hidden");
                     }
                     else if (responseObject.Message) {
                         ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
                     }
                 }
             };
-            xhttp.open("GET", "/CustomerManager/UpdateLayaway/?data=" + JSON.stringify(layaway), true);
+            xhttp.open("GET", "/CustomerManager/" + route + "/?data=" + JSON.stringify(data), true);
             xhttp.send();
-        } 
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function getLayawayData(tableRow) {
+            var layaway = {
+                Id: tableRow.querySelector("[name='layaway-id']").innerHTML,
+                CustomerId: tableRow.querySelector("[name='layaway-customer-id']").innerHTML,
+                AgreementDate: tableRow.querySelector("[id='layaway_AgreementDate']").value,
+                DueDate: tableRow.querySelector("[id='layaway_DueDate']").value,
+                DownPayment: tableRow.querySelector("[id='layaway_DownPayment']").value,
+                ServiceFee: tableRow.querySelector("[id='layaway_ServiceFee']").value,
+                CancellationFee: tableRow.querySelector("[id='layaway_CancellationFee']").value,
+                OrderStatus: tableRow.querySelector("[id='layaway_OrderStatus']").value
+            };
+            return layaway;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function getInvoiceData(tableRow) {
+            var invoice = {
+                Id: tableRow.querySelector("[name='invoice-id']").innerHTML,
+                InvoiceNumber: parseInt(tableRow.querySelector("[name='invoice-number']").innerText),
+                CustomerId: tableRow.querySelector("[name='invoice-customer-id']").innerHTML,
+                InvoiceDate: tableRow.querySelector("[id='invoice_InvoiceDate']").value,
+                PayerFirstName: tableRow.querySelector("[id='invoice_PayerFirstName']").value,
+                PayerLastName: tableRow.querySelector("[id='invoice_PayerLastName']").value,
+                PayerCompany: tableRow.querySelector("[id='invoice_PayerCompany']").value,
+                PayerStreet: tableRow.querySelector("[id='invoice_PayerStreet']").value,
+                PayerCity: tableRow.querySelector("[id='invoice_PayerCity']").value,
+                PayerState: tableRow.querySelector("[id='invoice_PayerState']").value,
+                PayerZipCode: tableRow.querySelector("[id='invoice_PayerZipCode']").value,
+                PayerEmail: tableRow.querySelector("[id='invoice_PayerEmail']").value,
+                PayerPhone: tableRow.querySelector("[id='invoice_PayerPhone']").value,
+                OrderStatus: tableRow.querySelector("[id='invoice_OrderStatus']").value
+            };
+            return invoice;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function getPaymentData(tableRow) {
+            var layaway = {
+                Id: tableRow.querySelector("[name='layaway-id']").innerHTML,
+                CustomerId: tableRow.querySelector("[name='layaway-customer-id']").innerHTML,
+                AgreementDate: tableRow.querySelector("[id='layaway_AgreementDate']").value,
+                DueDate: tableRow.querySelector("[id='layaway_DueDate']").value,
+                DownPayment: tableRow.querySelector("[id='layaway_DownPayment']").value,
+                ServiceFee: tableRow.querySelector("[id='layaway_ServiceFee']").value,
+                CancellationFee: tableRow.querySelector("[id='layaway_CancellationFee']").value,
+                OrderStatus: tableRow.querySelector("[id='layaway_OrderStatus']").value
+            };
+            return layaway;
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1431,29 +1496,15 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function toggleBarcodeInput(event) {
-            var parentElement1 = event.target.parentNode;            
-            var parentElement2 = parentElement1.parentNode;
-            var toggleBtnId = "";
-            
-            if (parentElement2.id.toLowerCase().indexOf("invoice") > -1) {
-                toggleBtnId = "invoice-scan-upc";                
-            }
-            else if (parentElement2.id.toLowerCase().indexOf("layaway") > -1) {
-                toggleBtnId = "layaway-scan-upc";
-            }
-            else {
-                return;
-            }
-
             var container = event.target.parentNode.querySelector("[name='upc-input-container']")
-            if (container.style.display == "none") {
-                container.style.display = "block";
-                event.target.parentNode.querySelector("[name='" + toggleBtnId + "']").classList.add("active");
+            if (container.classList.contains("hidden")) {
+                container.classList.remove("hidden");
+                event.target.parentNode.querySelector("[name='scan-upc']").classList.add("active");
                 container.querySelector("[name='upc-input']").focus();
             }
             else {
-                container.style.display = "none";
-                event.target.parentNode.querySelector("[name='" + toggleBtnId + "']").classList.remove("active");
+                container.classList.add("hidden");
+                event.target.parentNode.querySelector("[name='scan-upc']").classList.remove("active");
             }
         }
         
@@ -1505,7 +1556,7 @@
 
         function showInvoiceItemSaveBtn(event) {
             var btn = event.target.parentNode.querySelector("input[name='invoice-item-save'], button[name='invoice-item-save']");
-            btn.style.display = "block";
+            btn.style.display = "inline";
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1583,15 +1634,41 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function showLayawaySaveBtn(event) {
-            var btn = (event.target.parentNode).parentNode.querySelector("input[name='layaway-save'], button[name='layaway-save']");
-            btn.style.display = "inline";
+        function showSubformSaveBtn(event) {
+            function getParentRow(element) {
+                var parent = element.parentNode;
+                if (parent.nodeName.toLowerCase() === "tr") {
+                    result = parent;
+                    return parent;
+                }
+                else {
+                    return getParentRow(parent);
+                }
+            }
+            var tableRow = getParentRow(event.target);            
+
+            var btn = tableRow.querySelector("input[name='subform-save'], button[name='subform-save']");
+            btn.classList.remove("hidden");
+
+            var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
+            scanUpcBtn.classList.add("hidden");
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateLayaway(event, itemId) {
-            var parent = event.target.parentNode;
+            function getParentRow(element) {
+                var parent = element.parentNode;
+                if (parent.nodeName.toLowerCase() === "tr") {
+                    result = parent;
+                    return parent;
+                }
+                else {
+                    return getParentRow(parent);
+                }
+            }
+            var parent = getParentRow(event.target);
+
             var priceInput = parent.querySelector("input[type='text']");
             var price = priceInput.value;
             if (isNaN(price) || price < 0) {
@@ -1617,6 +1694,82 @@
             xhttp.send();
         }
 
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function addPayment(event, listName) {
+            function getParentRow(element) {
+                var parent = element.parentNode;
+                if (parent.nodeName.toLowerCase() === "tr") {
+                    result = parent;
+                    return parent;
+                }
+                else {
+                    return getParentRow(parent);
+                }
+            }
+            var btn = event.target;
+            var tableRow = getParentRow(btn);
+            var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
+            var productLookupBtn = tableRow.querySelector("[name='product-lookup']");
+            var chargeItemsBtn = tableRow.querySelector("[name='charge-items']");
+            var subItemsTable = tableRow.querySelector("[id='sub-items-table']");
+            var newPatmentDiv = tableRow.querySelector("[id='new-payment']");
+            var upcInput = tableRow.querySelector("[name='upc-input-container']");
+            
+            scanUpcBtn.classList.add("hidden");
+            productLookupBtn.classList.add("hidden");
+            chargeItemsBtn.classList.remove("hidden");
+            subItemsTable.classList.add("hidden");
+            newPatmentDiv.classList.remove("hidden");
+            upcInput.classList.add("hidden");
+            scanUpcBtn.classList.remove("active");
+
+            var receivableSrcIdOrigin = tableRow.querySelector("[id='receivable-source-id']");
+            var receivableSrcIdDest = tableRow.querySelector("[name='ReceivableSourceId']");
+            receivableSrcIdDest.innerText = receivableSrcIdOrigin.innerHTML;
+
+            var receivableSrcDest = tableRow.querySelector("[name='ReceivableSource']");
+            receivableSrcDest.innerText = listName;
+
+            closeProductLookup(event);
+
+            var paymentMode = tableRow.querySelector("[name='PaymentMode']").value;
+            if (paymentMode === "credit card") {
+                tableRow.querySelector("[id='creditcard-group']").classList.remove("hidden");
+            }
+            else if (paymentMode === "check") {
+                tableRow.querySelector("[id='check-group']").classList.remove("hidden");
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showChargeItems(event) {
+            function getParentRow(element) {
+                var parent = element.parentNode;
+                if (parent.nodeName.toLowerCase() === "tr") {
+                    result = parent;
+                    return parent;
+                }
+                else {
+                    return getParentRow(parent);
+                }
+            }
+            var btn = event.target;
+            var tableRow = getParentRow(btn);
+            var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
+            var productLookupBtn = tableRow.querySelector("[name='product-lookup']");
+            var chargeItemsBtn = tableRow.querySelector("[name='charge-items']");
+            var subItemsTable = tableRow.querySelector("[id='sub-items-table']");
+            var newPatmentDiv = tableRow.querySelector("[id='new-payment']");
+            
+            scanUpcBtn.classList.remove("hidden");
+            productLookupBtn.classList.remove("hidden");
+            chargeItemsBtn.classList.add("hidden");
+            subItemsTable.classList.remove("hidden");
+            newPatmentDiv.classList.add("hidden");
+        }
+        
         /////////////////////////////////////////////////////////////////////////////////////////////
     </script>
 }

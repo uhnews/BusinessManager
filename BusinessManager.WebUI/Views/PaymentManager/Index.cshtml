@@ -1,0 +1,99 @@
+﻿@model IEnumerable<BusinessManager.Core.Models.Payment>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ModifiedAt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentMode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CheckNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CheckImage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CheckWriter)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreditCardHolder)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreditCardNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreditCardName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReceivableSource)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReceivableSourceId)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ModifiedAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentMode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CheckNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CheckImage)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CheckWriter)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreditCardHolder)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreditCardNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreditCardName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReceivableSource)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReceivableSourceId)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

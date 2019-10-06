@@ -46,6 +46,7 @@ namespace BusinessManager.Core.Models
         public string Phone { get; set; }
 
         [StringLength(50)]
+        [DisplayName("Telephone (2)")]
         public string Phone2 { get; set; }
 
         [StringLength(65)]

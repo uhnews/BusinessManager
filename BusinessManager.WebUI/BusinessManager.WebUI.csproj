@@ -307,11 +307,15 @@
     <Content Include="Views\Shared\AlertBox.cshtml" />
     <Content Include="Views\CustomerManager\ProductLookup.cshtml" />
     <Content Include="Views\CustomerManager\Invoices.cshtml" />
+    <Content Include="Views\PaymentManager\Index.cshtml" />
+    <Content Include="Views\PaymentManager\Create.cshtml" />
+    <Content Include="Views\PaymentManager\Edit.cshtml" />
+    <Content Include="Views\PaymentManager\Delete.cshtml" />
+    <Content Include="Views\CustomerManager\NewPayment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\ProductImages\" />
-    <Folder Include="Views\PaymentManager\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

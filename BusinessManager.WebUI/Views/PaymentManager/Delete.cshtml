@@ -1,0 +1,122 @@
+﻿@model BusinessManager.Core.Models.Payment
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Payment</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifiedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PaymentDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentMode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PaymentMode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CheckNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CheckNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CheckImage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CheckImage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CheckWriter)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CheckWriter)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreditCardHolder)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreditCardHolder)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreditCardNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreditCardNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreditCardName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreditCardName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceivableSource)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReceivableSource)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceivableSourceId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReceivableSourceId)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

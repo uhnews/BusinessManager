@@ -70,7 +70,8 @@ namespace BusinessManager.Services
                     PayerState = customer.State,
                     PayerZipCode = customer.ZipCode,
                     PayerCompany = customer.CompanyName,
-                    PayerEmail = customer.Email
+                    PayerEmail = customer.Email,
+                    PayerPhone = customer.Phone
                 };
                 invoiceContext.Insert(invoice);
                 invoiceContext.Commit();
@@ -130,6 +131,7 @@ namespace BusinessManager.Services
                     retrievedInvoice.PayerZipCode = invoice.PayerZipCode;
                     retrievedInvoice.PayerCompany = invoice.PayerCompany;
                     retrievedInvoice.PayerEmail = invoice.PayerEmail;
+                    retrievedInvoice.PayerPhone = invoice.PayerPhone;
                     retrievedInvoice.OrderStatus = invoice.OrderStatus;
                 }
 

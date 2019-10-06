@@ -111,6 +111,7 @@
     <Compile Include="Contracts\ILayawayDataService.cs" />
     <Compile Include="Contracts\ILayawayService.cs" />
     <Compile Include="Contracts\IOrderService.cs" />
+    <Compile Include="Contracts\IPaymentDataService.cs" />
     <Compile Include="Contracts\IPOSSaleService.cs" />
     <Compile Include="Contracts\IPOSTransactionService.cs" />
     <Compile Include="Contracts\IProductRetrieveService.cs" />

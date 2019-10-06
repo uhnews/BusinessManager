@@ -1,0 +1,195 @@
+﻿@model BusinessManager.Core.Models.Payment
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    <script type="text/javascript">
+        function getNewPaymentForm(child) {
+            var parent1 = child.parentNode;
+            var parent2 = parent1.parentNode;
+
+            var parent3 = parent2.parentNode;
+            if (parent3.id === "new-payment-form")
+                return parent3;
+
+            var parent4 = parent3.parentNode;
+            if (parent4.id === "new-payment-form")
+                return parent4;
+
+            var parent5 = parent4.parentNode;
+            if (parent5.id === "new-payment-form")
+                return parent5;
+        }
+        function setPaymentMode(event) {
+            var btn = event.target;
+            var textSelected = btn.title;
+            var parent1 = btn.parentNode;
+            var parent2 = parent1.parentNode;
+            var paymentForm = getNewPaymentForm(btn);
+
+            var paymentModeDiv = parent2.parentNode;
+            var paymentModeInput = paymentModeDiv.querySelector("input[type='text']");
+            paymentModeInput.value = textSelected;
+
+            var creditcardGrp = paymentForm.querySelector("[id='creditcard-group']");
+            var checkGrp = paymentForm.querySelector("[id='check-group']");
+
+            switch (textSelected) {
+                case "credit card":
+                    creditcardGrp.classList.remove("hidden-element");
+                    checkGrp.classList.add("hidden-element");
+                    break;
+                case "check":
+                    creditcardGrp.classList.add("hidden-element");
+                    checkGrp.classList.remove("hidden-element");
+                    break;
+                default:
+                    creditcardGrp.classList.add("hidden-element");
+                    checkGrp.classList.add("hidden-element");
+                    return;
+            }
+        }
+    </script>
+    <div id="new-payment-form" class="form-horizontal">
+        <h4>Payment</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ModifiedAt, htmlAttributes: new { @class = "control-label col-md-2", @style = "display: none" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ModifiedAt, new { htmlAttributes = new { @class = "form-control", @style = "display: none" } })
+                @Html.ValidationMessageFor(model => model.ModifiedAt, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @* ********************************************* EDITING STARTS HERE ********************************************************** *@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PaymentDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PaymentDate, new
+                {
+                    htmlAttributes = new
+                    {
+                        @class = "form-control date-input input-sm",
+                        @type = "date"
+                    }
+                })
+                @Html.ValidationMessageFor(model => model.PaymentDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div id="payment-mode-group" class="form-group">
+            <div class="col-md-10" style="display: none">
+                @Html.EditorFor(model => model.PaymentMode, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+            </div>
+
+            <div class="col-md-10">
+                <div>
+                    @Html.LabelFor(model => model.PaymentMode, htmlAttributes: new { @class = "control-label col-md-2", @style = "padding: 5px 0 0 0" })
+                </div>
+                <label class="radio-inline" style="padding-left: 60px">
+                    <input type="radio" name="optradio" checked title="cash" onclick="setPaymentMode(event)">Cash
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optradio" title="credit card" onclick="setPaymentMode(event)">Credit/Debit Card
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optradio" title="check" onclick="setPaymentMode(event)">Check
+                </label>
+            </div>
+        </div>
+
+        <div id="creditcard-group" class="hidden-element">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreditCardHolder, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CreditCardHolder, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                    @Html.ValidationMessageFor(model => model.CreditCardHolder, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreditCardNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CreditCardNo, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                    @Html.ValidationMessageFor(model => model.CreditCardNo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreditCardName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CreditCardName, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                    @Html.ValidationMessageFor(model => model.CreditCardName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div id="check-group" class="hidden-element">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CheckNo, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                    @Html.ValidationMessageFor(model => model.CheckNo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckImage, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CheckImage, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                    @Html.ValidationMessageFor(model => model.CheckImage, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckWriter, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CheckWriter, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                    @Html.ValidationMessageFor(model => model.CheckWriter, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReceivableSource, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10" style="padding-top: 6px">
+                @Html.DisplayFor(model => model.ReceivableSource, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReceivableSourceId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10" style="padding-top: 6px">
+                @Html.DisplayFor(model => model.ReceivableSourceId, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreatedAt, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10" style="padding-top: 6px">
+                @Html.DisplayFor(model => model.CreatedAt, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-10">
+                <input type="button" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
