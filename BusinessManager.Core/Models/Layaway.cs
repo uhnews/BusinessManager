@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessManager.Core.Models
 {
@@ -36,9 +37,13 @@ namespace BusinessManager.Core.Models
 
         public virtual ICollection<LayawayItem> LayawayItems { get; set; }
 
+        [NotMapped]
+        public virtual ICollection<Payment> LayawayPayments { get; set; }
+
         public Layaway()
         {
             this.LayawayItems = new List<LayawayItem>();
+            this.LayawayPayments = new List<Payment>();
         }
     }
 }

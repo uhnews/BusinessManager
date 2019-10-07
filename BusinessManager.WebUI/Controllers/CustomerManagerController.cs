@@ -18,6 +18,7 @@ namespace BusinessManager.WebUI.Controllers
         IRepository<Invoice> invoiceContext;
         IRepository<InvoiceItem> invoiceItemContext;
         IRepository<Sequence> sequenceContext;
+        IRepository<Payment> paymentContext;
 
         // dependency injection
         public CustomerManagerController(
@@ -26,7 +27,8 @@ namespace BusinessManager.WebUI.Controllers
                                             IRepository<LayawayItem> layawayItemContext,
                                             IRepository<Invoice> invoiceContext,
                                             IRepository<InvoiceItem> invoiceItemContext,
-                                            IRepository<Sequence> sequenceContext
+                                            IRepository<Sequence> sequenceContext,
+                                            IRepository<Payment> paymentContext
                                         )
         {
             this.customerContext = customerContext;
@@ -35,6 +37,7 @@ namespace BusinessManager.WebUI.Controllers
             this.invoiceContext = invoiceContext;
             this.invoiceItemContext = invoiceItemContext;
             this.sequenceContext = sequenceContext;
+            this.paymentContext = paymentContext;
         }
 
         // GET: Customers
@@ -298,6 +301,15 @@ namespace BusinessManager.WebUI.Controllers
             Product product = productService.GetProduct(Id);
 
             return Json(product, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /CustomerManager/AddPayment
+        public JsonResult AddPayment(string data)
+        {
+            IPaymentService dataService = new PaymentService();
+            var addResult = dataService.AddPayment(paymentContext, data);
+
+            return Json(addResult, JsonRequestBehavior.AllowGet);
         }
     }
 }  

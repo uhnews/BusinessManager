@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessManager.Core.Models
 {
@@ -63,6 +64,7 @@ namespace BusinessManager.Core.Models
 
         public virtual ICollection<InvoiceItem> InvoiceItems { get; set; }
 
+        [NotMapped]
         public virtual ICollection<Payment> InvoicePayments { get; set; }
 
         public Invoice()

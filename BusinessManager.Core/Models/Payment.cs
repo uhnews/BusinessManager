@@ -42,6 +42,15 @@ namespace BusinessManager.Core.Models
         [StringLength(30)]
         public string CreditCardName { get; set; }      // VISA, Mastercard, Discovery
 
+        [DisplayName("Exp Month")]
+        public int CreditCardExpMonth { get; set; }
+
+        [DisplayName("Exp Year")]
+        public int CreditCardExpYear { get; set; }
+
+        [DisplayName("Verification Code")]
+        public string CreditCardCVV { get; set; }
+
         [DisplayName("Source")]
         [StringLength(50)]
         [Required]

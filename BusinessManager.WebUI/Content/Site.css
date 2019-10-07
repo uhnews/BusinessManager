@@ -291,10 +291,15 @@ textarea {
 }
 
 .payment-label {
-    margin: 0 0 2px 14px;
+    margin: 0 0 3px 14px;
     padding: 0 0 0 0;
     font-weight: 600;
-    transform: translateY(-5px);
+    font-size: 85%;
+}
+
+.form-group-payment {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
 }
 
 .invoice-input {

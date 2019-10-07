@@ -778,6 +778,9 @@
             var tableRow = getParent(clickedElement, "tr");
             var data = getData(tableRow);
 
+            if (data === null)
+                return;
+
             // reference actual button clicked (not its child elements)
             var btn = clickedElement;
             if (btn.nodeName.toLowerCase() !== "button") {
@@ -847,23 +850,34 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function getPaymentData(tableRow) {
-            var layaway = {
-                Id: tableRow.querySelector("[name='layaway-id']").innerHTML,
-                CustomerId: tableRow.querySelector("[name='layaway-customer-id']").innerHTML,
-                AgreementDate: tableRow.querySelector("[id='layaway_AgreementDate']").value,
-                DueDate: tableRow.querySelector("[id='layaway_DueDate']").value,
-                DownPayment: tableRow.querySelector("[id='layaway_DownPayment']").value,
-                ServiceFee: tableRow.querySelector("[id='layaway_ServiceFee']").value,
-                CancellationFee: tableRow.querySelector("[id='layaway_CancellationFee']").value,
-                OrderStatus: tableRow.querySelector("[id='layaway_OrderStatus']").value
+            var payment = {
+                PaymentDate: tableRow.querySelector("[name='PaymentDate']").value,
+                Amount: tableRow.querySelector("[name='Amount']").value,
+                PaymentMode: tableRow.querySelector("[name='PaymentMode']").value,
+                CheckNo: tableRow.querySelector("[name='CheckNo']").value,
+                CheckWriter: tableRow.querySelector("[name='CheckWriter']").value,
+                CheckImage: tableRow.querySelector("[name='CheckImage']").value,
+                CreditCardHolder: tableRow.querySelector("[name='CreditCardHolder']").value,                
+                CreditCardExpMonth: tableRow.querySelector("[name='CreditCardExpMonth']").value,
+                CreditCardExpYear: tableRow.querySelector("[name='CreditCardExpYear']").value,
+                CreditCardCVV: tableRow.querySelector("[name='CreditCardCVV']").value,
+                CreditCardNo: tableRow.querySelector("[name='CreditCardNo']").value,
+                CreditCardName: tableRow.querySelector("[name='CreditCardName']").value,
+                ReceivableSource: tableRow.querySelector("[name='ReceivableSource']").innerText,
+                ReceivableSourceId: tableRow.querySelector("[name='ReceivableSourceId']").innerText
             };
-            return layaway;
+            var message = validatePaymentInput(payment);
+            if (!message)
+                return payment;
+            else {
+                ShowMessage("<div class='text-danger' style='margin-left: 50px'>" + message + "</div>", "<span class='text-warning'>Warning</span>");
+                return null;
+            }
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function deleteSubItemConfirmHTML(subform, productName, image) {
-            //            
             let location = window.location;
             let protocol = location.protocol;
             let host = location.host;

@@ -318,6 +318,30 @@
     <Compile Include="Migrations\201909280829251_RemoveLengthFromInvoiceNo.Designer.cs">
       <DependentUpon>201909280829251_RemoveLengthFromInvoiceNo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910062030544_ResetInvoicePaymentFK.cs" />
+    <Compile Include="Migrations\201910062030544_ResetInvoicePaymentFK.Designer.cs">
+      <DependentUpon>201910062030544_ResetInvoicePaymentFK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910062033346_ResetLayawayPaymentFK.cs" />
+    <Compile Include="Migrations\201910062033346_ResetLayawayPaymentFK.Designer.cs">
+      <DependentUpon>201910062033346_ResetLayawayPaymentFK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910062104138_ResetLayawayAndInvoiceFK.cs" />
+    <Compile Include="Migrations\201910062104138_ResetLayawayAndInvoiceFK.Designer.cs">
+      <DependentUpon>201910062104138_ResetLayawayAndInvoiceFK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910062111191_ResetLayawayAndInvoiceFK1.cs" />
+    <Compile Include="Migrations\201910062111191_ResetLayawayAndInvoiceFK1.Designer.cs">
+      <DependentUpon>201910062111191_ResetLayawayAndInvoiceFK1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910071437178_AddPropertiesToPayment.cs" />
+    <Compile Include="Migrations\201910071437178_AddPropertiesToPayment.Designer.cs">
+      <DependentUpon>201910071437178_AddPropertiesToPayment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910071441558_ChangePropertynameOnPayment.cs" />
+    <Compile Include="Migrations\201910071441558_ChangePropertynameOnPayment.Designer.cs">
+      <DependentUpon>201910071441558_ChangePropertynameOnPayment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -489,6 +513,27 @@
     <EmbeddedResource Include="Migrations\201909280829251_RemoveLengthFromInvoiceNo.resx">
       <DependentUpon>201909280829251_RemoveLengthFromInvoiceNo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910062030544_ResetInvoicePaymentFK.resx">
+      <DependentUpon>201910062030544_ResetInvoicePaymentFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910062033346_ResetLayawayPaymentFK.resx">
+      <DependentUpon>201910062033346_ResetLayawayPaymentFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910062104138_ResetLayawayAndInvoiceFK.resx">
+      <DependentUpon>201910062104138_ResetLayawayAndInvoiceFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910062111191_ResetLayawayAndInvoiceFK1.resx">
+      <DependentUpon>201910062111191_ResetLayawayAndInvoiceFK1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910071437178_AddPropertiesToPayment.resx">
+      <DependentUpon>201910071437178_AddPropertiesToPayment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910071441558_ChangePropertynameOnPayment.resx">
+      <DependentUpon>201910071441558_ChangePropertynameOnPayment.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="temp\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
