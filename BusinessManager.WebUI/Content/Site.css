@@ -282,16 +282,36 @@ textarea {
     border-right: 0;
 }
 
+.border-radius-top {
+    -moz-border-radius-topleft: 4px;
+    -moz-border-radius-topright: 4px;
+    -moz-border-radius-topleft: 4px;
+    -moz-border-radius-topright: 4px;
+}
 /*   *************************************************************** */
 
-.payment-input {
+.new-payment-input {
     margin: 0 0 0 0;
     padding: 0 0 0 10px;
     transform: translateY(-5px);
 }
 
 .payment-label {
-    margin: 0 0 3px 14px;
+    margin: 0 0 3px 17px;
+    padding: 0 0 0 0;
+    font-weight: 600;
+    font-size: 85%;
+}
+
+.edit-payment-input {
+    margin: 0 0 0 0px;
+    padding: 0 0 0 10px;
+    transform: translateY(-5px);
+    /*width: 100%;*/
+}
+
+.edit-payment-label {
+    margin: 0 0 3px 2px;
     padding: 0 0 0 0;
     font-weight: 600;
     font-size: 85%;

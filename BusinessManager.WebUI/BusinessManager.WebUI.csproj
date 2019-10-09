@@ -312,6 +312,7 @@
     <Content Include="Views\PaymentManager\Edit.cshtml" />
     <Content Include="Views\PaymentManager\Delete.cshtml" />
     <Content Include="Views\CustomerManager\NewPayment.cshtml" />
+    <Content Include="Views\CustomerManager\Payments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

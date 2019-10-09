@@ -275,7 +275,7 @@
                     CustomerEditBorder: getCustomerEditBorderState()
                 };
             }
-
+            
             var btnsVisibility = getCustomerEditBtnsVisibility();
             Object.keys(btnsVisibility).forEach(key => {
                 state[key] = btnsVisibility[key];
@@ -332,7 +332,7 @@
                 let rows = table.rows;
                 for (let i = 0; i < rows.length; i++) {
                     let row = rows[i];
-                    let pgIndex = row.querySelector("span[name='layaways-row-number']").innerHTML;
+                    let pgIndex = row.querySelector("span[name='layaways-table-row-number']").innerHTML;
                     pgIndex = parseInt(pgIndex);
                     if (pgIndex === currLayawayPgIndex) {
                         row.style.display = "table-row";
@@ -349,7 +349,7 @@
                 let rows = table.rows;
                 for (let i = 0; i < rows.length; i++) {
                     let row = rows[i];
-                    let pgIndex = row.querySelector("span[name='invoices-row-number']").innerHTML;
+                    let pgIndex = row.querySelector("span[name='invoices-table-row-number']").innerHTML;
                     pgIndex = parseInt(pgIndex);
                     if (pgIndex === currInvoicePgIndex) {
                         row.style.display = "table-row"
@@ -427,7 +427,7 @@
             for (let i = 0; i < tableRows.length; i++) {
                 var row = tableRows[i];
                 if (row.style.display !== "none") {
-                    var layawayPgIndex = row.querySelector("span[name='layaways-row-number']").innerHTML;
+                    var layawayPgIndex = row.querySelector("span[name='layaways-table-row-number']").innerHTML;
                     if (layawayPgIndex) {
                         layawayPgIndex = parseInt(layawayPgIndex);
                         return layawayPgIndex;
@@ -445,7 +445,7 @@
             for (let i = 0; i < tableRows.length; i++) {
                 var row = tableRows[i];
                 if (row.style.display !== "none") {
-                    var invoicePgIndex = row.querySelector("span[name='invoices-row-number']").innerHTML;
+                    var invoicePgIndex = row.querySelector("span[name='invoices-table-row-number']").innerHTML;
                     if (invoicePgIndex) {
                         invoicePgIndex = parseInt(invoicePgIndex);
                         return invoicePgIndex;
@@ -760,18 +760,7 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function saveSubformData(event, route, getData) {
-            function getParent(element, tagName) {
-                var parent = element.parentNode;
-                if (parent.nodeName.toLowerCase() === tagName.toLowerCase()) {
-                    result = parent;
-                    return parent;
-                }
-                else {
-                    return getParent(parent, tagName);
-                }
-            }
-
+        function saveSubformData(event, route, getData, clearInput) {
             var clickedElement = event.target;
 
             // get data form UI
@@ -799,6 +788,10 @@
                     if (responseObject.Successful === true) {
                         btn.classList.add("hidden");
                         scanUpcBtn.classList.remove("hidden");
+                        if (clearInput) {
+                            clearInput(tableRow);
+                        }
+                        ShowMessage("<h4 class='text-primary' style='margin-left: 20px'>Payment Saved!</h4>");
                     }
                     else if (responseObject.Message) {
                         ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
@@ -867,8 +860,13 @@
                 ReceivableSourceId: tableRow.querySelector("[name='ReceivableSourceId']").innerText
             };
             var message = validatePaymentInput(payment);
-            if (!message)
+            if (!message) {
+                if (payment.PaymentMode !== "credit card") {
+                    payment.CreditCardExpMonth = 0;
+                    payment.CreditCardExpYear = 0;
+                }
                 return payment;
+            }
             else {
                 ShowMessage("<div class='text-danger' style='margin-left: 50px'>" + message + "</div>", "<span class='text-warning'>Warning</span>");
                 return null;
@@ -1330,44 +1328,53 @@
             // clean up
             document.getElementById("curr-layaway-id").innerHtml = "";
         }
-        
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+                
+        function getParent(element, tagName) {
+            var parent = element.parentNode;
+            if (parent.nodeName.toLowerCase() === tagName.toLowerCase()) {
+                result = parent;
+                return parent;
+            }
+            else {
+                return getParent(parent, tagName);
+            }
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function navFirst(event, subform) {
+        function navFirst(event, siblingTable = "") {
             //
-            var cssSelector = "";
-            switch (subform) {
-                case "Invoices":
-                    cssSelector = "[name='invoices-row-number']";
-                    break;
-
-                case "Layaways":
-                    cssSelector = "[name='layaways-row-number']";
-                    break;
-
-                default:
-                    return;
+            var table = getParent(event.target, "table");
+            var tableElementId = table.id;      // e.g. id="invoices-table"
+            var currRow = getParent(event.target, "tr");
+            var currRowIndexElement = currRow.querySelector("[name='" + tableElementId + "-row-number']");
+            //
+            if (siblingTable) {
+                // get currRowIndex from 'alt' row-number element
+                currRowIndexElement = currRow.querySelector("[name='" + siblingTable + "-row-number-alt']");
+                currRowIndex = parseInt(currRowIndexElement.innerText);
+                table = table.querySelector("table[id='" + siblingTable + "']");
+                tableElementId = table.id;      // e.g. id="payments-table"
             }
-            var parent1 = event.target.parentNode;
-            var parent2 = parent1.parentNode;
-            var parent3 = parent2.parentNode;
-            var parent4 = parent3.parentNode;
-
-            var currRow = parent4.parentNode;
-            var tableSection = currRow.parentNode;
-            var table = tableSection.parentNode;
-
+            //
             var rows = table.rows;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var rowIndex = row.querySelector(cssSelector).innerText;
-                if (parseInt(rowIndex) !== 1) {
+                var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
+                if (rowIndex !== 1) {
                     // hide row
-                    row.style.display = "none";
+                    //row.style.display = "none";
+                    row.classList.add("hidden");
                 }
                 else {
-                    // show row
-                    row.style.display = "table-row";
+                    // show First row
+                    //row.style.display = "table-row";
+                    row.classList.remove("hidden");
+                    if (siblingTable) {
+                        currRowIndexElement.innerText = 1;
+                    }
                 }
             }
             savePgState();
@@ -1375,44 +1382,39 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function navPrev(event, subform) {
+        function navPrev(event, siblingTable = "") {
             //
-            var cssSelector = "";
-            switch (subform) {
-                case "Invoices":
-                    cssSelector = "[name='invoices-row-number']";
-                    break;
-
-                case "Layaways":
-                    cssSelector = "[name='layaways-row-number']";
-                    break;
-
-                default:
-                    return;
+            var table = getParent(event.target, "table");
+            var tableElementId = table.id;
+            var currRow = getParent(event.target, "tr");
+            var currRowIndexElement = currRow.querySelector("[name='" + tableElementId + "-row-number']");
+            var currRowIndex = parseInt(currRowIndexElement.innerText);
+            //
+            if (siblingTable) {
+                // get currRowIndex from 'alt' row-number element
+                currRowIndexElement = currRow.querySelector("[name='" + siblingTable + "-row-number-alt']");
+                currRowIndex = parseInt(currRowIndexElement.innerText);
+                table = table.querySelector("table[id='" + siblingTable + "']");
+                tableElementId = table.id;
             }
-            var parent1 = event.target.parentNode;
-            var parent2 = parent1.parentNode;
-            var parent3 = parent2.parentNode;
-            var parent4 = parent3.parentNode;
-
-            var currRow = parent4.parentNode;
-            var currRowIndex = parseInt(currRow.querySelector(cssSelector).innerText);
+            //
             if (currRowIndex === 1) return;
-
-            var tableSection = currRow.parentNode;
-            var table = tableSection.parentNode;
-
             var rows = table.rows;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var rowIndex = parseInt(row.querySelector(cssSelector).innerText);
+                var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
                 if (rowIndex !== currRowIndex - 1) {
                     // hide row
-                    row.style.display = "none";
+                    //row.style.display = "none";
+                    row.classList.add("hidden");
                 }
                 else {
-                    // show row
-                    row.style.display = "table-row";
+                    // show Previous row
+                    //row.style.display = "table-row";
+                    row.classList.remove("hidden");
+                    if (siblingTable) {
+                        currRowIndexElement.innerText = currRowIndex - 1;
+                    }
                 }
             }
             savePgState();
@@ -1420,46 +1422,39 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function navNext(event, subform) {
+        function navNext(event, siblingTable = "") {
             //
-            var cssSelector = "";
-            switch (subform) {
-                case "Invoices":
-                    cssSelector = "[name='invoices-row-number']";
-                    break;
-
-                case "Layaways":
-                    cssSelector = "[name='layaways-row-number']";
-                    break;
-
-                default:
-                    return;
+            var table = getParent(event.target, "table");
+            var tableElementId = table.id;       
+            var currRow = getParent(event.target, "tr");
+            var currRowIndexElement = currRow.querySelector("[name='" + tableElementId + "-row-number']");
+            var currRowIndex = parseInt(currRowIndexElement.innerText);
+            //
+            if (siblingTable) {
+                // get currRowIndex from 'alt' row-number element
+                currRowIndexElement = currRow.querySelector("[name='" + siblingTable + "-row-number-alt']");
+                currRowIndex = parseInt(currRowIndexElement.innerText);
+                table = table.querySelector("table[id='" + siblingTable + "']");
+                tableElementId = table.id;
             }
-
-            var parent1 = event.target.parentNode;
-            var parent2 = parent1.parentNode;
-            var parent3 = parent2.parentNode;
-            var parent4 = parent3.parentNode;
-
-            var currRow = parent4.parentNode;
-            var currRowIndex = parseInt(currRow.querySelector(cssSelector).innerText);
-
-            var tableSection = currRow.parentNode;
-            var table = tableSection.parentNode;
-
+            //
             var rows = table.rows;                        
             if (currRowIndex === rows.length) return;
-
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var rowIndex = parseInt(row.querySelector(cssSelector).innerText);
+                var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
                 if (rowIndex !== currRowIndex + 1) {
                     // hide row
-                    row.style.display = "none";
+                    //row.style.display = "none";
+                    row.classList.add("hidden");
                 }
                 else {
-                    // show row
-                    row.style.display = "table-row";
+                    // show Next row
+                    //row.style.display = "table-row";
+                    row.classList.remove("hidden");
+                    if (siblingTable) {
+                        currRowIndexElement.innerText = currRowIndex + 1;
+                    }
                 }
             }
             savePgState();
@@ -1467,41 +1462,37 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function navLast(event, subform) {
+        function navLast(event, siblingTable = "") {
             //
-            var cssSelector = "";
-            switch (subform) {
-                case "Invoices":
-                    cssSelector = "[name='invoices-row-number']";
-                    break;
-
-                case "Layaways":
-                    cssSelector = "[name='layaways-row-number']";
-                    break;
-
-                default:
-                    return;
+            var table = getParent(event.target, "table");
+            var tableElementId = table.id;      // e.g. id="invoices-table"
+            var currRow = getParent(event.target, "tr");
+            var currRowIndexElement = currRow.querySelector("[name='" + tableElementId + "-row-number']");
+            //
+            if (siblingTable) {
+                // get currRowIndex from 'alt' row-number element
+                currRowIndexElement = currRow.querySelector("[name='" + siblingTable + "-row-number-alt']");
+                currRowIndex = parseInt(currRowIndexElement.innerText);
+                table = table.querySelector("table[id='" + siblingTable + "']");
+                tableElementId = table.id;      // e.g. id="payments-table"
             }
-            var parent1 = event.target.parentNode;
-            var parent2 = parent1.parentNode;
-            var parent3 = parent2.parentNode;
-            var parent4 = parent3.parentNode;
-
-            var currRow = parent4.parentNode;
-            var tableSection = currRow.parentNode;
-            var table = tableSection.parentNode;
-
+            //
             var rows = table.rows;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var rowIndex = row.querySelector(cssSelector).innerText;
-                if (parseInt(rowIndex) !== rows.length) {
+                var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
+                if (rowIndex !== rows.length) {
                     // hide row
-                    row.style.display = "none";
+                    //row.style.display = "none";
+                    row.classList.add("hidden");
                 }
                 else {
-                    // show row
-                    row.style.display = "table-row";
+                    // show Last row
+                    //row.style.display = "table-row";
+                    row.classList.remove("hidden");
+                    if (siblingTable) {
+                        currRowIndexElement.innerText = rows.length;
+                    }
                 }
             }
             savePgState();
@@ -1649,17 +1640,7 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showSubformSaveBtn(event) {
-            function getParentRow(element) {
-                var parent = element.parentNode;
-                if (parent.nodeName.toLowerCase() === "tr") {
-                    result = parent;
-                    return parent;
-                }
-                else {
-                    return getParentRow(parent);
-                }
-            }
-            var tableRow = getParentRow(event.target);            
+            var tableRow = getParent(event.target, "tr");            
 
             var btn = tableRow.querySelector("input[name='subform-save'], button[name='subform-save']");
             btn.classList.remove("hidden");
@@ -1671,18 +1652,7 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateLayaway(event, itemId) {
-            function getParentRow(element) {
-                var parent = element.parentNode;
-                if (parent.nodeName.toLowerCase() === "tr") {
-                    result = parent;
-                    return parent;
-                }
-                else {
-                    return getParentRow(parent);
-                }
-            }
-            var parent = getParentRow(event.target);
-
+            var parent = getParent(event.target, "tr");
             var priceInput = parent.querySelector("input[type='text']");
             var price = priceInput.value;
             if (isNaN(price) || price < 0) {
@@ -1710,32 +1680,26 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function addPayment(event, listName) {
-            function getParentRow(element) {
-                var parent = element.parentNode;
-                if (parent.nodeName.toLowerCase() === "tr") {
-                    result = parent;
-                    return parent;
-                }
-                else {
-                    return getParentRow(parent);
-                }
-            }
+        function addPayment(event, modelName) {
+            //
             var btn = event.target;
-            var tableRow = getParentRow(btn);
+            var tableRow = getParent(btn, "tr");
             var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
             var productLookupBtn = tableRow.querySelector("[name='product-lookup']");
             var chargeItemsBtn = tableRow.querySelector("[name='charge-items']");
             var subItemsTable = tableRow.querySelector("[id='sub-items-table']");
             var newPatmentDiv = tableRow.querySelector("[id='new-payment']");
+            var paymentsDiv = tableRow.querySelector("[id='payments-table']");
             var upcInput = tableRow.querySelector("[name='upc-input-container']");
             
             scanUpcBtn.classList.add("hidden");
             productLookupBtn.classList.add("hidden");
             chargeItemsBtn.classList.remove("hidden");
             subItemsTable.classList.add("hidden");
+            paymentsDiv.classList.add("hidden");
             newPatmentDiv.classList.remove("hidden");
             upcInput.classList.add("hidden");
+
             scanUpcBtn.classList.remove("active");
 
             var receivableSrcIdOrigin = tableRow.querySelector("[id='receivable-source-id']");
@@ -1743,7 +1707,7 @@
             receivableSrcIdDest.innerText = receivableSrcIdOrigin.innerHTML;
 
             var receivableSrcDest = tableRow.querySelector("[name='ReceivableSource']");
-            receivableSrcDest.innerText = listName;
+            receivableSrcDest.innerText = modelName;
 
             closeProductLookup(event);
 
@@ -1758,30 +1722,48 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function showChargeItems(event) {
-            function getParentRow(element) {
-                var parent = element.parentNode;
-                if (parent.nodeName.toLowerCase() === "tr") {
-                    result = parent;
-                    return parent;
-                }
-                else {
-                    return getParentRow(parent);
-                }
-            }
+        function showPayments(event) {
+            //
             var btn = event.target;
-            var tableRow = getParentRow(btn);
+            var tableRow = getParent(btn, "tr");
+            var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
+            var productLookupBtn = tableRow.querySelector("[name='product-lookup']");
+            var chargeItemsBtn = tableRow.querySelector("[name='charge-items']");
+            var subItemsTable = tableRow.querySelector("[id='sub-items-table']");
+            var newPaymentDiv = tableRow.querySelector("[id='new-payment']");
+            var paymentsDiv = tableRow.querySelector("[id='payments-table']");
+            var upcInput = tableRow.querySelector("[name='upc-input-container']");
+            
+            scanUpcBtn.classList.add("hidden");
+            productLookupBtn.classList.add("hidden");
+            chargeItemsBtn.classList.remove("hidden");
+            subItemsTable.classList.add("hidden");
+            newPaymentDiv.classList.add("hidden");
+            paymentsDiv.classList.remove("hidden");
+            upcInput.classList.add("hidden");
+
+            scanUpcBtn.classList.remove("active");
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showChargeItems(event) {
+            //
+            var btn = event.target;
+            var tableRow = getParent(btn, "tr");
             var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
             var productLookupBtn = tableRow.querySelector("[name='product-lookup']");
             var chargeItemsBtn = tableRow.querySelector("[name='charge-items']");
             var subItemsTable = tableRow.querySelector("[id='sub-items-table']");
             var newPatmentDiv = tableRow.querySelector("[id='new-payment']");
+            var paymentsDiv = tableRow.querySelector("[id='payments-table']");
             
             scanUpcBtn.classList.remove("hidden");
             productLookupBtn.classList.remove("hidden");
             chargeItemsBtn.classList.add("hidden");
             subItemsTable.classList.remove("hidden");
             newPatmentDiv.classList.add("hidden");
+            paymentsDiv.classList.add("hidden");
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////

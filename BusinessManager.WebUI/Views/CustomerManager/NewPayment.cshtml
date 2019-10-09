@@ -6,25 +6,15 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function setPaymentMode(event) {
-            function getNewPaymentForm(element) {
-                var parent = element.parentNode;
-                if (parent.id === "new-payment-form") {
-                    result = parent;
-                    return parent;
-                }
-                else {
-                    return getNewPaymentForm(parent);
-                }
-            }
             var btn = event.target;
-            var paymentForm = getNewPaymentForm(btn);
+            var tableRow = getParent(btn, "tr");
             var optSelected = btn.title;
 
-            var paymentModeInput = paymentForm.querySelector("[name='PaymentMode']");
+            var paymentModeInput = tableRow.querySelector("[name='PaymentMode']");
             paymentModeInput.value = optSelected;
 
-            var creditcardGrp = paymentForm.querySelector("[id='creditcard-group']");
-            var checkGrp = paymentForm.querySelector("[id='check-group']");
+            var creditcardGrp = tableRow.querySelector("[id='creditcard-group']");
+            var checkGrp = tableRow.querySelector("[id='check-group']");
 
             switch (optSelected) {
                 case "credit card":
@@ -42,14 +32,14 @@
             }
             showPaymentSaveBtn(event);
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function validatePaymentInput(payment) {
             var message = "";
             if (!payment.PaymentDate)
                 message = "<p>'Payment Date' cannot be empty.</p>";
-                
+
             if (isNaN(payment.Amount) || payment.Amount === "" || parseFloat(payment.Amount) <= 0) {
                 message += "<p>'Amount' must be a number and greater than zero.</p>";
             }
@@ -61,11 +51,11 @@
                 if (!(payment.CreditCardNo.trim())) {
                     message += "<p>'Card Number' cannot be empty.</p>";
                 }
-                
+
                 if (isNaN(payment.CreditCardExpMonth) || payment.CreditCardExpMonth === "" || parseInt(payment.CreditCardExpMonth) <= 0) {
                     message += "<p>'Exp Month' must be greater than zero.</p>";
                 }
-                
+
                 if (isNaN(payment.CreditCardExpYear) || payment.CreditCardExpYear === "" || parseInt(payment.CreditCardExpYear) <= 0) {
                     message += "<p>'Exp Year' must be greater than zero.</p>";
                 }
@@ -92,33 +82,40 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showPaymentSaveBtn(event) {
-            function getParentRow(element) {
-                var parent = element.parentNode;
-                if (parent.nodeName.toLowerCase() === "tr") {
-                    result = parent;
-                    return parent;
-                }
-                else {
-                    return getParentRow(parent);
-                }
-            }
-            var tableRow = getParentRow(event.target);
+            var tableRow = getParent(event.target, "tr");
             var btn = tableRow.querySelector("[name='save-payment']");
             btn.classList.remove("hidden");
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
-    </script>
-    <div id="new-payment-form" class="form-horizontal">
-        <h4 style="margin-top: 15px">New Payment</h4>
-        <hr style="margin: 5px" />
 
-        <div class="form-group form-group-payment">
-            <p class="payment-label">Payment Date</p>
+        function clearNewPaymentInput(tableRow) {
+            tableRow.querySelector("[name='PaymentDate']").value = "";
+            tableRow.querySelector("[name='Amount']").value = 0;
+            tableRow.querySelector("[name='PaymentMode']").value = "cash";
+            tableRow.querySelector("[name='CheckNo']").value = "";
+            tableRow.querySelector("[name='CheckWriter']").value = "";
+            tableRow.querySelector("[name='CheckImage']").value = "";
+            tableRow.querySelector("[name='CreditCardHolder']").value = "";
+            tableRow.querySelector("[name='CreditCardExpMonth']").value = 0;
+            tableRow.querySelector("[name='CreditCardExpYear']").value = 0;
+            tableRow.querySelector("[name='CreditCardCVV']").value = "";
+            tableRow.querySelector("[name='CreditCardNo']").value = "";
+            tableRow.querySelector("[name='CreditCardName']").value = "";
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+    </script>
+    <h4 class="text-danger" style="margin: 0; padding: 10px 0 10px 5px ">New Payment</h4>
+    <div id="new-payment-form" class="form-horizontal" style="background-color: #fffcf0; padding: 10px 20px 20px 20px">
+        @* #fffcf0 = yellow 3 *@
+
+        <div class="form-group form-group-payment" style="margin-bottom: 5px">
+            <p class="payment-label" style="margin-bottom: 2px">Payment Date</p>
             <div class="col-md-10">
-                <input name="PaymentDate" 
-                       type="date" 
-                       class="form-control input-sm date-input" 
+                <input name="PaymentDate"
+                       type="date"
+                       class="form-control input-sm date-input"
                        onchange="showPaymentSaveBtn(event)" />
             </div>
         </div>
@@ -126,17 +123,17 @@
         <div class="form-group form-group-payment">
             <p class="payment-label">Amount</p>
             <div class="col-md-10">
-                <input name="Amount" 
-                       type="text" 
-                       class="form-control input-sm payment-input" 
-                       onkeyup="showPaymentSaveBtn(event)" 
+                <input name="Amount"
+                       type="text"
+                       class="form-control input-sm new-payment-input"
+                       onkeyup="showPaymentSaveBtn(event)"
                        onchange="showPaymentSaveBtn(event)" />
             </div>
         </div>
 
         <div id="payment-mode-group" class="form-group" style="margin-left: -30px">
             <div class="col-md-10 hidden">
-                <input name="PaymentMode" readonly type="text" value="cash" class="form-control input-sm payment-input" />
+                <input name="PaymentMode" readonly type="text" value="cash" class="form-control input-sm new-payment-input" />
             </div>
 
             <div class="col-md-10" style="margin-top: 0">
@@ -161,10 +158,10 @@
             <div class="form-group form-group-payment">
                 <p class="payment-label">Card Holder</p>
                 <div class="col-md-10">
-                    <input name="CreditCardHolder" 
-                           type="text" 
-                           class="form-control input-sm payment-input" 
-                           onkeyup="showPaymentSaveBtn(event)" 
+                    <input name="CreditCardHolder"
+                           type="text"
+                           class="form-control input-sm new-payment-input"
+                           onkeyup="showPaymentSaveBtn(event)"
                            onchange="showPaymentSaveBtn(event)" />
                 </div>
             </div>
@@ -172,10 +169,10 @@
             <div class="form-group form-group-payment">
                 <p class="payment-label">Card Name</p>
                 <div class="col-md-10">
-                    <input name="CreditCardName" 
-                           type="text" 
-                           class="form-control input-sm payment-input" 
-                           onkeyup="showPaymentSaveBtn(event)" 
+                    <input name="CreditCardName"
+                           type="text"
+                           class="form-control input-sm new-payment-input"
+                           onkeyup="showPaymentSaveBtn(event)"
                            onchange="showPaymentSaveBtn(event)" />
                 </div>
             </div>
@@ -183,10 +180,10 @@
             <div class="form-group form-group-payment">
                 <p class="payment-label">Card Number</p>
                 <div class="col-md-10">
-                    <input name="CreditCardNo" 
-                           type="text" 
-                           class="form-control input-sm payment-input" 
-                           onkeyup="showPaymentSaveBtn(event)" 
+                    <input name="CreditCardNo"
+                           type="text"
+                           class="form-control input-sm new-payment-input"
+                           onkeyup="showPaymentSaveBtn(event)"
                            onchange="showPaymentSaveBtn(event)" />
                 </div>
             </div>
@@ -195,33 +192,33 @@
                     <div class="col-md-3">
                         <p class="payment-label" style="margin-left: 0">Exp Month</p>
                         <div>
-                            <input name="CreditCardExpMonth" 
-                                   type="number" 
-                                   class="form-control input-sm payment-input" 
+                            <input name="CreditCardExpMonth"
+                                   type="number"
+                                   class="form-control input-sm new-payment-input"
                                    style="padding-right: 5px; padding-left: 5px"
-                                   onkeyup="showPaymentSaveBtn(event)" 
+                                   onkeyup="showPaymentSaveBtn(event)"
                                    onchange="showPaymentSaveBtn(event)" />
                         </div>
                     </div>
                     <div class="col-md-3">
                         <p class="payment-label" style="margin-left: 0">Exp Year</p>
                         <div>
-                            <input name="CreditCardExpYear" 
-                                   type="number" 
-                                   class="form-control input-sm payment-input" 
+                            <input name="CreditCardExpYear"
+                                   type="number"
+                                   class="form-control input-sm new-payment-input"
                                    style="padding-right: 5px; padding-left: 5px"
-                                   onkeyup="showPaymentSaveBtn(event)" 
+                                   onkeyup="showPaymentSaveBtn(event)"
                                    onchange="showPaymentSaveBtn(event)" />
                         </div>
                     </div>
                     <div>
                         <p class="payment-label">Verification Code</p>
                         <div class="col-md-4" style="padding: 0">
-                            <input name="CreditCardCVV" 
-                                   type="text" 
-                                   class="form-control input-sm payment-input"
+                            <input name="CreditCardCVV"
+                                   type="text"
+                                   class="form-control input-sm new-payment-input"
                                    style="width: 80%"
-                                   onkeyup="showPaymentSaveBtn(event)" 
+                                   onkeyup="showPaymentSaveBtn(event)"
                                    onchange="showPaymentSaveBtn(event)" />
                         </div>
                     </div>
@@ -233,10 +230,10 @@
             <div class="form-group form-group-payment">
                 <p class="payment-label">Check Number</p>
                 <div class="col-md-10">
-                    <input name="CheckNo" 
-                           type="text" 
-                           class="form-control input-sm payment-input" 
-                           onkeyup="showPaymentSaveBtn(event)" 
+                    <input name="CheckNo"
+                           type="text"
+                           class="form-control input-sm new-payment-input"
+                           onkeyup="showPaymentSaveBtn(event)"
                            onchange="showPaymentSaveBtn(event)" />
                 </div>
             </div>
@@ -244,10 +241,10 @@
             <div class="form-group form-group-payment">
                 <p class="payment-label">Issued By</p>
                 <div class="col-md-10">
-                    <input name="CheckWriter" 
-                           type="text" 
-                           class="form-control input-sm payment-input" 
-                           onkeyup="showPaymentSaveBtn(event)" 
+                    <input name="CheckWriter"
+                           type="text"
+                           class="form-control input-sm new-payment-input"
+                           onkeyup="showPaymentSaveBtn(event)"
                            onchange="showPaymentSaveBtn(event)" />
                 </div>
             </div>
@@ -255,9 +252,9 @@
             <div class="form-group form-group-payment">
                 <p class="payment-label">Check Image</p>
                 <div class="col-md-10">
-                    <input name="CheckImage" 
-                           type="text" 
-                           class="form-control input-sm payment-input" 
+                    <input name="CheckImage"
+                           type="text"
+                           class="form-control input-sm new-payment-input"
                            onchange="showPaymentSaveBtn(event)" />
                 </div>
             </div>
@@ -289,7 +286,7 @@
                 <button type="button"
                         name="save-payment"
                         class="btn btn-sm btn-default btn-success-text margin-bottom-3 hidden"
-                        onclick="saveSubformData(event, 'AddPayment', getPaymentData)">
+                        onclick="saveSubformData(event, 'AddPayment', getPaymentData, clearNewPaymentInput)">
                     <strong>Save</strong>
                     <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                 </button>

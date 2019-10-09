@@ -110,6 +110,10 @@ namespace BusinessManager.WebUI.Controllers
                     layaway.LayawayItems = layawayItems.OrderByDescending(i => i.ModifiedAt).ToList();
                 }
 
+                // sort and load Invoice Payments
+                IPaymentService paymentService = new PaymentService();
+                paymentService.GetPayments(customer);
+
                 return View(customer);
             }
         }
