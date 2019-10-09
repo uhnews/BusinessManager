@@ -15,7 +15,7 @@
         //var payments = invoice.InvoicePayments;
         ++invoiceIndex;
         ViewBag.InvoiceIndex = invoiceIndex;
-        string rowStyle = invoiceIndex > 1 ? "display: none" : "display: table-row";
+        string rowClass = invoiceIndex > 1 ? "hidden" : "table-row-shown";
 
         invoiceCharges = invoice.InvoiceItems.Sum(item => item.Quantity * item.Price);
         string invoiceChargesStr = "$ " + String.Format("{0:#,##0.00}", invoiceCharges);
@@ -23,11 +23,10 @@
         invoicePayments = invoice.InvoicePayments.Sum(item => item.Amount);
         string invoicePaymentsStr = "$ " + String.Format("{0:#,##0.00}", invoicePayments);
 
-        customerCharges += invoiceCharges;
-        customerCharges -= invoicePayments;
+        customerCharges += (invoiceCharges - invoicePayments);
         string customerChargesStr = String.Format("$ {0:#,##0.00}", customerCharges);
 
-        <tr id="invoice-row" style="@rowStyle">
+        <tr id="invoice-row" class="@rowClass">
             <td>
                 <div class="col-md-12" style="display: flex; height: 625px">
                     @{

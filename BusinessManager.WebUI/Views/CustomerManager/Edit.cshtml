@@ -335,10 +335,12 @@
                     let pgIndex = row.querySelector("span[name='layaways-table-row-number']").innerHTML;
                     pgIndex = parseInt(pgIndex);
                     if (pgIndex === currLayawayPgIndex) {
-                        row.style.display = "table-row";
+                        //row.style.display = "table-row";
+                        row.classList.remove("hidden");
                     }
                     else {
-                        row.style.display = "none";
+                        //row.style.display = "none";
+                        row.classList.add("hidden");
                     }
                 }
             }
@@ -352,10 +354,12 @@
                     let pgIndex = row.querySelector("span[name='invoices-table-row-number']").innerHTML;
                     pgIndex = parseInt(pgIndex);
                     if (pgIndex === currInvoicePgIndex) {
-                        row.style.display = "table-row"
+                        //row.style.display = "table-row"
+                        row.classList.remove("hidden");
                     }
                     else {
-                        row.style.display = "none"
+                        //row.style.display = "none"
+                        row.classList.add("hidden");
                     }
                 }
             }            
@@ -426,7 +430,8 @@
             var tableRows = layawaysTable.rows;
             for (let i = 0; i < tableRows.length; i++) {
                 var row = tableRows[i];
-                if (row.style.display !== "none") {
+                //if (row.style.display !== "none") {
+                if (!row.classList.contains("hidden")) {
                     var layawayPgIndex = row.querySelector("span[name='layaways-table-row-number']").innerHTML;
                     if (layawayPgIndex) {
                         layawayPgIndex = parseInt(layawayPgIndex);
@@ -444,7 +449,8 @@
             var tableRows = invoicesTable.rows;
             for (let i = 0; i < tableRows.length; i++) {
                 var row = tableRows[i];
-                if (row.style.display !== "none") {
+                //if (row.style.display !== "none") {
+                if (!row.classList.contains("hidden")) {
                     var invoicePgIndex = row.querySelector("span[name='invoices-table-row-number']").innerHTML;
                     if (invoicePgIndex) {
                         invoicePgIndex = parseInt(invoicePgIndex);
@@ -1443,7 +1449,7 @@
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
-                if (rowIndex !== currRowIndex + 1) {
+                if (rowIndex !== rows.length) {
                     // hide row
                     //row.style.display = "none";
                     row.classList.add("hidden");

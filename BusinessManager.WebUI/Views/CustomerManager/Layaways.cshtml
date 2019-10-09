@@ -12,12 +12,12 @@
     @foreach (var layaway in Model)
     {
         ++layawayIndex;
-        string rowStyle = layawayIndex > 1 ? "display: none" : "display: table-row";
+        string rowClass = layawayIndex > 1 ? "hidden" : "table-row-shown";
         layawayCharges = layaway.LayawayItems.Sum(item => item.Quantity * item.Price);
         var layawayChargesStr  = "$ " + String.Format("{0:###,###,###.00}", layawayCharges);
         customerCharges += layawayCharges;
         var customerChargesStr = String.Format("$ {0:#,###.00}", customerCharges);
-        <tr style="@rowStyle">
+        <tr class="@rowClass">
             <td>
                 <div class="col-md-12" style="display: flex; height: 625px">
                     @{

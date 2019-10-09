@@ -328,3 +328,7 @@ textarea {
 .invoice-label {
     width: 30%; 
 }
+
+.table-row-shown {
+    display: table-row;
+}
