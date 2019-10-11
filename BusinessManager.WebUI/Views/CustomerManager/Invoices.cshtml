@@ -401,13 +401,13 @@
                                             </strong><br />
                                             @Html.DisplayFor(m => item.ProductDescription, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
                                         </div>
-                                        <div style="padding-top: 7px; width: 50%">
+                                        <div style="padding-top: 7px; width: 70%">
                                             <label class="control-label invoice-label" style="display: inline; margin-right: 10px">Quantity:</label>
-                                            <p name="item-quantity" class="text-primary">
+                                            <span name="item-quantity" class="text-primary">
                                                 @Html.DisplayFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
-                                            </p>
+                                            </span>
                                         </div>
-                                        <div style="margin-bottom: 5px; width: 50%">
+                                        <div style="margin-bottom: 5px; width: 70%">
                                             @Html.LabelFor(m => item.Price, htmlAttributes: new
                                             {
                                                 @class = "control-label invoice-label",
@@ -424,6 +424,8 @@
                                                     @onchange = "showInvoiceItemSaveBtn(event)"
                                                 }
                                             })
+                                            <p><label style="margin-right: 5px">Item Total: </label><span name="line-total" class="text-primary">@(item.Quantity * item.Price)</span></p>
+                                            <span name="PriceOldValue" class="hidden">@item.Price</span>
                                             <button name="invoice-item-save"
                                                     type="button"
                                                     style="margin: 0 0 3px 0"

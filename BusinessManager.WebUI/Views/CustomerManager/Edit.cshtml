@@ -1636,12 +1636,13 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateLayawayItemPrice(event, itemId) {
-            var parent = event.target.parentNode;
-            var parentNodeTag = parent.nodeName;
-            if (parentNodeTag !== "DIV") {
-                parent = parent.parentNode;
-            }
+            var parent = getParent(event.target, "tr");
             var btn = parent.querySelector("button");
+
+            var oldValueSpan = parent.querySelector("[name='PriceOldValue']");
+            var oldValue = parseFloat(oldValueSpan.innerText);
+            var lineTotalSpan = parent.querySelector("[name='line-total']");
+            var quantity = parseInt(parent.querySelector("[name='item-quantity']").innerText);
 
             var priceInput = parent.querySelector("input[type='text']");
             var price = priceInput.value;
@@ -1649,6 +1650,8 @@
                 ShowMessage("The price must be a number greater than zero.");
                 return;
             }
+            var amountChange = parseFloat(price) - oldValue;
+
             //upload data
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
@@ -1657,8 +1660,10 @@
                     var responseObject = JSON.parse(responseText);
                     if (responseObject.Successful === true) {
                         priceInput.value = parseFloat(price).toFixed(2);
+                        lineTotalSpan.innerText = (quantity * parseFloat(price)).toFixed(2);
                         btn.classList.add("hidden");
-                        updateCustomerTotals("layaways-table")
+                        updateCustomerTotals("invoices-table", amountChange, getCurrInvoicePgIndex());
+                        oldValueSpan.innerText = price;
                     }
                     else if (responseObject.Message) {
                         ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
@@ -1672,12 +1677,13 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateInvoiceItemPrice(event, itemId) {
-            var parent = event.target.parentNode;
-            var parentNodeTag = parent.nodeName;
-            if (parentNodeTag !== "DIV") {
-                parent = parent.parentNode;
-            }
+            var parent = getParent(event.target, "tr");
             var btn = parent.querySelector("button");
+
+            var oldValueSpan = parent.querySelector("[name='PriceOldValue']");
+            var oldValue = parseFloat(oldValueSpan.innerText);
+            var lineTotalSpan = parent.querySelector("[name='line-total']");
+            var quantity = parseInt(parent.querySelector("[name='item-quantity']").innerText);
 
             var priceInput = parent.querySelector("input[type='text']");
             var price = priceInput.value;
@@ -1685,6 +1691,8 @@
                 ShowMessage("The price must be a number greater than zero.");
                 return;
             }
+            var amountChange = parseFloat(price) - oldValue;
+
             //upload data
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
@@ -1694,8 +1702,10 @@
                     if (responseObject.Successful === true) {
                         var oldPrice = responseObject.OldValue;
                         priceInput.value = parseFloat(price).toFixed(2);
+                        lineTotalSpan.innerText = (quantity * parseFloat(price)).toFixed(2);
                         btn.classList.add("hidden");
-                        updateCustomerTotals();
+                        updateCustomerTotals("invoices-table", amountChange, getCurrInvoicePgIndex());
+                        oldValueSpan.innerText = price;
                     }
                     else if (responseObject.Message) {
                         ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
