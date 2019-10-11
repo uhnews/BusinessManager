@@ -37,6 +37,61 @@ namespace BusinessManager.Services
                 }
             }
         }
+        public object UpdatePayment(IRepository<Payment> paymentContext, string data)
+        {
+            {
+                var payment = JsonConvert.DeserializeObject<Payment>(data);
+                
+                // sanitize data a bit to ensure there are no inconsistencies regarding PaymentMode and to protect privacy
+                if (payment.PaymentMode == "cash")
+                {
+                    // clear check & credit card info
+                    payment.CheckNo = "";
+                    payment.CheckImage = "";
+                    payment.CheckWriter = "";
+                    payment.CreditCardHolder = "";
+                    payment.CreditCardNo = "";
+                    payment.CreditCardName = "";
+                    payment.CreditCardExpMonth = 0;
+                    payment.CreditCardExpYear = 0;
+                    payment.CreditCardCVV = "";
+                }
+                else if (payment.PaymentMode == "credit card")
+                {
+                    // clear check info
+                    payment.CheckNo = "";
+                    payment.CheckImage = "";
+                    payment.CheckWriter = "";
+                }
+                else if (payment.PaymentMode == "check")
+                {
+                    // clear credit card info
+                    payment.CreditCardHolder = "";
+                    payment.CreditCardNo = "";
+                    payment.CreditCardName = "";
+                    payment.CreditCardExpMonth = 0;
+                    payment.CreditCardExpYear = 0;
+                    payment.CreditCardCVV = "";
+                }
+
+                try
+                {
+                    paymentContext.Update(payment);
+                    paymentContext.Commit();
+
+                    // send response object
+                    return new { Successful = true, Message = "Payment update." };
+                }
+                catch (Exception ex)
+                {
+                    // log error;
+                    Console.WriteLine(ex);
+
+                    // send response object error
+                    return new { Successful = false, Message = "Payment failed to update." };
+                }
+            }
+        }
 
         public void GetPayments(Customer customer)
         {

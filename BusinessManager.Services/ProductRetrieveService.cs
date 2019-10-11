@@ -68,6 +68,7 @@ namespace BusinessManager.Services
                         Category = c.Category,
                         ProductCode = c.ProductCode,
                         UPC = c.UPC,
+                        SupplierPrice = c.SupplierPrice,
                         Price = c.Price,
                         Quantity = c.Quantity,
                         QuantityMin = c.QuantityMin,

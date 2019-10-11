@@ -7,6 +7,7 @@
     decimal invoiceCharges = 0;
     decimal customerCharges = 0;
     decimal invoicePayments = 0;
+    decimal invoiceBalance = 0;
 }
 
 <table id="invoices-table" class="table">
@@ -22,6 +23,9 @@
 
         invoicePayments = invoice.InvoicePayments.Sum(item => item.Amount);
         string invoicePaymentsStr = "$ " + String.Format("{0:#,##0.00}", invoicePayments);
+
+        invoiceBalance = invoiceCharges - invoicePayments;
+        string invoiceBalanceStr = "$ " + String.Format("{0:#,##0.00}", invoiceBalance);
 
         customerCharges += (invoiceCharges - invoicePayments);
         string customerChargesStr = String.Format("$ {0:#,##0.00}", customerCharges);
@@ -43,15 +47,13 @@
                             height: 550px;
                             width: 100%;
                         }
-
                         .fixed_header thead tr {
                             display: block;
                         }
                     </style>
                     <script>
                     </script>
-                    <div id="invoice-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: #fff5cc">
-                        @* #fff5cc = yellow 2 *@
+                    <div id="invoice-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: #fff5cc"> @* #fff5cc = yellow 2 *@
                         <form id="invoice-form">
                             <div name="invoice-customer-id" style="display: none">@invoice.CustomerId</div>
                             <div id="receivable-source-id" name="invoice-id" style="display: none">@invoice.Id</div>
@@ -230,255 +232,261 @@
                                     }
                                 })
                             </div>
+
                             <div name="invoice-summary" style="position: relative; margin: 0px 0px 5px 0px">
                                 <hr style="margin:  10px 0 0 0; border-width: 2px" />
-                                <h5 style="margin: 10px 0 5px 15px; text-decoration: underline; font-size: 15px">This Invoice </h5>
-                                <h4 style="margin: 0px 0 0 40px; font-size: 17px">
+                                <h5 style="margin: 0 0 0 15px; text-decoration: underline; font-size: 15px">This Invoice </h5>
+                                <div style="margin: 0 0 0 40px">
                                     <span>Total Charges: </span>
                                     <span name="transaction-charges"
+                                            class="pull-right"
+                                            style="margin-right: 25px">@invoiceChargesStr</span>
+                                </div>
+                                <div style="margin: 0 0 0 40px">
+                                    <span>Payments: </span>
+                                    <span name="invoice-payments"
+                                            class="pull-right"
+                                            style="margin-right: 25px">@invoicePaymentsStr</span>
+                                </div>
+                                <div style="margin: 0 0 0 40px">
+                                    <span>Balance: </span>
+                                    <span name="invoice-payments"
                                           class="pull-right"
-                                          style="margin-right: 25px">@invoiceChargesStr</span>
-                                    </h4>
-                                    <h4 style="margin: 3px 0 0 40px; font-size: 17px">
-                                        <span>Payments: </span>
-                                        <span name="invoice-payments"
-                                              class="pull-right"
-                                              style="margin-right: 25px">@invoicePaymentsStr</span>
-                                    </h4>
-
-                                    <h5 style="margin: 10px 0 5px 15px; text-decoration: underline; font-size: 15px">All Invoices</h5>
-                                    <h4 style="margin: 0px 0 0 40px; font-size: 17px">
-                                        <span name="charges-accumulator" class="hidden">@customerChargesStr</span>
-                                        <span>Amount Pending:</span>
-                                        <span name="all-pending-transaction-charges"
-                                              class="pull-right"
-                                              style="margin-right: 25px; font-size: 17px"></span>
-                                    </h4>
-                                    <hr style="margin: 3px 0 10px 0; border-width: 2px" />
-                                </div>
-
-                                <div class="btn-group" style="@buttonGroupStyle">
-                                    <button type="button"
-                                            name="subform-save"
-                                            class="btn btn-sm btn-default btn-success-text hidden"
-                                            onclick="saveSubformData(event, 'UpdateInvoice', getInvoiceData)">
-                                        <strong>Save</strong>
-                                        <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
-                                    </button>
-                                    <button type="button"
-                                            name="scan-upc"
-                                            class="btn btn-sm btn-default margin-bottom-3"
-                                            onclick="toggleBarcodeInput(event)">
-                                        Scan Barcode
-                                    </button>
-                                    <button type="button"
-                                            name="product-lookup"
-                                            class="btn btn-sm btn-default margin-bottom-3"
-                                            onclick="openProductLookup(event, '@invoice.Id', 'Invoices')">
-                                        Add Item
-                                    </button>
-                                    <button type="button"
-                                            name="charge-items"
-                                            class="btn btn-sm btn-default margin-bottom-3 hidden"
-                                            onclick="showChargeItems(event)">
-                                        Show Items
-                                    </button>
-                                    <div class="btn-group dropup">
-                                        <button type="button"
-                                                class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
-                                            Payments
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu" style="padding: 0">
-                                            <li>
-                                                <button type="button"
-                                                        class="btn btn-sm btn-default btn-block"
-                                                        onclick="addPayment(event, 'Invoice')">
-                                                    Add Payment
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button type="button"
-                                                        class="btn btn-sm btn-default btn-block"
-                                                        onclick="showPayments(event)">
-                                                    Edit Payments
-                                                </button>
-                                            </li>
-                                        </ul>
+                                          style="margin-right: 25px">@invoiceBalanceStr</span>
                                     </div>
-                                    @{
-                                        if (invoice.InvoiceItems.Count == 0)
-                                        {
-                                            <button type="button"
-                                                    class="btn btn-sm btn-default btn-danger-text margin-bottom-3"
-                                                    onclick="deleteInvoice(event)">
-                                                Delete
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <button type="button"
-                                                    class="btn btn-sm btn-default btn-danger-text margin-bottom-3"
-                                                    disabled>
-                                                Delete
-                                            </button>
-                                        }
-                                    }
-                                    <div name="upc-input-container" style="padding: 0" class="hidden">
-                                        <span class="fas fa-barcode text-primary" style="font-size: 35px; margin: 0px -15px 0 0; padding: 0">&nbsp;&nbsp;</span>
-                                        <input name="upc-input"
-                                               type="text"
-                                               class="form-control input-sm"
-                                               style="display: inline; max-width: 70%; transform: translateY(-8px)"
-                                               onkeypress="getProductByUPC(event, '@invoice.Id', 'Invoice')" />
-                                    </div>
+                                <h5 style="margin: 0 0 0 15px; text-decoration: underline; font-size: 15px">All Invoices</h5>
+                                <div style="margin: 0 0 0 40px">
+                                    <span name="charges-accumulator" class="hidden">@customerChargesStr</span>
+                                    <span>Amount Pending:</span>
+                                    <span name="all-pending-transaction-charges"
+                                            class="pull-right"
+                                            style="margin-right: 25px"></span>
                                 </div>
-                            </form>
-                        </div>
-                        @{
-                            var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0; border: none";
-                            var subItemInputStyle2 = "display: inline; max-width: 95%; margin: 0 0 5px 0";
-                        }
-                        <div id="sub-items-table" class="col-md-6 invoiceitems-fixed-header" style="flex: 1; background-color: #fff5cc; padding-left: 0">
-                            @* #fff5cc = yellow 2 *@
-                            <h4 style="margin-left: 10px">Invoice Items</h4>
-                            <table class="table">
+                                <hr style="margin: 0 0 10px 0; border-width: 2px" />
+                            </div>
+
+                            <div class="btn-group" style="@buttonGroupStyle">
+                                <button type="button"
+                                        name="subform-save"
+                                        class="btn btn-sm btn-default btn-success-text hidden"
+                                        onclick="saveSubformData(event, 'UpdateInvoice', getUIInvoiceData)">
+                                    <strong>Save</strong>
+                                    <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
+                                </button>
+                                <button type="button"
+                                        name="scan-upc"
+                                        class="btn btn-sm btn-default margin-bottom-3"
+                                        onclick="toggleBarcodeInput(event)">
+                                    Scan Barcode
+                                </button>
+                                <button type="button"
+                                        name="product-lookup"
+                                        class="btn btn-sm btn-default margin-bottom-3"
+                                        onclick="openProductLookup(event, '@invoice.Id', 'Invoices')">
+                                    Add Item
+                                </button>
+                                <button type="button"
+                                        name="charge-items"
+                                        class="btn btn-sm btn-default margin-bottom-3 hidden"
+                                        onclick="showChargeItems(event)">
+                                    Show Items
+                                </button>
+                                <div class="btn-group dropup">
+                                    <button type="button"
+                                            class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                        Payments
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" style="padding: 0">
+                                        <li>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-default btn-block"
+                                                    onclick="addPayment(event, 'Invoice')">
+                                                Add Payment
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-default btn-block"
+                                                    onclick="showPayments(event)">
+                                                Edit Payments
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
                                 @{
-                                    var itemsCount = invoice.InvoiceItems.Count;
-                                    var itemIndex = 0;
-                                    var rowElementId = "";
+                                    if (invoice.InvoiceItems.Count == 0)
+                                    {
+                                        <button type="button"
+                                                class="btn btn-sm btn-default btn-danger-text margin-bottom-3"
+                                                onclick="deleteInvoice(event)">
+                                            Delete
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button"
+                                                class="btn btn-sm btn-default btn-danger-text margin-bottom-3"
+                                                disabled>
+                                            Delete
+                                        </button>
+                                    }
                                 }
-                                @foreach (var item in invoice.InvoiceItems)
-                                {
-                                    ++itemIndex;
-                                    rowElementId = "row-" + invoiceIndex + "-" + itemIndex;
-                                    <tr id=@rowElementId style="margin-top: 20px; background-color: #fffcf0">
-                                        @* #fffcf0 = yellow 3 *@
-                                        <td style="position: relative">
-                                            <div>
-                                                <img onclick="showPic(event, '@item.Image')"
-                                                     class="img-thumbnail"
-                                                     style="width: 100px; cursor: pointer"
-                                                     src="~/Content/ProductImages/@item.Image"
-                                                     alt="Image" />
-                                            </div>
-                                            @* InvoiceItem delete button here *@
-                                            <input id="invoice-item-delete"
-                                                   type="button"
-                                                   value="Delete"
-                                                   style="float: left; margin: 5px"
-                                                   class="btn btn-sm btn-default btn-danger-text"
-                                                   onclick="deleteInvoiceItem(event, '@item.Id', '@rowElementId', '@item.Image', '@item.ProductName')" />
-                                        </td>
-                                        <td>
-                                            <div style="padding-top: 7px">
+                                <div name="upc-input-container" style="padding: 0" class="hidden">
+                                    <span class="fas fa-barcode text-primary" style="font-size: 35px; margin: 0px -15px 0 0; padding: 0">&nbsp;&nbsp;</span>
+                                    <input name="upc-input"
+                                            type="text"
+                                            class="form-control input-sm"
+                                            style="display: inline; max-width: 70%; transform: translateY(-8px)"
+                                            onkeypress="getProductByUPC(event, '@invoice.Id', 'Invoice')" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    @{
+                        var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0; border: none";
+                        var subItemInputStyle2 = "display: inline; max-width: 95%; margin: 0 0 5px 0";
+                    }
+                    <div id="sub-items-table" class="col-md-6 invoiceitems-fixed-header" style="flex: 1; background-color: #fff5cc; padding-left: 0">
+                        @* #fff5cc = yellow 2 *@
+                        <h4 style="margin-left: 10px">Invoice Items</h4>
+                        <table class="table">
+                            @{
+                                var itemsCount = invoice.InvoiceItems.Count;
+                                var itemIndex = 0;
+                                var rowElementId = "";
+                            }
+                            @foreach (var item in invoice.InvoiceItems)
+                            {
+                                ++itemIndex;
+                                rowElementId = "row-" + invoiceIndex + "-" + itemIndex;
+                                <tr id=@rowElementId style="margin-top: 20px; background-color: #fffcf0">
+                                    @* #fffcf0 = yellow 3 *@
+                                    <td style="position: relative">
+                                        <div>
+                                            <img onclick="popUpProductDetail('@item.ProductId')"
+                                                    class="img-thumbnail"
+                                                    style="width: 100px; cursor: pointer"
+                                                    src="~/Content/ProductImages/@item.Image"
+                                                    alt="Image" />
+                                        </div>
+                                        @* InvoiceItem delete button here *@
+                                        <input id="invoice-item-delete"
+                                                type="button"
+                                                value="Delete"
+                                                style="float: left; margin: 5px"
+                                                class="btn btn-sm btn-default btn-danger-text"
+                                                onclick="deleteInvoiceItem(event, '@item.Id', '@rowElementId', '@item.Image', '@item.ProductName')" />
+                                    </td>
+                                    <td>
+                                        <div style="padding-top: 7px">
 
-                                                @* InvoiceItem.Id *@
-                                                <div name="invoiceitem-item-id" style="display: none">@item.Id</div>
-                                                @* InvoiceItem.ProductId *@
-                                                <div name="invoiceitem-product-id" style="display: none">@item.ProductId</div>
-                                                @* InvoiceItem.Quantity *@
-                                                <div name="invoiceitem-quantity" style="display: none">@item.Quantity</div>
+                                            @* InvoiceItem.Id *@
+                                            <div name="invoiceitem-item-id" style="display: none">@item.Id</div>
+                                            @* InvoiceItem.ProductId *@
+                                            <div name="invoiceitem-product-id" style="display: none">@item.ProductId</div>
+                                            @* InvoiceItem.Quantity *@
+                                            <div name="invoiceitem-quantity" style="display: none">@item.Quantity</div>
 
-                                                <strong>
-                                                    @Html.DisplayFor(m => item.ProductName, new
-                                                    {
-                                                        htmlAttributes = new
-                                                        {
-                                                            @class = "form-control",
-                                                            @style = @subItemInputStyle1,
-                                                            @readonly = "true"
-                                                        }
-                                                    })
-                                                </strong><br />
-                                                @Html.DisplayFor(m => item.ProductDescription, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
-                                            </div>
-                                            <div style="padding-top: 7px; width: 50%">
-                                                <label class="control-label invoice-label" style="display: inline; margin-right: 10px">Quantity:</label>
-                                                <p name="item-quantity" class="text-primary">
-                                                    @Html.DisplayFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
-                                                </p>
-                                            </div>
-                                            <div style="margin-bottom: 5px; width: 50%">
-                                                @Html.LabelFor(m => item.Price, htmlAttributes: new
-                                                {
-                                                    @class = "control-label invoice-label",
-                                                    @style = "display: inline; margin-right: 10px; margin-top: 10px"
-                                                })
-
-                                                @Html.EditorFor(m => item.Price, new
+                                            <strong>
+                                                @Html.DisplayFor(m => item.ProductName, new
                                                 {
                                                     htmlAttributes = new
                                                     {
-                                                        @class = "form-control input-sm",
-                                                        @style = @subItemInputStyle2,
-                                                        @onkeyup = "showInvoiceItemSaveBtn(event)",
-                                                        @onchange = "showInvoiceItemSaveBtn(event)"
+                                                        @class = "form-control",
+                                                        @style = @subItemInputStyle1,
+                                                        @readonly = "true"
                                                     }
                                                 })
-                                                <button name="invoice-item-save"
-                                                        type="button"
-                                                        style="margin: 0 0 3px 0; display: none"
-                                                        class="btn btn-sm btn-default btn-success-text"
-                                                        onclick="updateInvoiceItemPrice(event, '@item.Id')">
-                                                    <strong>Save</strong>
-                                                    <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
-                                                </button>
-                                                <div style="display: inline" class="text-danger">
-                                                    <span name="invoiceitems-row-number">@itemIndex</span> / <span name="invoiceitems-row-count">@itemsCount</span>
-                                                </div>
+                                            </strong><br />
+                                            @Html.DisplayFor(m => item.ProductDescription, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
+                                        </div>
+                                        <div style="padding-top: 7px; width: 50%">
+                                            <label class="control-label invoice-label" style="display: inline; margin-right: 10px">Quantity:</label>
+                                            <p name="item-quantity" class="text-primary">
+                                                @Html.DisplayFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
+                                            </p>
+                                        </div>
+                                        <div style="margin-bottom: 5px; width: 50%">
+                                            @Html.LabelFor(m => item.Price, htmlAttributes: new
+                                            {
+                                                @class = "control-label invoice-label",
+                                                @style = "display: inline; margin-right: 10px; margin-top: 10px"
+                                            })
+
+                                            @Html.EditorFor(m => item.Price, new
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @class = "form-control input-sm",
+                                                    @style = @subItemInputStyle2,
+                                                    @onkeyup = "showInvoiceItemSaveBtn(event)",
+                                                    @onchange = "showInvoiceItemSaveBtn(event)"
+                                                }
+                                            })
+                                            <button name="invoice-item-save"
+                                                    type="button"
+                                                    style="margin: 0 0 3px 0"
+                                                    class="btn btn-sm btn-default btn-success-text hidden"
+                                                    onclick="updateInvoiceItemPrice(event, '@item.Id')">
+                                                <strong>Save</strong>
+                                                <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
+                                            </button>
+                                            <div class="text-danger">
+                                                <span name="invoiceitems-row-number">@itemIndex</span> / <span name="invoiceitems-row-count">@itemsCount</span>
                                             </div>
-                                        </td>
-                                    </tr>
-                                }
-                            </table>
-                        </div>
-
-                        <div id="new-payment"
-                             class="col-md-6 invoiceitems-fixed-header hidden"
-                             style="flex: 1; background-color: #fff5cc; padding: 0 15px 0 0; margin: 0 0 0 0">
-                            @* #fff5cc = yellow 2 *@
-
-                            @Html.Partial("NewPayment")
-
-                        </div>
-                        <div id="payments-table" class="col-md-6 invoiceitems-fixed-header hidden" style="flex: 1; background-color: #fff5cc; padding-left: 0">
-                            @Html.Partial("Payments", invoice.InvoicePayments)
-                        </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
                     </div>
 
-                    @*  ################### RECORD NAVIGATION BUTTONS #####################  *@
-
-                    <div name="invoice-nav-group" class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
-                        Invoice <span name="invoices-table-row-number">@invoiceIndex</span> of <span name="invoices-row-count" style="margin-right: 20px">@invoiceCount</span>
-                        <div style="display: inline">
-                            <button type="button" class="btn-pill-golden">
-                                <span class="glyphicon glyphicon-fast-backward"
-                                      style="padding: 0 3px 0 3px"
-                                      onclick="navFirst(event)">
-                                </span>
-                            </button>
-                            <button type="button" class="btn-pill-golden">
-                                <span class="glyphicon glyphicon-arrow-left"
-                                      style="padding: 0 3px 0 3px"
-                                      onclick="navPrev(event)">
-                                </span>
-                            </button>
-                            <button type="button" class="btn-pill-golden">
-                                <span class="glyphicon glyphicon-arrow-right"
-                                      style="padding: 0 3px 0 3px"
-                                      onclick="navNext(event)">
-                                </span>
-                            </button>
-                            <button type="button" class="btn-pill-golden">
-                                <span class="glyphicon glyphicon-fast-forward"
-                                      style="padding: 0 3px 0 3px"
-                                      onclick="navLast(event)">
-                                </span>
-                            </button>
-                        </div>
+                    <div id="new-payment"
+                            class="col-md-6 invoiceitems-fixed-header hidden"
+                            style="flex: 1; background-color: #fff5cc; padding: 0 15px 0 0; margin: 0 0 0 0"
+                         > @* #fff5cc = yellow 2 *@
+                        @Html.Partial("NewPayment")
                     </div>
-                </td>
-            </tr>
-        }
+
+                    <div id="payments-table" 
+                         class="col-md-6 invoiceitems-fixed-header hidden" 
+                         style="flex: 1; background-color: #fff5cc; padding-left: 0">
+                        @{
+                            ViewBag.CurrInvoiceId = invoice.Id;
+                        }
+                        @Html.Partial("Payments", invoice.InvoicePayments)
+                    </div>
+                </div>
+
+                @*  ################### RECORD NAVIGATION BUTTONS #####################  *@
+
+                <div name="invoice-nav-group" class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
+                    Invoice <span name="invoices-table-row-number">@invoiceIndex</span> of <span name="invoices-row-count" style="margin-right: 20px">@invoiceCount</span>
+                    <div style="display: inline">
+                        <button type="button" class="btn-pill-golden" onclick="navFirst(event)">
+                            <span class="glyphicon glyphicon-fast-backward"
+                                    style="padding: 0 3px 0 3px" >
+                            </span>
+                        </button>
+                        <button type="button" class="btn-pill-golden" onclick="navPrev(event)">
+                            <span class="glyphicon glyphicon-arrow-left"
+                                    style="padding: 0 3px 0 3px" >
+                            </span>
+                        </button>
+                        <button type="button" class="btn-pill-golden" onclick="navNext(event)">
+                            <span class="glyphicon glyphicon-arrow-right"
+                                    style="padding: 0 3px 0 3px" >
+                            </span>
+                        </button>
+                        <button type="button" class="btn-pill-golden" onclick="navLast(event)">
+                            <span class="glyphicon glyphicon-fast-forward"
+                                    style="padding: 0 3px 0 3px" >
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+     }
 </table>

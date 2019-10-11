@@ -174,7 +174,7 @@
                                     <button type="button"
                                             name="subform-save"
                                             class="btn btn-sm btn-default btn-success-text hidden"
-                                            onclick="saveSubformData(event, 'UpdateLayaway', getLayawayData)">
+                                            onclick="saveSubformData(event, 'UpdateLayaway', getUILayawayData)">
                                         <strong>Save</strong>
                                         <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                                     </button>
@@ -241,7 +241,7 @@
                                 <tr id=@rowElementId style="margin-top: 20px">
                                     <td style="position: relative">
                                         <div>
-                                            <img onclick="showPic(event, '@item.Image')"
+                                            <img onclick="popUpProductDetail('@item.ProductId')"
                                                  class="img-thumbnail"
                                                  style="width: 100px; cursor: pointer"
                                                  src="~/Content/ProductImages/@item.Image"
@@ -303,13 +303,13 @@
                                             })
                                             <button name="layaway-item-save"
                                                     type="button"
-                                                    style="margin: 0; display: none"
-                                                    class="btn btn-sm btn-default btn-success-text"
+                                                    style="margin: 0"
+                                                    class="btn btn-sm btn-default btn-success-text hidden"
                                                     onclick="updateLayawayItemPrice(event, '@item.Id')">
                                                 <strong>Save</strong>
                                                 <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                                             </button>
-                                            <div style="display: inline" class="text-danger">
+                                            <div class="text-danger">
                                                 <span name="layawayitems-row-number">@itemIndex</span> / <span name="layawayitems-row-count">@itemsCount</span>
                                             </div>
                                         </div>
@@ -322,28 +322,24 @@
                 <div name="layaway-nav-group" class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
                     Layaway <span name="layaways-table-row-number">@layawayIndex</span> of <span name="layaways-row-count" style="margin-right: 30px">@layawayCount</span>
                     <div style="display: inline">
-                        <button type="button" class="btn-pill">
+                        <button type="button" class="btn-pill" onclick="navFirst(event)">
                             <span class="glyphicon glyphicon-fast-backward" 
-                                  style="padding: 0 3px 0 3px" 
-                                  onclick="navFirst(event)">
+                                  style="padding: 0 3px 0 3px" >
                             </span>
                         </button>
-                        <button type="button" class="btn-pill">
+                        <button type="button" class="btn-pill" onclick="navPrev(event)">
                             <span class="glyphicon glyphicon-arrow-left" 
-                                  style="padding: 0 3px 0 3px" 
-                                  onclick="navPrev(event)">
+                                  style="padding: 0 3px 0 3px" >
                             </span>
                         </button>
-                        <button type="button" class="btn-pill">
+                        <button type="button" class="btn-pill" onclick="navNext(event)">
                             <span class="glyphicon glyphicon-arrow-right" 
-                                  style="padding: 0 3px 0 3px" 
-                                  onclick="navNext(event)">
+                                  style="padding: 0 3px 0 3px" >
                             </span>
                         </button>
-                        <button type="button" class="btn-pill">
+                        <button type="button" class="btn-pill" onclick="navLast(event)">
                             <span class="glyphicon glyphicon-fast-forward" 
-                                  style="padding: 0 3px 0 3px" 
-                                  onclick="navLast(event)">
+                                  style="padding: 0 3px 0 3px" >
                             </span>
                         </button>
                     </div>

@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Edit Customer";
+    ViewBag.Prducts = Model.ProductList;
 }
 
 @using (Html.BeginForm("Edit", "CustomerManager", FormMethod.Post, new { onsubmit = "return false", id = "customer-edit-form" }))
@@ -587,6 +588,31 @@
                 row.querySelector("[name='all-pending-transaction-charges']").innerHTML = customerLayawayChargesTotal;
             }
         }
+
+        //
+
+        function addCommasToNumber(number) {
+            var result = "";
+            if (isNaN(number)) {
+                return result;
+            }
+            var n = number.toString().replace(/,/g, "");
+            var indexOfDot = n.indexOf(".")
+            result = n.substring(indexOfDot);   // add decimal part to result
+            n = n.substring(0, indexOfDot);     // truncate decimal part from temp variable, n
+            var arr = n.split("");
+            for (let i = arr.length - 1; i >= 0; i -= 3) {
+                result = arr[i] + (result && i < arr.length - 1 ? "," : "") + result;
+                if (i - 1 >= 0) {
+                    result = arr[i - 1] + result
+                    if (i - 2 >= 0) {
+                        result = arr[i-2] + result;
+                    }
+                }
+            }
+            console.log(result);
+            return result;
+        }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -601,16 +627,15 @@
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 if (i === (rowIndex - 1)) {
-                    var oldTransactionCharges = (row.querySelector("span[name='transaction-charges']").innerHTML).replace("$ ", "");          //remove leading '$ ' from UI data
+                    var oldTransactionCharges = (row.querySelector("span[name='transaction-charges']").innerHTML).replace("$ ", "");          // remove leading '$ ' from UI data
                     oldTransactionCharges = parseFloat(oldTransactionCharges);
                     var newTransactionCharges = parseFloat(oldTransactionCharges) + parseFloat(amountAdded);
                     row.querySelector("span[name='transaction-charges']").innerHTML = parseFloat(newTransactionCharges).toFixed(2);
                 }
-
-                var oldAllTransactionCharges = (row.querySelector("[name='all-pending-transaction-charges']").innerHTML).replace("$ ", "");   //remove leading '$ ' from UI data
+                var oldAllTransactionCharges = (row.querySelector("[name='all-pending-transaction-charges']").innerHTML).replace("$ ", "");   // remove leading '$ ' from UI data
+                oldAllTransactionCharges = oldAllTransactionCharges.replace(/,/g, "");                                                        // remove all commas  
                 var newAllTransactionCharges = parseFloat(oldAllTransactionCharges) + parseFloat(amountAdded);
-
-                row.querySelector("[name='all-pending-transaction-charges']").innerHTML = parseFloat(newAllTransactionCharges).toFixed(2);
+                row.querySelector("[name='all-pending-transaction-charges']").innerHTML = "$ " + addCommasToNumber(parseFloat(newAllTransactionCharges).toFixed(2));
             }
         }
         
@@ -767,6 +792,7 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function saveSubformData(event, route, getData, clearInput) {
+            //
             var clickedElement = event.target;
 
             // get data form UI
@@ -810,7 +836,7 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function getLayawayData(tableRow) {
+        function getUILayawayData(tableRow) {
             var layaway = {
                 Id: tableRow.querySelector("[name='layaway-id']").innerHTML,
                 CustomerId: tableRow.querySelector("[name='layaway-customer-id']").innerHTML,
@@ -826,7 +852,7 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function getInvoiceData(tableRow) {
+        function getUIInvoiceData(tableRow) {
             var invoice = {
                 Id: tableRow.querySelector("[name='invoice-id']").innerHTML,
                 InvoiceNumber: parseInt(tableRow.querySelector("[name='invoice-number']").innerText),
@@ -848,7 +874,7 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function getPaymentData(tableRow) {
+        function getUIPaymentData(tableRow) {
             var payment = {
                 PaymentDate: tableRow.querySelector("[name='PaymentDate']").value,
                 Amount: tableRow.querySelector("[name='Amount']").value,
@@ -863,7 +889,8 @@
                 CreditCardNo: tableRow.querySelector("[name='CreditCardNo']").value,
                 CreditCardName: tableRow.querySelector("[name='CreditCardName']").value,
                 ReceivableSource: tableRow.querySelector("[name='ReceivableSource']").innerText,
-                ReceivableSourceId: tableRow.querySelector("[name='ReceivableSourceId']").innerText
+                ReceivableSourceId: tableRow.querySelector("[name='ReceivableSourceId']").innerText,
+                Id: tableRow.querySelector("[name='Id']").innerText
             };
             var message = validatePaymentInput(payment);
             if (!message) {
@@ -1058,19 +1085,57 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function showPic(event, image) {
-            var location = window.location;
-            var protocol = location.protocol;
-            var host = location.host;
-            var baseUrl = protocol + "//" + host
-            var imageUrl = baseUrl + "//Content//ProductImages//" + image;
-            var html = "<img " +
-                "class='img-rounded' " +
-                "src='" + imageUrl + "' " +
-                "style='height: 200px' " +
-                "alt='Image' " +
-                " />"
-            ShowMessage(html);
+        function popUpProductDetail(productId) {            
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var responseText = this.responseText;
+                    var responseObject = JSON.parse(responseText);
+                    if (responseObject.Id) {
+                        //
+                        showPopUp(responseObject);
+                    }
+                    else if (responseObject.Message) {
+                        ShowMessage(responseObject.Message);
+                    }
+                }
+            };
+            xhttp.open("GET", "/CustomerManager/GetProduct/?id=" + productId, true);
+            xhttp.send();
+
+            function showPopUp(product) {
+                var location = window.location;
+                var protocol = location.protocol;
+                var host = location.host;
+                var baseUrl = protocol + "//" + host
+                var imageUrl = baseUrl + "//Content//ProductImages//" + product.Image;
+                var html = `
+                    <div>
+                         <div style="width: 35%; display: inline-block">
+                             <img class="img-rounded img-thumbnail"
+                                  src="${imageUrl}" 
+                                  style="width: 27%; position: absolute; top: 7%; left: 5%" 
+                                  alt="Image" />
+                         </div>
+                         <div style="width: 50%; display: inline-block">
+                            <h3>${product.Name}</h3>
+                            <h4 class="text-primary">${product.Description}</h4>
+                            <p><strong>Vendor Price: </strong><span class="text-primary pull-right">${parseFloat(product.SupplierPrice).toFixed(2)}</span></p>
+                            <p><strong>Price: </strong><span class="text-primary pull-right">${product.Price}</span></p>
+                            <p><strong>Wholesale Price: </strong><span class="text-primary pull-right">${product.WholesalePrice}</span></p>
+                            <p><strong>Category: </strong><span class="text-primary pull-right">${product.Category}</span></span></span></p>
+                            <p><strong>Quantity: </strong><span class="text-primary pull-right">${product.Quantity}</span></p>
+                            <p><strong>Min: </strong><span class="text-primary pull-right">${product.QuantityMin}</p>
+                            <p><strong>On Layaway: </strong><span class="text-primary pull-right">${product.QuantityOnLayaway}</span></p>
+                            <p><strong>Is Service: </strong><span class="text-primary pull-right">${product.IsService}</span></p>
+                            <p><strong>UPC: </strong><span class="text-primary pull-right">${product.UPC}</p>
+                            <p><strong>Product Code: </strong><span class="text-primary pull-right">${product.ProductCode}</span></p>
+                         </div>
+                     </div>
+                    `;
+
+                ShowMessage(html, "<strong>Product Detail</strong>");
+            }
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1371,12 +1436,10 @@
                 var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
                 if (rowIndex !== 1) {
                     // hide row
-                    //row.style.display = "none";
                     row.classList.add("hidden");
                 }
                 else {
                     // show First row
-                    //row.style.display = "table-row";
                     row.classList.remove("hidden");
                     if (siblingTable) {
                         currRowIndexElement.innerText = 1;
@@ -1411,12 +1474,10 @@
                 var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
                 if (rowIndex !== currRowIndex - 1) {
                     // hide row
-                    //row.style.display = "none";
                     row.classList.add("hidden");
                 }
                 else {
                     // show Previous row
-                    //row.style.display = "table-row";
                     row.classList.remove("hidden");
                     if (siblingTable) {
                         currRowIndexElement.innerText = currRowIndex - 1;
@@ -1431,9 +1492,9 @@
         function navNext(event, siblingTable = "") {
             //
             var table = getParent(event.target, "table");
-            var tableElementId = table.id;       
+            var tableName = table.id;      // e.g. id="invoices-table"
             var currRow = getParent(event.target, "tr");
-            var currRowIndexElement = currRow.querySelector("[name='" + tableElementId + "-row-number']");
+            var currRowIndexElement = currRow.querySelector("[name='" + tableName + "-row-number']");
             var currRowIndex = parseInt(currRowIndexElement.innerText);
             //
             if (siblingTable) {
@@ -1441,22 +1502,21 @@
                 currRowIndexElement = currRow.querySelector("[name='" + siblingTable + "-row-number-alt']");
                 currRowIndex = parseInt(currRowIndexElement.innerText);
                 table = table.querySelector("table[id='" + siblingTable + "']");
-                tableElementId = table.id;
+                tableName = table.id;
             }
             //
             var rows = table.rows;                        
             if (currRowIndex === rows.length) return;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
-                if (rowIndex !== rows.length) {
+                var rowIndexSpan = row.querySelector("[name='" + tableName + "-row-number']")
+                var rowIndex = parseInt(rowIndexSpan.innerText);
+                if (rowIndex !== currRowIndex + 1) {
                     // hide row
-                    //row.style.display = "none";
                     row.classList.add("hidden");
                 }
                 else {
                     // show Next row
-                    //row.style.display = "table-row";
                     row.classList.remove("hidden");
                     if (siblingTable) {
                         currRowIndexElement.innerText = currRowIndex + 1;
@@ -1489,12 +1549,10 @@
                 var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
                 if (rowIndex !== rows.length) {
                     // hide row
-                    //row.style.display = "none";
                     row.classList.add("hidden");
                 }
                 else {
                     // show Last row
-                    //row.style.display = "table-row";
                     row.classList.remove("hidden");
                     if (siblingTable) {
                         currRowIndexElement.innerText = rows.length;
@@ -1540,6 +1598,11 @@
             var searchUPC = event.target.value;
             event.target.value = "";
 
+            if (searchUPC.trim() === "") {
+                event.target.parentNode.classList.add("hidden");
+                return;
+            }
+
             var table = document.getElementById("product-lookup-table");
             
             var rows = table.getElementsByTagName("tr");
@@ -1550,24 +1613,24 @@
                     // add product to current subform record                    
                     var productId = row.querySelector("span[name='Id']").innerHTML;
                     copyProductData(event, productId, row, requestorId);
-                    break;
+                    return;
                 }
             }
-            ShowMessage("<h3 class='text-primary'>Product not found.</h3>")
+            ShowMessage("<h3 class='text-primary'>Product <span class='text-danger'>'" + searchUPC + "'</span> not found.</h3>")
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showLayawayItemSaveBtn(event) {
             var btn = event.target.parentNode.querySelector("input[name='layaway-item-save'], button[name='layaway-item-save']");
-            btn.style.display = "inline";
+            btn.classList.remove("hidden");
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showInvoiceItemSaveBtn(event) {
             var btn = event.target.parentNode.querySelector("input[name='invoice-item-save'], button[name='invoice-item-save']");
-            btn.style.display = "inline";
+            btn.classList.remove("hidden");
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1594,7 +1657,7 @@
                     var responseObject = JSON.parse(responseText);
                     if (responseObject.Successful === true) {
                         priceInput.value = parseFloat(price).toFixed(2);
-                        btn.style.display = "none";
+                        btn.classList.add("hidden");
                         updateCustomerTotals("layaways-table")
                     }
                     else if (responseObject.Message) {
@@ -1631,7 +1694,7 @@
                     if (responseObject.Successful === true) {
                         var oldPrice = responseObject.OldValue;
                         priceInput.value = parseFloat(price).toFixed(2);
-                        btn.style.display = "none";
+                        btn.classList.add("hidden");
                         updateCustomerTotals();
                     }
                     else if (responseObject.Message) {
@@ -1749,6 +1812,7 @@
             upcInput.classList.add("hidden");
 
             scanUpcBtn.classList.remove("active");
+            closeProductLookup(event);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////

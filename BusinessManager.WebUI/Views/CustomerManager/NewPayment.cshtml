@@ -111,8 +111,8 @@
         @* #fffcf0 = yellow 3 *@
 
         <div class="form-group form-group-payment" style="margin-bottom: 5px">
-            <p class="payment-label" style="margin-bottom: 2px">Payment Date</p>
-            <div class="col-md-10">
+            <p class="payment-label" style="margin-left: 15px">Payment Date</p>
+            <div class="col-md-6">
                 <input name="PaymentDate"
                        type="date"
                        class="form-control input-sm date-input"
@@ -120,9 +120,9 @@
             </div>
         </div>
 
-        <div class="form-group form-group-payment">
-            <p class="payment-label">Amount</p>
-            <div class="col-md-10">
+        <div class="form-group form-group-payment" style="margin-bottom: 5px">
+            <p class="payment-label" style="margin-left: 15px; margin-bottom: 0">Amount</p>
+            <div class="col-md-6">
                 <input name="Amount"
                        type="text"
                        class="form-control input-sm new-payment-input"
@@ -138,7 +138,7 @@
 
             <div class="col-md-10" style="margin-top: 0">
                 <div>
-                    <p class="payment-label">Payment Mode</p>
+                    <p class="payment-label" style="margin-left: 15px">Payment Mode</p>
                 </div>
                 <div class="border border-gray" style="width: 80%; margin-left: 30px; padding: 2px 0 10px 0">
                     <label class="radio" style="padding-left: 40px">
@@ -154,10 +154,10 @@
             </div>
         </div>
 
-        <div id="creditcard-group" class="hidden" style="transform: translateY(-px)">
-            <div class="form-group form-group-payment">
-                <p class="payment-label">Card Holder</p>
-                <div class="col-md-10">
+        <div id="creditcard-group" class="hidden">
+            <div class="form-group form-group-payment" style="margin-bottom: 5px">
+                <p class="payment-label" style="margin-left: 15px">Card Holder</p>
+                <div class="col-md-11">
                     <input name="CreditCardHolder"
                            type="text"
                            class="form-control input-sm new-payment-input"
@@ -166,9 +166,9 @@
                 </div>
             </div>
 
-            <div class="form-group form-group-payment">
-                <p class="payment-label">Card Name</p>
-                <div class="col-md-10">
+            <div class="form-group form-group-payment" style="margin-bottom: 5px">
+                <p class="payment-label" style="margin-left: 15px">Card Name</p>
+                <div class="col-md-6">
                     <input name="CreditCardName"
                            type="text"
                            class="form-control input-sm new-payment-input"
@@ -178,8 +178,8 @@
             </div>
 
             <div class="form-group form-group-payment">
-                <p class="payment-label">Card Number</p>
-                <div class="col-md-10">
+                <p class="payment-label" style="margin-left: 15px">Card Number</p>
+                <div class="col-md-11">
                     <input name="CreditCardNo"
                            type="text"
                            class="form-control input-sm new-payment-input"
@@ -188,36 +188,36 @@
                 </div>
             </div>
             <div>
-                <div class="form-group form-group-payment">
-                    <div class="col-md-3">
+                <div class="form-group form-group-payment col-md-12" style="padding: 0; margin: 10px 0 5px 0">
+                    <div class="pull-left" style="width: 25%; display: inline-block; margin: 5px">
                         <p class="payment-label" style="margin-left: 0">Exp Month</p>
-                        <div>
+                        <div style="background-color: burlywood">
                             <input name="CreditCardExpMonth"
                                    type="number"
                                    class="form-control input-sm new-payment-input"
-                                   style="padding-right: 5px; padding-left: 5px"
+                                   style="padding-right: 5px; padding-left: 5px; margin: 0"
                                    onkeyup="showPaymentSaveBtn(event)"
                                    onchange="showPaymentSaveBtn(event)" />
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="pull-left" style="width: 30%; display: inline-block; margin: 5px">
                         <p class="payment-label" style="margin-left: 0">Exp Year</p>
-                        <div>
+                        <div style="background-color: burlywood">
                             <input name="CreditCardExpYear"
                                    type="number"
                                    class="form-control input-sm new-payment-input"
-                                   style="padding-right: 5px; padding-left: 5px"
+                                   style="padding-right: 5px; padding-left: 5px; margin: 0"
                                    onkeyup="showPaymentSaveBtn(event)"
                                    onchange="showPaymentSaveBtn(event)" />
                         </div>
                     </div>
-                    <div>
-                        <p class="payment-label">Verification Code</p>
-                        <div class="col-md-4" style="padding: 0">
+                    <div class="pull-left" style="width: 30%; display: inline-block; margin: 5px">
+                        <p class="payment-label" style="margin-left: 0">Sec Code</p>
+                        <div style="background-color: burlywood">
                             <input name="CreditCardCVV"
                                    type="text"
                                    class="form-control input-sm new-payment-input"
-                                   style="width: 80%"
+                                   style="margin: 0"
                                    onkeyup="showPaymentSaveBtn(event)"
                                    onchange="showPaymentSaveBtn(event)" />
                         </div>
@@ -228,7 +228,7 @@
 
         <div id="check-group" class="hidden">
             <div class="form-group form-group-payment">
-                <p class="payment-label">Check Number</p>
+                <p class="payment-label" style="margin-left: 15px">Check Number</p>
                 <div class="col-md-10">
                     <input name="CheckNo"
                            type="text"
@@ -239,7 +239,7 @@
             </div>
 
             <div class="form-group form-group-payment">
-                <p class="payment-label">Issued By</p>
+                <p class="payment-label" style="margin-left: 15px">Issued By</p>
                 <div class="col-md-10">
                     <input name="CheckWriter"
                            type="text"
@@ -250,7 +250,7 @@
             </div>
 
             <div class="form-group form-group-payment">
-                <p class="payment-label">Check Image</p>
+                <p class="payment-label" style="margin-left: 15px">Check Image</p>
                 <div class="col-md-10">
                     <input name="CheckImage"
                            type="text"
@@ -281,12 +281,19 @@
             </div>
         </div>
 
+        <div class="form-group hidden">
+            <p class="payment-label">Id</p>
+            <div class="col-md-10" style="padding-top: 6px">
+                <span name="Id"></span>
+            </div>
+        </div>
+
         <div class="form-group" style="margin:  15px 0 0 0; padding: 0">
             <div class="col-md-10">
                 <button type="button"
                         name="save-payment"
                         class="btn btn-sm btn-default btn-success-text margin-bottom-3 hidden"
-                        onclick="saveSubformData(event, 'AddPayment', getPaymentData, clearNewPaymentInput)">
+                        onclick="saveSubformData(event, 'AddPayment', getUIPaymentData, clearNewPaymentInput)">
                     <strong>Save</strong>
                     <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                 </button>

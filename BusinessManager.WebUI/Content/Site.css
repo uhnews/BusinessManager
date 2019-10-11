@@ -106,8 +106,9 @@ textarea {
     text-decoration: none;
     display: inline-block;
     cursor: pointer;
-    max-height: 20px;
-    border-radius: 20px
+    max-height: 16px;
+    border-radius: 16px;
+    font-size: 80%;
 }
 
     .btn-pill:hover {
@@ -122,13 +123,14 @@ textarea {
     background-color: #997a00;
     border: none;
     color: white;
-    padding: 0px 6px 6px 6px;
+    padding: 0px 6px 3px 6px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     cursor: pointer;
-    max-height: 20px;
-    border-radius: 20px
+    max-height: 16px;
+    border-radius: 16px;
+    font-size: 80%;
 }
 
     .btn-pill-golden:hover {
@@ -282,22 +284,18 @@ textarea {
     border-right: 0;
 }
 
-.border-radius-top {
-    -moz-border-radius-topleft: 4px;
-    -moz-border-radius-topright: 4px;
-    -moz-border-radius-topleft: 4px;
-    -moz-border-radius-topright: 4px;
+.border-radius {
+    border-radius: 4px;
 }
 /*   *************************************************************** */
 
 .new-payment-input {
     margin: 0 0 0 0;
     padding: 0 0 0 10px;
-    transform: translateY(-5px);
 }
 
 .payment-label {
-    margin: 0 0 3px 17px;
+    margin: 0 0 3px 0px;
     padding: 0 0 0 0;
     font-weight: 600;
     font-size: 85%;
@@ -306,12 +304,11 @@ textarea {
 .edit-payment-input {
     margin: 0 0 0 0px;
     padding: 0 0 0 10px;
-    transform: translateY(-5px);
-    /*width: 100%;*/
+    /*transform: translateY(-1px);*/
 }
 
 .edit-payment-label {
-    margin: 0 0 3px 2px;
+    margin: 0 0 0px 2px;
     padding: 0 0 0 0;
     font-weight: 600;
     font-size: 85%;

@@ -114,7 +114,7 @@
     string rowClass = "";
 
     <h4 style="margin-left: 5px">Invoice Payments</h4>
-    <table id="payments-table" class="table" style="background-color: #fffcf0"> @* #fffcf0 = yellow 3 *@
+    <table id="payments-table-@ViewBag.CurrInvoiceId" class="table" style="background-color: #fffcf0"> @* #fffcf0 = yellow 3 *@
         @foreach (var payment in Model)
         {
             ++paymentIndex;
@@ -124,10 +124,11 @@
                 <td class="col-md-8">
                     <div id="payment-record-form" class="form-group">
                         <div class="form-group form-group-payment" style="margin-bottom: 5px">
-                            <p class="edit-payment-label" style="margin-bottom: 2px; margin-left: 4px">Payment Date</p>
+                            <p class="edit-payment-label" style="margin-left: 4px">Payment Date</p>
                             <div>
                                 <input name="PaymentDate"
                                        type="date"
+                                       value="@payment.PaymentDate.ToString("yyyy'-'MM'-'dd")"
                                        class="form-control input-sm date-input"
                                        style="margin-left: 2px"
                                        onchange="showPaymentSaveBtn(event)" />
@@ -139,6 +140,7 @@
                             <div>
                                 <input name="Amount"
                                        type="text"
+                                       value="@payment.Amount"
                                        class="form-control input-sm edit-payment-input"
                                        onkeyup="showPaymentSaveBtn(event)"
                                        onchange="showPaymentSaveBtn(event)" />
@@ -147,106 +149,131 @@
 
                         <div id="payment-mode-group" class="form-group" style="margin-left: -30px">
                             <div class="hidden">
-                                <input name="PaymentMode" readonly type="text" value="cash" class="form-control input-sm edit-payment-input" />
+                                <input name="PaymentMode" readonly type="text" value="@payment.PaymentMode" class="form-control input-sm edit-payment-input" />
                             </div>
-
+                            @{
+                                bool cashChecked = @payment.PaymentMode == "cash" ? true : false;
+                                bool creditCardChecked = @payment.PaymentMode == "credit card" ? true : false;
+                                bool checkChecked = @payment.PaymentMode == "check" ? true : false;
+                            }
                             <div style="margin-top: 0">
                                 <div>
-                                    <p class="edit-payment-label" style="margin-left: 32px">Payment Mode</p>
+                                    <p class="edit-payment-label" style="margin-left: 32px; margin-top: 5px">Payment Mode</p>
                                 </div>
                                 <div class="border border-gray" style="width: 70%; margin-left: 40px; padding: 2px 0 10px 0">
                                     <label class="radio" style="padding-left: 40px">
-                                        <input type="radio" name="optradio" checked title="cash" onclick="setPaymentMode(event)">Cash
+                                        <input type="radio"
+                                               name="optradio-@rowElementId"
+                                               title="cash"
+                                               @(cashChecked ? "checked" : "")
+                                               onclick="setPaymentMode(event)">
+                                        Cash
                                     </label>
                                     <label class="radio" style="padding-left: 40px">
-                                        <input type="radio" name="optradio" title="credit card" onclick="setPaymentMode(event)">Credit/Debit Card
+                                        <input type="radio"
+                                               name="optradio-@rowElementId"
+                                               title="credit card"
+                                               @(creditCardChecked ? "checked" : "")
+                                               onclick="setPaymentMode(event)">
+                                        Credit/Debit Card
                                     </label>
                                     <label class="radio" style="padding-left: 40px">
-                                        <input type="radio" name="optradio" title="check" onclick="setPaymentMode(event)">Check
+                                        <input type="radio"
+                                               name="optradio-@rowElementId"
+                                               title="check"
+                                               @(checkChecked ? "checked" : "")
+                                               onclick="setPaymentMode(event)">
+                                        Check
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-                        <div id="creditcard-group" class="hidden" style="transform: translateY(-px)">
+                        <div id="creditcard-group" @(!creditCardChecked ? "class=hidden" : "")>
                             <div class="form-group form-group-payment">
                                 <p class="edit-payment-label">Card Holder</p>
                                 <div>
                                     <input name="CreditCardHolder"
                                            type="text"
+                                           value="@payment.CreditCardHolder"
                                            class="form-control input-sm edit-payment-input"
                                            onkeyup="showPaymentSaveBtn(event)"
                                            onchange="showPaymentSaveBtn(event)" />
                                 </div>
                             </div>
 
-                            <div class="form-group form-group-payment">
+                            <div class="form-group form-group-payment" style="margin-top: 5px">
                                 <p class="edit-payment-label">Card Name</p>
                                 <div>
                                     <input name="CreditCardName"
                                            type="text"
+                                           value="@payment.CreditCardName"
                                            class="form-control input-sm edit-payment-input"
                                            onkeyup="showPaymentSaveBtn(event)"
                                            onchange="showPaymentSaveBtn(event)" />
                                 </div>
                             </div>
 
-                            <div class="form-group form-group-payment">
+                            <div class="form-group form-group-payment" style="margin-top: 5px">
                                 <p class="edit-payment-label">Card Number</p>
                                 <div>
                                     <input name="CreditCardNo"
                                            type="text"
+                                           value="@payment.CreditCardNo"
                                            class="form-control input-sm edit-payment-input"
                                            onkeyup="showPaymentSaveBtn(event)"
                                            onchange="showPaymentSaveBtn(event)" />
                                 </div>
                             </div>
 
-                            <div>
-                                <div class="form-group form-group-payment">
-                                    <div style="width: 25%; display: inline-block; margin-right: 3%; transform: translateY(-26px)">
-                                        <p class="edit-payment-label" style="margin-left: 0px">Exp Month</p>
-                                        <div>
-                                            <input name="CreditCardExpMonth"
-                                                   type="number"
-                                                   class="form-control input-sm edit-payment-input"
-                                                   style="padding-right: 5px; padding-left: 5px"
-                                                   onkeyup="showPaymentSaveBtn(event)"
-                                                   onchange="showPaymentSaveBtn(event)" />
-                                        </div>
-                                    </div>
-                                    <div style="width: 25%; display: inline-block; margin-right: 3%; transform: translateY(-26px)">
-                                        <p class="edit-payment-label" style="margin-left: 0px">Exp Year</p>
-                                        <div>
-                                            <input name="CreditCardExpYear"
-                                                   type="number"
-                                                   class="form-control input-sm edit-payment-input"
-                                                   style="padding-right: 5px; padding-left: 5px"
-                                                   onkeyup="showPaymentSaveBtn(event)"
-                                                   onchange="showPaymentSaveBtn(event)" />
-                                        </div>
-                                    </div>
-                                    <div style="width: 30%; display: inline-block">
-                                        <p class="edit-payment-label" style="margin-left: 0px">CVV Code</p>
-                                        <div style="padding: 0">
-                                            <input name="CreditCardCVV"
-                                                   type="text"
-                                                   class="form-control input-sm edit-payment-input"
-                                                   style="width: 80%"
-                                                   onkeyup="showPaymentSaveBtn(event)"
-                                                   onchange="showPaymentSaveBtn(event)" />
-                                        </div>
+                            <div class="form-group form-group-payment" style="margin-top: 5px; margin-bottom: 5px">
+                                <div class="pull-left" style="width: 25%; display: inline-block; margin-right: 3%">
+                                    <p class="edit-payment-label" style="margin-left: 0px">Exp Month</p>
+                                    <div>
+                                        <input name="CreditCardExpMonth"
+                                               type="number"
+                                               value="@payment.CreditCardExpMonth"
+                                               class="form-control input-sm edit-payment-input"
+                                               style="padding-right: 5px; padding-left: 5px"
+                                               onkeyup="showPaymentSaveBtn(event)"
+                                               onchange="showPaymentSaveBtn(event)" />
                                     </div>
                                 </div>
+                                <div class="pull-left" style="width: 30%; display: inline-block; margin-right: 3%">
+                                    <p class="edit-payment-label" style="margin-left: 0px">Exp Year</p>
+                                    <div>
+                                        <input name="CreditCardExpYear"
+                                               type="number"
+                                               value="@payment.CreditCardExpYear"
+                                               class="form-control input-sm edit-payment-input"
+                                               style="padding-right: 5px; padding-left: 5px"
+                                               onkeyup="showPaymentSaveBtn(event)"
+                                               onchange="showPaymentSaveBtn(event)" />
+                                    </div>
+                                </div>
+                                <div class="pull-left" style="width: 30%; display: inline-block">
+                                    <p class="edit-payment-label" style="margin-left: 0px">CVV Code</p>
+                                    <div style="padding: 0">
+                                        <input name="CreditCardCVV"
+                                               value="@payment.CreditCardCVV"
+                                               type="text"
+                                               class="form-control input-sm edit-payment-input"
+                                               style="width: 80%"
+                                               onkeyup="showPaymentSaveBtn(event)"
+                                               onchange="showPaymentSaveBtn(event)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="height: 15px; opacity: 0">*** FILLER TEXT ***</div>
                             </div>
                         </div>
 
-                        <div id="check-group" class="hidden">
+                        <div id="check-group" @(!checkChecked ? "class=hidden" : "")>
                             <div class="form-group form-group-payment">
                                 <p class="edit-payment-label">Check Number</p>
                                 <div>
                                     <input name="CheckNo"
                                            type="text"
+                                           value="@payment.CheckNo"
                                            class="form-control input-sm edit-payment-input"
                                            onkeyup="showPaymentSaveBtn(event)"
                                            onchange="showPaymentSaveBtn(event)" />
@@ -258,6 +285,7 @@
                                 <div>
                                     <input name="CheckWriter"
                                            type="text"
+                                           value="@payment.CheckWriter"
                                            class="form-control input-sm edit-payment-input"
                                            onkeyup="showPaymentSaveBtn(event)"
                                            onchange="showPaymentSaveBtn(event)" />
@@ -269,6 +297,7 @@
                                 <div>
                                     <input name="CheckImage"
                                            type="text"
+                                           value="@payment.CheckImage"
                                            class="form-control input-sm edit-payment-input"
                                            onchange="showPaymentSaveBtn(event)" />
                                 </div>
@@ -278,14 +307,14 @@
                         <div class="form-group hidden">
                             <p class="edit-payment-label">Receivable Source</p>
                             <div style="padding-top: 6px">
-                                <span name="ReceivableSource"></span>
+                                <span name="ReceivableSource">@payment.ReceivableSource</span>
                             </div>
                         </div>
 
                         <div class="form-group hidden">
                             <p class="edit-payment-label">Source Id</p>
                             <div style="padding-top: 6px">
-                                <span name="ReceivableSourceId"></span>
+                                <span name="ReceivableSourceId">@payment.ReceivableSourceId</span>
                             </div>
                         </div>
 
@@ -296,19 +325,25 @@
                             </div>
                         </div>
 
-                        <div class="form-group" style="margin:  5px 0 0 0; padding: 0">
-                            <div>
-                                <button type="button"
-                                        name="save-payment"
-                                        class="btn btn-sm btn-default btn-success-text margin-bottom-3 hidden"
-                                        onclick="saveSubformData(event, 'AddPayment', getPaymentData, clearNewPaymentInput)">
-                                    <strong>Save</strong>
-                                    <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
-                                </button>
+                        <div class="form-group hidden">
+                            <p class="edit-payment-label">Id</p>
+                            <div style="padding-top: 6px">
+                                <span name="Id">@payment.Id</span>
                             </div>
                         </div>
                     </div>
-                    <span name="payments-table-row-number" class="hidden">@paymentIndex</span>
+                    <span name="payments-table-@ViewBag.CurrInvoiceId-row-number" class="hidden">@paymentIndex</span>
+                    <div class="form-group" style="margin: 0 0 0 0; padding: 0 0 0 0; display: block">
+                        <div>
+                            <button type="button"
+                                    name="save-payment"
+                                    class="btn btn-sm btn-default btn-success-text margin-bottom-3 hidden"
+                                    onclick="saveSubformData(event, 'UpdatePayment', getUIPaymentData)">
+                                <strong>Save</strong>
+                                <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
+                            </button>
+                        </div>
+                    </div>
                 </td>
             </tr>
         }
@@ -317,30 +352,26 @@
     @*  ################### RECORD NAVIGATION BUTTONS #####################  *@
 
     <div class="form-group text-danger" style="margin: -15px 0 0 0; padding: 0 0 20px 0 ">
-        Payment <span name="payments-table-row-number-alt">1</span> of <span name="payments-table-row-count" style="margin: 0 10px 0 0">@paymentCount</span>
+        Payment <span name="payments-table-@ViewBag.CurrInvoiceId-row-number-alt">1</span> of <span name="payments-table-row-count" style="margin: 0 10px 0 0">@paymentCount</span>
         <div style="display: inline">
-            <button type="button" class="btn-pill-golden">
+            <button type="button" class="btn-pill-golden" onclick="navFirst(event, 'payments-table-@ViewBag.CurrInvoiceId')">
                 <span class="glyphicon glyphicon-fast-backward"
-                      style="padding: 0 3px 0 3px"
-                      onclick="navFirst(event, 'payments-table')">
+                      style="padding: 0 3px 0 3px" >
                 </span>
             </button>
-            <button type="button" class="btn-pill-golden">
+            <button type="button" class="btn-pill-golden" onclick="navPrev(event, 'payments-table-@ViewBag.CurrInvoiceId')">
                 <span class="glyphicon glyphicon-arrow-left"
-                      style="padding: 0 3px 0 3px"
-                      onclick="navPrev(event, 'payments-table')">
+                      style="padding: 0 3px 0 3px" >
                 </span>
             </button>
-            <button type="button" class="btn-pill-golden">
+            <button type="button" class="btn-pill-golden" onclick="navNext(event, 'payments-table-@ViewBag.CurrInvoiceId')">
                 <span class="glyphicon glyphicon-arrow-right"
-                      style="padding: 0 3px 0 3px"
-                      onclick="navNext(event, 'payments-table')">
+                      style="padding: 0 3px 0 3px" >
                 </span>
             </button>
-            <button type="button" class="btn-pill-golden">
+            <button type="button" class="btn-pill-golden" onclick="navLast(event, 'payments-table-@ViewBag.CurrInvoiceId')">
                 <span class="glyphicon glyphicon-fast-forward"
-                      style="padding: 0 3px 0 3px"
-                      onclick="navLast(event, 'payments-table')">
+                      style="padding: 0 3px 0 3px" >
                 </span>
             </button>
         </div>

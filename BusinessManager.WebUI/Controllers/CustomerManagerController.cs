@@ -315,5 +315,14 @@ namespace BusinessManager.WebUI.Controllers
 
             return Json(addResult, JsonRequestBehavior.AllowGet);
         }
+
+        // GET: /CustomerManager/UpdatePayment
+        public JsonResult UpdatePayment(string data)
+        {
+            IPaymentService dataService = new PaymentService();
+            var updateResult = dataService.UpdatePayment(paymentContext, data);
+
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
     }
 }  
