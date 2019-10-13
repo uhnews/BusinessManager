@@ -231,10 +231,10 @@ namespace BusinessManager.WebUI.Controllers
             return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
         }
 
-        public JsonResult UpdateInvoiceItemPrice(string Id, decimal price)
+        public JsonResult UpdateInvoiceItem(string Id, string productDescription, int quantity, decimal price)
         {
             IInvoiceDataService dataService = new InvoiceDataService();
-            object updateResult = dataService.UpdateInvoiceItemPrice(invoiceItemContext, Id, price);
+            object updateResult = dataService.UpdateInvoiceItem(invoiceItemContext, Id, productDescription, quantity, price);
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
@@ -285,10 +285,10 @@ namespace BusinessManager.WebUI.Controllers
             return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
         }
 
-        public JsonResult UpdateLayawayItemPrice(string Id, decimal price)
+        public JsonResult UpdateLayawayItem(string Id, string productDescription, int quantity, decimal price)
         {
             ILayawayDataService dataService = new LayawayDataService();
-            object updateResult = dataService.UpdateLayawayItemPrice(layawayItemContext, Id, price);
+            object updateResult = dataService.UpdateLayawayItem(layawayItemContext, Id, productDescription, quantity, price);
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 

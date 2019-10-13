@@ -27,7 +27,6 @@ textarea {
 /*                                             CUSTON CSS CLASSES                                               */
 /* ************************************************************************************************************ */
 
-
 /* STYLE FOR DATE INPUT ******** */
 .date-input {
     padding: 0px 8px 0px 8px;
@@ -263,6 +262,10 @@ textarea {
 
 .border-gray {
     border-color: #c5ced3;
+}
+
+.border-my-gray {
+    border-color: #7f9db9;
 }
 
 /* remove boder edges here */

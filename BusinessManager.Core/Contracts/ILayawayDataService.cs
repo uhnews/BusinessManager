@@ -15,7 +15,7 @@ namespace BusinessManager.Core.Contracts
         object UpdateLayaway(IRepository<Layaway> layawayContext, string data);
         object AddItemToLayaway(IRepository<LayawayItem> layawayItemContext, string data);
         object RemoveItemFromLayaway(IRepository<LayawayItem> layawayItemContext, string Id);
-        object UpdateLayawayItemPrice(IRepository<LayawayItem> layawayItemContext, string Id, decimal price);
+        object UpdateLayawayItem(IRepository<LayawayItem> layawayItemContext, string Id, string productDescription, int quantity, decimal price);
         object UpdateLayawayItemQuantity(IRepository<LayawayItem> layawayItemContext, string Id, int quantity);
     }
 }

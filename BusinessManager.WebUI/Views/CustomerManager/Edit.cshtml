@@ -19,7 +19,7 @@
         }
     </style>
     <div style="display: flex">
-        <div id="customer-section" class="form-horizontal col-md-4 border border-warning border-remove-right " style="padding: 10px; background-color: GhostWhite">
+        <div id="customer-section" class="form-horizontal col-md-4 border border-warning border-remove-right " style="padding: 10px; background-color: #adbfd2">
             <div id="customer-info">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.Id)
@@ -177,7 +177,7 @@
         <div id="alt-subform-container" class="col-md-8 bg-warning" style="padding: 0; margin: 0">
            
         </div>
-        <div id="layaways-container" class="col-md-8 bg-info hidden" style="padding: 0; margin: 0">
+        <div id="layaways-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: #adbfd2">
             @{
                 var itemCount = 0;
                 var layawayCount = Model.Layaways.Count;
@@ -201,7 +201,7 @@
             </div>
             @Html.Partial("Layaways", Model.Layaways)
         </div>
-        <div id="invoices-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: #ffeea8">  @* #ffeea8 = yellow 1 *@
+        <div id="invoices-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: #adbfd2">  @* #ffeea8 = yellow 1 *@
             @{
                 var invoiceItemCount = 0;
                 var invoiceCount = Model.Invoices.Count;
@@ -1120,16 +1120,16 @@
                          <div style="width: 50%; display: inline-block">
                             <h3>${product.Name}</h3>
                             <h4 class="text-primary">${product.Description}</h4>
-                            <p><strong>Vendor Price: </strong><span class="text-primary pull-right">${parseFloat(product.SupplierPrice).toFixed(2)}</span></p>
-                            <p><strong>Price: </strong><span class="text-primary pull-right">${product.Price}</span></p>
-                            <p><strong>Wholesale Price: </strong><span class="text-primary pull-right">${product.WholesalePrice}</span></p>
-                            <p><strong>Category: </strong><span class="text-primary pull-right">${product.Category}</span></span></span></p>
-                            <p><strong>Quantity: </strong><span class="text-primary pull-right">${product.Quantity}</span></p>
-                            <p><strong>Min: </strong><span class="text-primary pull-right">${product.QuantityMin}</p>
-                            <p><strong>On Layaway: </strong><span class="text-primary pull-right">${product.QuantityOnLayaway}</span></p>
-                            <p><strong>Is Service: </strong><span class="text-primary pull-right">${product.IsService}</span></p>
-                            <p><strong>UPC: </strong><span class="text-primary pull-right">${product.UPC}</p>
-                            <p><strong>Product Code: </strong><span class="text-primary pull-right">${product.ProductCode}</span></p>
+                            <p style="margin-bottom: 2px"><strong>Vendor Price: </strong><span class="text-primary pull-right">${parseFloat(product.SupplierPrice).toFixed(2)}</span></p>
+                            <p style="margin-bottom: 2px"><strong>Price: </strong><span class="text-primary pull-right">${product.Price}</span></p>
+                            <p style="margin-bottom: 2px"><strong>Wholesale Price: </strong><span class="text-primary pull-right">${product.WholesalePrice}</span></p>
+                            <p style="margin-bottom: 2px"><strong>Category: </strong><span class="text-primary pull-right">${product.Category}</span></span></span></p>
+                            <p style="margin-bottom: 2px"><strong>Quantity: </strong><span class="text-primary pull-right">${product.Quantity}</span></p>
+                            <p style="margin-bottom: 2px"><strong>Min: </strong><span class="text-primary pull-right">${product.QuantityMin}</p>
+                            <p style="margin-bottom: 2px"><strong>On Layaway: </strong><span class="text-primary pull-right">${product.QuantityOnLayaway}</span></p>
+                            <p style="margin-bottom: 2px"><strong>Is Service: </strong><span class="text-primary pull-right">${product.IsService}</span></p>
+                            <p style="margin-bottom: 2px"><strong>UPC: </strong><span class="text-primary pull-right">${product.UPC}</p>
+                            <p style="margin-bottom: 2px"><strong>Product Code: </strong><span class="text-primary pull-right">${product.ProductCode}</span></p>
                          </div>
                      </div>
                     `;
@@ -1492,7 +1492,7 @@
         function navNext(event, siblingTable = "") {
             //
             var table = getParent(event.target, "table");
-            var tableName = table.id;      // e.g. id="invoices-table"
+            var tableName = table.id;      // e.g. id="invoices-table" (second level of table nesting, Customer being first level; Payments and Charge Items 3rd level nesting)
             var currRow = getParent(event.target, "tr");
             var currRowIndexElement = currRow.querySelector("[name='" + tableName + "-row-number']");
             var currRowIndex = parseInt(currRowIndexElement.innerText);
@@ -1505,11 +1505,11 @@
                 tableName = table.id;
             }
             //
-            var rows = table.rows;                        
+            var rows = table.rows; 
             if (currRowIndex === rows.length) return;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                var rowIndexSpan = row.querySelector("[name='" + tableName + "-row-number']")
+                var rowIndexSpan = row.querySelector("[name='" + tableName + "-row-number']");
                 var rowIndex = parseInt(rowIndexSpan.innerText);
                 if (rowIndex !== currRowIndex + 1) {
                     // hide row
@@ -1547,17 +1547,17 @@
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
-                if (rowIndex !== rows.length) {
+                if (rowIndex < rows.length - 1) {
                     // hide row
                     row.classList.add("hidden");
                 }
                 else {
-                    // show Last row
-                    row.classList.remove("hidden");
-                    if (siblingTable) {
-                        currRowIndexElement.innerText = rows.length;
-                    }
                 }
+            }
+            // show Last row
+            rows[rows.length - 1].classList.remove("hidden");
+            if (siblingTable) {
+                currRowIndexElement.innerText = rows.length;
             }
             savePgState();
         }
@@ -1622,27 +1622,27 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showLayawayItemSaveBtn(event) {
-            var btn = event.target.parentNode.querySelector("input[name='layaway-item-save'], button[name='layaway-item-save']");
+            var btn = getParent(event.target, "tr").querySelector("input[name='layaway-item-save'], button[name='layaway-item-save']");
             btn.classList.remove("hidden");
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showInvoiceItemSaveBtn(event) {
-            var btn = event.target.parentNode.querySelector("input[name='invoice-item-save'], button[name='invoice-item-save']");
+            var btn = getParent(event.target, "tr").querySelector("input[name='invoice-item-save'], button[name='invoice-item-save']");
             btn.classList.remove("hidden");
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function updateLayawayItemPrice(event, itemId) {
+        function _updateLayawayItem(event, itemId) {
             var parent = getParent(event.target, "tr");
             var btn = parent.querySelector("button");
 
-            var oldValueSpan = parent.querySelector("[name='PriceOldValue']");
-            var oldValue = parseFloat(oldValueSpan.innerText);
+            var priceOldValueSpan = parent.querySelector("[name='PriceOldValue']");
+            var priceOldValue = parseFloat(priceOldValueSpan.innerText);
             var lineTotalSpan = parent.querySelector("[name='line-total']");
-            var quantity = parseInt(parent.querySelector("[name='item-quantity']").innerText);
+            var quantity = parseInt(parent.querySelector("[id='item_Quantity']").value);
 
             var priceInput = parent.querySelector("input[type='text']");
             var price = priceInput.value;
@@ -1650,7 +1650,7 @@
                 ShowMessage("The price must be a number greater than zero.");
                 return;
             }
-            var amountChange = parseFloat(price) - oldValue;
+            var amountChange = parseFloat(price) - priceOldValue;
 
             //upload data
             var xhttp = new XMLHttpRequest();
@@ -1663,37 +1663,66 @@
                         lineTotalSpan.innerText = (quantity * parseFloat(price)).toFixed(2);
                         btn.classList.add("hidden");
                         updateCustomerTotals("invoices-table", amountChange, getCurrInvoicePgIndex());
-                        oldValueSpan.innerText = price;
+                        priceOldValueSpan.innerText = price;
                     }
                     else if (responseObject.Message) {
                         ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
                     }
                 }
             };
-            xhttp.open("GET", "/CustomerManager/UpdateLayawayItemPrice/?Id=" + itemId + "&price=" + price, true);
+            xhttp.open("GET", "/CustomerManager/UpdateLayawayItem/?Id=" + itemId + "&price=" + price, true);
             xhttp.send();
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function updateInvoiceItemPrice(event, itemId) {
+        function updateInvoiceItem(event, itemId) {
+            updateChargeItem(event, itemId, "invoice", getCurrInvoicePgIndex);
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function updateLayawayItem(event, itemId) {
+            updateChargeItem(event, itemId, "layaway", getCurrLayawayPgIndex);
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function updateChargeItem(event, itemId, itemType, getCurrPgIndexFunction) {
             var parent = getParent(event.target, "tr");
             var btn = parent.querySelector("button");
 
-            var oldValueSpan = parent.querySelector("[name='PriceOldValue']");
-            var oldValue = parseFloat(oldValueSpan.innerText);
-            var lineTotalSpan = parent.querySelector("[name='line-total']");
-            var quantity = parseInt(parent.querySelector("[name='item-quantity']").innerText);
+            var priceOldValueSpan = parent.querySelector("[name='PriceOldValue']");
+            var priceOldValue = parseFloat(priceOldValueSpan.innerText);
 
-            var priceInput = parent.querySelector("input[type='text']");
-            var price = priceInput.value;
-            if (isNaN(price) || price === "" || parseFloat(price) < 0) {
-                ShowMessage("The price must be a number greater than zero.");
+            var descriptionOldValueSpan = parent.querySelector("[name='ProductDescriptionOldValue']");
+
+            var quantityOldValueSpan = parent.querySelector("[name='QuantityOldValue']");
+            var quantityOldValue = parseFloat(quantityOldValueSpan.innerText);
+            
+            var descriptionInput = parent.querySelector("input[id='item_ProductDescription'");            
+            var description = descriptionInput.value;
+            if (!description || !description.trim()) {
+                ShowMessage("Description cannot be blank.");
                 return;
             }
-            var amountChange = parseFloat(price) - oldValue;
 
-            //upload data
+            var quantityInput = parent.querySelector("input[id='item_Quantity'");
+            var quantity = quantityInput.value;
+            if (isNaN(quantity) || quantity === "" || parseInt(quantity) < 0) {
+                ShowMessage("Quantity must be a number greater than zero.");
+                return;
+            }
+            
+            var priceInput = parent.querySelector("[id='item_Price']");
+            var price = priceInput.value;
+            if (isNaN(price) || price === "" || parseFloat(price) < 0) {
+                ShowMessage("Price must be a number greater than zero.");
+                return;
+            }
+            var amountChange = parseFloat(price) * parseInt(quantity) - priceOldValue * quantityOldValue;
+
+            // upload data
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
@@ -1702,17 +1731,20 @@
                     if (responseObject.Successful === true) {
                         var oldPrice = responseObject.OldValue;
                         priceInput.value = parseFloat(price).toFixed(2);
-                        lineTotalSpan.innerText = (quantity * parseFloat(price)).toFixed(2);
+                        parent.querySelector("[name='line-total']").innerText = (quantity * parseFloat(price)).toFixed(2);
                         btn.classList.add("hidden");
-                        updateCustomerTotals("invoices-table", amountChange, getCurrInvoicePgIndex());
-                        oldValueSpan.innerText = price;
+                        updateCustomerTotals(itemType + "s-table", amountChange, getCurrPgIndexFunction());
+                        descriptionOldValueSpan.innerText = description;
+                        quantityOldValueSpan.innerText = quantity;
+                        priceOldValueSpan.innerText = price;
                     }
                     else if (responseObject.Message) {
                         ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
                     }
                 }
             };
-            xhttp.open("GET", "/CustomerManager/UpdateInvoiceItemPrice/?Id=" + itemId + "&price=" + price, true);
+            var ItemType = itemType.substring(0, 1).toUpperCase() + itemType.substring(1);
+            xhttp.open("GET", "/CustomerManager/Update" + ItemType + "Item/?Id=" + itemId + "&productDescription=" + description + "&quantity=" + quantity + "&price=" + price, true);
             xhttp.send();
         }
         
@@ -1759,93 +1791,225 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function addPayment(event, modelName) {
-            //
-            var btn = event.target;
-            var tableRow = getParent(btn, "tr");
-            var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
-            var productLookupBtn = tableRow.querySelector("[name='product-lookup']");
-            var chargeItemsBtn = tableRow.querySelector("[name='charge-items']");
-            var subItemsTable = tableRow.querySelector("[id='sub-items-table']");
-            var newPatmentDiv = tableRow.querySelector("[id='new-payment']");
-            var paymentsDiv = tableRow.querySelector("[id='payments-table']");
-            var upcInput = tableRow.querySelector("[name='upc-input-container']");
-            
-            scanUpcBtn.classList.add("hidden");
-            productLookupBtn.classList.add("hidden");
-            chargeItemsBtn.classList.remove("hidden");
-            subItemsTable.classList.add("hidden");
-            paymentsDiv.classList.add("hidden");
-            newPatmentDiv.classList.remove("hidden");
-            upcInput.classList.add("hidden");
+        function setSubformElementVars(event) {
+            // helper method initializes and returns object variables--representing various elements 
+            // on Customer UI--for use as required by the calling functions
+            var clickedBtn = event.target;
+            var tableRow = getParent(clickedBtn, "tr");
+            // store elements in object e
+            var e = {
+                tableRow: tableRow,
+                scanUpcBtn: tableRow.querySelector("[name='scan-upc']"),
+                productLookupBtn: tableRow.querySelector("[name='product-lookup']"),
+                chargeItemsBtn: tableRow.querySelector("[name='charge-items']"),
+                subItemsTable: tableRow.querySelector("[id='sub-items-table']"),
+                newPatmentDiv: tableRow.querySelector("[id='new-payment']"),
+                paymentsDiv: tableRow.querySelector("[id='payments-table']"),
+                paymentListDiv: tableRow.querySelector("[id='payment-list-table']"),
+                upcInput: tableRow.querySelector("[name='upc-input-container']")
+            };
 
-            scanUpcBtn.classList.remove("active");
+            // hide all elements
+            e.scanUpcBtn.classList.add("hidden");
+            e.productLookupBtn.classList.add("hidden");
+            e.chargeItemsBtn.classList.add("hidden");
+            e.subItemsTable.classList.add("hidden");
+            e.paymentsDiv.classList.add("hidden");
+            e.paymentListDiv.classList.add("hidden");
+            e.newPatmentDiv.classList.add("hidden");
+            e.upcInput.classList.add("hidden");
 
-            var receivableSrcIdOrigin = tableRow.querySelector("[id='receivable-source-id']");
-            var receivableSrcIdDest = tableRow.querySelector("[name='ReceivableSourceId']");
+            // return initialized element set (set of element objects inside object e)
+            return e;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function addPayment(event, receivableSource) {
+            // displays New Payment View & initializes values
+            var e = setSubformElementVars(event);
+            e.chargeItemsBtn.classList.remove("hidden");
+            e.newPatmentDiv.classList.remove("hidden");
+            e.scanUpcBtn.classList.remove("active");
+
+            var receivableSrcIdOrigin = e.tableRow.querySelector("[id='receivable-source-id']");
+            var receivableSrcIdDest = e.tableRow.querySelector("[name='ReceivableSourceId']");
             receivableSrcIdDest.innerText = receivableSrcIdOrigin.innerHTML;
 
-            var receivableSrcDest = tableRow.querySelector("[name='ReceivableSource']");
-            receivableSrcDest.innerText = modelName;
+            var receivableSrcDest = e.tableRow.querySelector("[name='ReceivableSource']");
+            receivableSrcDest.innerText = receivableSource;
 
             closeProductLookup(event);
 
-            var paymentMode = tableRow.querySelector("[name='PaymentMode']").value;
+            var paymentMode = e.tableRow.querySelector("[name='PaymentMode']").value;
             if (paymentMode === "credit card") {
-                tableRow.querySelector("[id='creditcard-group']").classList.remove("hidden");
+                e.tableRow.querySelector("[id='creditcard-group']").classList.remove("hidden");
             }
             else if (paymentMode === "check") {
-                tableRow.querySelector("[id='check-group']").classList.remove("hidden");
+                e.tableRow.querySelector("[id='check-group']").classList.remove("hidden");
             }
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showPayments(event) {
-            //
-            var btn = event.target;
-            var tableRow = getParent(btn, "tr");
-            var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
-            var productLookupBtn = tableRow.querySelector("[name='product-lookup']");
-            var chargeItemsBtn = tableRow.querySelector("[name='charge-items']");
-            var subItemsTable = tableRow.querySelector("[id='sub-items-table']");
-            var newPaymentDiv = tableRow.querySelector("[id='new-payment']");
-            var paymentsDiv = tableRow.querySelector("[id='payments-table']");
-            var upcInput = tableRow.querySelector("[name='upc-input-container']");
-            
-            scanUpcBtn.classList.add("hidden");
-            productLookupBtn.classList.add("hidden");
-            chargeItemsBtn.classList.remove("hidden");
-            subItemsTable.classList.add("hidden");
-            newPaymentDiv.classList.add("hidden");
-            paymentsDiv.classList.remove("hidden");
-            upcInput.classList.add("hidden");
+            // displays Payment Edit View
+            var e = setSubformElementVars(event);
+            e.chargeItemsBtn.classList.remove("hidden");
+            e.paymentsDiv.classList.remove("hidden");
+            e.scanUpcBtn.classList.remove("active");
+            closeProductLookup(event);
+        }
 
-            scanUpcBtn.classList.remove("active");
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showPaymentList(event) {
+            // displays Payment List View
+            var e = setSubformElementVars(event);
+            e.chargeItemsBtn.classList.remove("hidden");
+            e.paymentListDiv.classList.remove("hidden");
+            e.scanUpcBtn.classList.remove("active");
             closeProductLookup(event);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showChargeItems(event) {
-            //
-            var btn = event.target;
-            var tableRow = getParent(btn, "tr");
-            var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
-            var productLookupBtn = tableRow.querySelector("[name='product-lookup']");
-            var chargeItemsBtn = tableRow.querySelector("[name='charge-items']");
-            var subItemsTable = tableRow.querySelector("[id='sub-items-table']");
-            var newPatmentDiv = tableRow.querySelector("[id='new-payment']");
-            var paymentsDiv = tableRow.querySelector("[id='payments-table']");
-            
-            scanUpcBtn.classList.remove("hidden");
-            productLookupBtn.classList.remove("hidden");
-            chargeItemsBtn.classList.add("hidden");
-            subItemsTable.classList.remove("hidden");
-            newPatmentDiv.classList.add("hidden");
-            paymentsDiv.classList.add("hidden");
+            // displays Invoiced Items View
+            var e = setSubformElementVars(event);
+            e.scanUpcBtn.classList.remove("hidden");
+            e.productLookupBtn.classList.remove("hidden");
+            e.subItemsTable.classList.remove("hidden");
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function goToPaymentEdit(event) {
+            var clickedLink = event.target;
+            var parentTD = getParent(clickedLink, "td");
+            var currPaymentIndex = parentTD.innerText;
+
+            var parentTable = getParent(event.target, "table");     // parent table to the clicked link
+            parentTableName = parentTable.id;
+
+            var grandParentRow = getParent(parentTable, "tr");      // this is a row of ITS parent table
+            var receivableSourcId = grandParentRow.querySelector("[id='receivable-source-id']").innerText;
+
+            var paymentsTable = grandParentRow.querySelector("[id='payments-table-" + receivableSourcId + "']");
+
+            grandParentRow.querySelector("[name='payments-menu-show-payments']").click();
+
+            for (let i = 0; i < paymentsTable.rows.length; i++) {
+                let row = paymentsTable.rows[i];
+                if (i === parseInt(currPaymentIndex) - 1) {
+                    row.classList.remove("hidden");
+                }
+                else {
+                    row.classList.add("hidden");
+                    grandParentRow.querySelector("[name='payments-table-" + receivableSourcId + "-row-number-alt']").innerText = currPaymentIndex;
+                }
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function setPaymentMode(event) {
+            var btn = event.target;
+            var tableRow = getParent(btn, "tr");
+            var optSelected = btn.title;
+
+            var paymentModeInput = tableRow.querySelector("[name='PaymentMode']");
+            paymentModeInput.value = optSelected;
+
+            var creditcardGrp = tableRow.querySelector("[id='creditcard-group']");
+            var checkGrp = tableRow.querySelector("[id='check-group']");
+
+            switch (optSelected) {
+                case "credit card":
+                    creditcardGrp.classList.remove("hidden");
+                    checkGrp.classList.add("hidden");
+                    break;
+                case "check":
+                    creditcardGrp.classList.add("hidden");
+                    checkGrp.classList.remove("hidden");
+                    break;
+                default:
+                    creditcardGrp.classList.add("hidden");
+                    checkGrp.classList.add("hidden");
+                    return;
+            }
+            showPaymentSaveBtn(event);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function validatePaymentInput(payment) {
+            var message = "";
+            if (!payment.PaymentDate)
+                message = "<p>'Payment Date' cannot be empty.</p>";
+
+            if (isNaN(payment.Amount) || payment.Amount === "" || parseFloat(payment.Amount) <= 0) {
+                message += "<p>'Amount' must be a number and greater than zero.</p>";
+            }
+
+            if (payment.PaymentMode === "credit card") {
+                if (!(payment.CreditCardHolder.trim())) {
+                    message += "<p>'Card Holder' cannot be empty.</p>";
+                }
+                if (!(payment.CreditCardNo.trim())) {
+                    message += "<p>'Card Number' cannot be empty.</p>";
+                }
+
+                if (isNaN(payment.CreditCardExpMonth) || payment.CreditCardExpMonth === "" || parseInt(payment.CreditCardExpMonth) <= 0) {
+                    message += "<p>'Exp Month' must be greater than zero.</p>";
+                }
+
+                if (isNaN(payment.CreditCardExpYear) || payment.CreditCardExpYear === "" || parseInt(payment.CreditCardExpYear) <= 0) {
+                    message += "<p>'Exp Year' must be greater than zero.</p>";
+                }
+
+                if (!(payment.CreditCardCVV.trim())) {
+                    message += "<p>'Verification Code' cannot be empty.</p>";
+                }
+
+                if (!(payment.CreditCardName.trim())) {
+                    message += "<p>'Card Name' cannot be empty.</p>";
+                }
+            }
+            else if (payment.PaymentMode === "check") {
+                if (!(payment.CheckNo.trim())) {
+                    message += "<p>'Check Number' cannot be empty.</p>";
+                }
+                if (!(payment.CheckWriter.trim())) {
+                    message += "<p>'Issued By' cannot be empty.</p>";
+                }
+            }
+            return message;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showPaymentSaveBtn(event) {
+            var tableRow = getParent(event.target, "tr");
+            var btn = tableRow.querySelector("[name='save-payment']");
+            btn.classList.remove("hidden");
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function clearNewPaymentInput(tableRow) {
+            tableRow.querySelector("[name='PaymentDate']").value = "";
+            tableRow.querySelector("[name='Amount']").value = 0;
+            tableRow.querySelector("[name='PaymentMode']").value = "cash";
+            tableRow.querySelector("[name='CheckNo']").value = "";
+            tableRow.querySelector("[name='CheckWriter']").value = "";
+            tableRow.querySelector("[name='CheckImage']").value = "";
+            tableRow.querySelector("[name='CreditCardHolder']").value = "";
+            tableRow.querySelector("[name='CreditCardExpMonth']").value = 0;
+            tableRow.querySelector("[name='CreditCardExpYear']").value = 0;
+            tableRow.querySelector("[name='CreditCardCVV']").value = "";
+            tableRow.querySelector("[name='CreditCardNo']").value = "";
+            tableRow.querySelector("[name='CreditCardName']").value = "";
+        }
     </script>
 }

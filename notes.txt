@@ -1,0 +1,25 @@
+antiquewhite
+florawhite
+ghostwhite
+navajowhite
+white
+whitesmoke
+
+Date
+Amount
+Mode
+Check #
+Source
+
+'item-quantity'
+===============
+
+Edit -> updateLayawayItemPrice(event, itemId)
+Edit -> updateInvoiceItemPrice(event, itemId)
+
+Edit -> deleteLayawayItem(event, itemId, rowIndex, image, productName)
+Edit -> deleteInvoiceItem(event, itemId, rowIndex, image, productName)
+
+Layaways -> <span name="item-quantity" class="text-primary">
+Invoices -> @*<span name="item-quantity" class="text-primary" ondblclick="alert(this.innerHTML)">*@
+

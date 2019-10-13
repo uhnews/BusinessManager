@@ -189,7 +189,7 @@ namespace BusinessManager.Services
             }
         }
 
-        public object UpdateInvoiceItemPrice(IRepository<InvoiceItem> invoiceItemContext, string Id, decimal price)
+        public object UpdateInvoiceItem(IRepository<InvoiceItem> invoiceItemContext, string Id, string productDescription, int quantity, decimal price)
         {
             InvoiceItem invoiceItem = invoiceItemContext.Find(Id);       
 
@@ -198,6 +198,8 @@ namespace BusinessManager.Services
                 try
                 {
                     decimal oldPrice = invoiceItem.Price;
+                    invoiceItem.ProductDescription = productDescription;
+                    invoiceItem.Quantity = quantity;
                     invoiceItem.Price = price;
                     invoiceItem.ModifiedAt = DateTime.Now;
                     invoiceItemContext.Update(invoiceItem);

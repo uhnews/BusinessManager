@@ -13,9 +13,8 @@
 <table id="invoices-table" class="table">
     @foreach (var invoice in Model)
     {
-        //var payments = invoice.InvoicePayments;
         ++invoiceIndex;
-        ViewBag.InvoiceIndex = invoiceIndex;
+        ViewBag.ReceivableSourceIndex = invoiceIndex;
         string rowClass = invoiceIndex > 1 ? "hidden" : "table-row-shown";
 
         invoiceCharges = invoice.InvoiceItems.Sum(item => item.Quantity * item.Price);
@@ -41,13 +40,13 @@
                         string dateStyle = "padding: 5px; line-height: 100%; display: inline; max-width: 45%";
                     }
                     <style>
-                        .invoiceitems-fixed-header tbody {
+                        .CustomerManagerInvoices-fixed-header tbody {
                             display: block;
                             overflow: auto;
                             height: 550px;
                             width: 100%;
                         }
-                        .fixed_header thead tr {
+                        .CustomerManagerInvoices-fixed_header thead tr {
                             display: block;
                         }
                     </style>
@@ -233,37 +232,37 @@
                                 })
                             </div>
 
-                            <div name="invoice-summary" style="position: relative; margin: 0px 0px 5px 0px">
+                            <div name="invoice-summary" style="position: relative; margin: 0px 0px 3px 0px">
                                 <hr style="margin:  10px 0 0 0; border-width: 2px" />
-                                <h5 style="margin: 0 0 0 15px; text-decoration: underline; font-size: 15px">This Invoice </h5>
+                                <h5 style="margin: 0 0 3px 15px; text-decoration: underline; font-size: 15px">This Invoice </h5>
                                 <div style="margin: 0 0 0 40px">
                                     <span>Total Charges: </span>
                                     <span name="transaction-charges"
-                                            class="pull-right"
-                                            style="margin-right: 25px">@invoiceChargesStr</span>
-                                </div>
-                                <div style="margin: 0 0 0 40px">
-                                    <span>Payments: </span>
-                                    <span name="invoice-payments"
-                                            class="pull-right"
-                                            style="margin-right: 25px">@invoicePaymentsStr</span>
-                                </div>
-                                <div style="margin: 0 0 0 40px">
-                                    <span>Balance: </span>
-                                    <span name="invoice-payments"
                                           class="pull-right"
-                                          style="margin-right: 25px">@invoiceBalanceStr</span>
+                                          style="margin-right: 25px">@invoiceChargesStr</span>
                                     </div>
-                                <h5 style="margin: 0 0 0 15px; text-decoration: underline; font-size: 15px">All Invoices</h5>
-                                <div style="margin: 0 0 0 40px">
-                                    <span name="charges-accumulator" class="hidden">@customerChargesStr</span>
-                                    <span>Amount Pending:</span>
-                                    <span name="all-pending-transaction-charges"
-                                            class="pull-right"
-                                            style="margin-right: 25px"></span>
-                                </div>
-                                <hr style="margin: 0 0 10px 0; border-width: 2px" />
-                            </div>
+                                    <div style="margin: 0 0 0 40px">
+                                        <span>Payments: </span>
+                                        <span name="current-payments"
+                                              class="pull-right"
+                                              style="margin-right: 25px">@invoicePaymentsStr</span>
+                                        </div>
+                                        <div style="margin: 0 0 0 40px">
+                                            <span>Balance: </span>
+                                            <span name="current-balance"
+                                                  class="pull-right"
+                                                  style="margin-right: 25px">@invoiceBalanceStr</span>
+                                            </div>
+                                            <h5 style="margin: 2px 0 2px 15px; text-decoration: underline; font-size: 15px">All Customer Invoices</h5>
+                                            <div style="margin: 0 0 0 40px">
+                                                <span name="charges-accumulator" class="hidden">@customerChargesStr</span>
+                                                <span>Amount Pending:</span>
+                                                <span name="all-pending-transaction-charges"
+                                                      class="pull-right"
+                                                      style="margin-right: 25px"></span>
+                                            </div>
+                                            <hr style="margin: 0 0 10px 0; border-width: 2px" />
+                                        </div>
 
                             <div class="btn-group" style="@buttonGroupStyle">
                                 <button type="button"
@@ -293,6 +292,7 @@
                                 </button>
                                 <div class="btn-group dropup">
                                     <button type="button"
+                                            name="payments-menu"
                                             class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                                         Payments
                                         <span class="caret"></span>
@@ -300,16 +300,26 @@
                                     <ul class="dropdown-menu" role="menu" style="padding: 0">
                                         <li>
                                             <button type="button"
+                                                    name="payments-menu-add-payment"
                                                     class="btn btn-sm btn-default btn-block"
-                                                    onclick="addPayment(event, 'Invoice')">
+                                                    onclick="addPayment(event, 'invoices')">
                                                 Add Payment
                                             </button>
                                         </li>
                                         <li>
                                             <button type="button"
+                                                    name="payments-menu-show-payments"
                                                     class="btn btn-sm btn-default btn-block"
                                                     onclick="showPayments(event)">
                                                 Edit Payments
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button"
+                                                    name="payments-menu-show-payment-list"
+                                                    class="btn btn-sm btn-default btn-block"
+                                                    onclick="showPaymentList(event)">
+                                                Payment List
                                             </button>
                                         </li>
                                     </ul>
@@ -344,10 +354,11 @@
                         </form>
                     </div>
                     @{
-                        var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0; border: none";
-                        var subItemInputStyle2 = "display: inline; max-width: 95%; margin: 0 0 5px 0";
+                        var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0";
+                        var subItemInputStyle2 = "display: inline; max-width: 55%; margin: 0 0 5px 0";
+                        var subItemLabelStyle = "display: inline; max-width: 35%; margin-right: 15px; margin-top: 10px; font-size: 90%";
                     }
-                    <div id="sub-items-table" class="col-md-6 invoiceitems-fixed-header" style="flex: 1; background-color: #fff5cc; padding-left: 0">
+                    <div id="sub-items-table" class="col-md-6 CustomerManagerInvoices-fixed-header" style="flex: 1; background-color: #fff5cc; padding-left: 0">
                         @* #fff5cc = yellow 2 *@
                         <h4 style="margin-left: 10px">Invoice Items</h4>
                         <table class="table">
@@ -398,39 +409,72 @@
                                                         @readonly = "true"
                                                     }
                                                 })
-                                            </strong><br />
-                                            @Html.DisplayFor(m => item.ProductDescription, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
+                                            </strong>
                                         </div>
-                                        <div style="padding-top: 7px; width: 70%">
-                                            <label class="control-label invoice-label" style="display: inline; margin-right: 10px">Quantity:</label>
-                                            <span name="item-quantity" class="text-primary">
-                                                @Html.DisplayFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
-                                            </span>
-                                        </div>
-                                        <div style="margin-bottom: 5px; width: 70%">
-                                            @Html.LabelFor(m => item.Price, htmlAttributes: new
-                                            {
-                                                @class = "control-label invoice-label",
-                                                @style = "display: inline; margin-right: 10px; margin-top: 10px"
-                                            })
-
-                                            @Html.EditorFor(m => item.Price, new
+                                        <div style="padding-top: 7px; width: 90%t">
+                                            @Html.EditorFor(m => item.ProductDescription, new
                                             {
                                                 htmlAttributes = new
                                                 {
                                                     @class = "form-control input-sm",
-                                                    @style = @subItemInputStyle2,
+                                                    @style = subItemInputStyle1,
                                                     @onkeyup = "showInvoiceItemSaveBtn(event)",
-                                                    @onchange = "showInvoiceItemSaveBtn(event)"
+                                                    @onchange = "showInvoiceItemSaveBtn(event)",
+                                                    @onpaste = "showInvoiceItemSaveBtn(event)",
+                                                    @oncut = "showInvoiceItemSaveBtn(event)"
                                                 }
                                             })
-                                            <p><label style="margin-right: 5px">Item Total: </label><span name="line-total" class="text-primary">@(item.Quantity * item.Price)</span></p>
+                                        </div>
+                                        <div style="padding-top: 7px; width: 90%; text-align: right">
+                                            @Html.EditorFor(m => item.Quantity, new
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @class = "form-control input-sm pull-right",
+                                                    @style = subItemInputStyle2,
+                                                    @onkeyup = "showInvoiceItemSaveBtn(event)",
+                                                    @onchange = "showInvoiceItemSaveBtn(event)",
+                                                    @onpaste = "showInvoiceItemSaveBtn(event)",
+                                                    @oncut = "showInvoiceItemSaveBtn(event)"
+                                                }
+                                            })
+
+                                            @Html.LabelFor(m => item.Quantity, htmlAttributes: new
+                                            {
+                                                @class = "control-label invoice-label pull-right",
+                                                @style = subItemLabelStyle
+                                            })
+                                        </div>
+                                        <div style="margin-bottom: 5px; width: 90%; text-align: right">
+                                            @Html.EditorFor(m => item.Price, new
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @class = "form-control input-sm pull-right",
+                                                    @style = @subItemInputStyle2,
+                                                    @onkeyup = "showInvoiceItemSaveBtn(event)",
+                                                    @onchange = "showInvoiceItemSaveBtn(event)",
+                                                    @onpaste = "showInvoiceItemSaveBtn(event)",
+                                                    @oncut = "showInvoiceItemSaveBtn(event)"
+                                                }
+                                            })
+
+                                            @Html.LabelFor(m => item.Price, htmlAttributes: new
+                                            {
+                                                @class = "control-label invoice-label pull-right",
+                                                @style = subItemLabelStyle
+                                            })
+                                        </div>
+                                        <div style="margin-bottom: 5px; width: 100%">
+                                            <span name="ProductDescriptionOldValue" class="hidden">@item.ProductDescription</span>
+                                            <span name="QuantityOldValue" class="hidden">@item.Quantity</span>
                                             <span name="PriceOldValue" class="hidden">@item.Price</span>
+                                            <p><label style="margin-right: 5px; width: 40%">Item Total </label><span name="line-total" class="text-primary">@(item.Quantity * item.Price)</span></p>
                                             <button name="invoice-item-save"
                                                     type="button"
                                                     style="margin: 0 0 3px 0"
                                                     class="btn btn-sm btn-default btn-success-text hidden"
-                                                    onclick="updateInvoiceItemPrice(event, '@item.Id')">
+                                                    onclick="updateInvoiceItem(event, '@item.Id')">
                                                 <strong>Save</strong>
                                                 <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                                             </button>
@@ -445,17 +489,26 @@
                     </div>
 
                     <div id="new-payment"
-                            class="col-md-6 invoiceitems-fixed-header hidden"
+                            class="col-md-6 CustomerManagerInvoices-fixed-header hidden"
                             style="flex: 1; background-color: #fff5cc; padding: 0 15px 0 0; margin: 0 0 0 0"
                          > @* #fff5cc = yellow 2 *@
                         @Html.Partial("NewPayment")
                     </div>
 
-                    <div id="payments-table" 
-                         class="col-md-6 invoiceitems-fixed-header hidden" 
+                    <div id="payment-list-table" 
+                         class="col-md-6 CustomerManagerInvoices-fixed-header hidden" 
                          style="flex: 1; background-color: #fff5cc; padding-left: 0">
                         @{
-                            ViewBag.CurrInvoiceId = invoice.Id;
+                            ViewBag.CurrReceivableSourceId = invoice.Id;
+                        }
+                        @Html.Partial("PaymentList", invoice.InvoicePayments)
+                    </div>
+
+                    <div id="payments-table" 
+                         class="col-md-6 CustomerManagerInvoices-fixed-header hidden" 
+                         style="flex: 1; background-color: #fff5cc; padding-left: 0">
+                        @{
+                            ViewBag.CurrReceivableSourceId = invoice.Id;
                         }
                         @Html.Partial("Payments", invoice.InvoicePayments)
                     </div>

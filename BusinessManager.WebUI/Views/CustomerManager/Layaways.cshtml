@@ -6,42 +6,56 @@
     int layawayCount = Model.Count();
     decimal layawayCharges = 0;
     decimal customerCharges = 0;
+    decimal layawayPayments = 0;
+    decimal layawayBalance = 0;
 }
 
 <table id="layaways-table" class="table">
     @foreach (var layaway in Model)
     {
         ++layawayIndex;
+        ViewBag.ReceivableSourceIndex = layawayIndex;
         string rowClass = layawayIndex > 1 ? "hidden" : "table-row-shown";
+
         layawayCharges = layaway.LayawayItems.Sum(item => item.Quantity * item.Price);
-        var layawayChargesStr  = "$ " + String.Format("{0:###,###,###.00}", layawayCharges);
-        customerCharges += layawayCharges;
-        var customerChargesStr = String.Format("$ {0:#,###.00}", customerCharges);
-        <tr class="@rowClass">
+        var layawayChargesStr  = "$ " + String.Format("{0:###,###,###.00}", layawayCharges);        
+
+        layawayPayments = layaway.LayawayPayments.Sum(item => item.Amount);
+        string layawayPaymentsStr = "$ " + String.Format("{0:#,##0.00}", layawayPayments);        
+
+        layawayBalance = layawayCharges - layawayPayments;
+        string layawayBalanceStr = "$ " + String.Format("{0:#,##0.00}", layawayBalance);
+        
+
+        customerCharges += (layawayCharges - layawayPayments);
+        string customerChargesStr = String.Format("$ {0:#,##0.00}", customerCharges);
+
+        <tr id="layaway-row" class="@rowClass">
             <td>
                 <div class="col-md-12" style="display: flex; height: 625px">
                     @{
-                        var colorLightBlue = "#f6fbfd";
+                        //var colorLightBlue = "#f6fbfd";
+                        var colorLightBlue = "#ede2de";
 
                         // Layaway Items table styling strings
-                        var inputStyle = "display: inline; width: 45%; max-width: 100%";
-                        var inputGroupStyle = "margin: 6px";
-                        var buttonGroupStyle = "margin: 6px 6px 30x 6px";
-                        var dateStyle = "padding: 5px; line-height: 100%; display: inline; max-width: 45%";
+                        string inputStyle = "display: inline; width: 45%; max-width: 100%";
+                        string inputGroupStyle = "margin: 1px 6px 1px 6px";
+                        string buttonGroupStyle = "margin: 6px 6px 30x 6px";
+                        string dateStyle = "padding: 5px; line-height: 100%; display: inline; max-width: 45%";
                     }
                     <style>
                         .layaway-label {
                             width: 30%
                         }
 
-                        .fixed-header tbody {
+                        .CustomerManagerLayaways-fixed-header tbody {
                             display: block;
                             overflow: auto;
                             height: 550px;
                             width: 100%;
                         }
 
-                        .fixed_header thead tr {
+                        .CustomerManagerLayaways-fixed_header thead tr {
                             display: block;
                         }
                     </style>
@@ -144,89 +158,138 @@
                                     }
                                 })
                             </div>
-                            <div name="layaway-summary" style="position: relative; margin: 0px 0px 5px 0px">
+
+                            <div name="layaway-summary" style="position: relative; margin: 0px 0px 3px 0px">
                                 <hr style="margin:  10px 0 0 0; border-width: 2px" />
-                                <h5 style="margin: 10px 0 5px 15px; text-decoration: underline; font-size: 15px">This Layaway </h5>
-                                <h4 style="margin: 0px 0 0 40px; font-size: 17px">
+                                <h5 style="margin: 0 0 3px 15px; text-decoration: underline; font-size: 15px">This Layaway </h5>                                
+                                <div style="margin: 0 0 0 40px">
                                     <span>Total Charges: </span>
                                     <span name="transaction-charges"
+                                            class="pull-right"
+                                            style="margin-right: 25px">@layawayChargesStr</span>
+                                </div>
+                                <div style="margin: 0 0 0 40px">
+                                    <span>Payments: </span>
+                                    <span name="current-payments"
+                                            class="pull-right"
+                                            style="margin-right: 25px">@layawayPaymentsStr</span>
+                                </div>
+                                <div style="margin: 0 0 0 40px">
+                                    <span>Balance: </span>
+                                    <span name="current-balance"
                                           class="pull-right"
-                                          style="margin-right: 25px">@layawayChargesStr</span>
-                                    </h4>
-                                    <h4 style="margin: 3px 0 0 40px; font-size: 17px">
-                                        <span>Payments: </span>
-                                        <span name="layaway-payments"
-                                              class="pull-right"
-                                              style="margin-right: 25px">$ 0.00</span>
-                                    </h4>
+                                          style="margin-right: 25px">@layawayBalanceStr</span>
+                                </div>                                
+                                <h5 style="margin: 2px 0 2px 15px; text-decoration: underline; font-size: 15px">All Customer Layaways</h5>
+                                <div style="margin: 0 0 0 40px">
+                                    <span name="charges-accumulator" class="hidden">@customerChargesStr</span>
+                                    <span>Amount Pending:</span>
+                                    <span name="all-pending-transaction-charges"
+                                            class="pull-right"
+                                            style="margin-right: 25px"></span>
+                                </div>
+                                <hr style="margin: 0 0 10px 0; border-width: 2px" />
+                            </div>
 
-                                    <h5 style="margin: 10px 0 5px 15px; text-decoration: underline; font-size: 15px">All Customer Layaways</h5>
-                                    <h4 style="margin: 0px 0 0 40px; font-size: 17px">
-                                        <span name="charges-accumulator" class="hidden">@customerChargesStr</span>
-                                        <span>Amount Pending:</span>
-                                        <span name="all-pending-transaction-charges"
-                                              class="pull-right"
-                                              style="margin-right: 25px; font-size: 17px"></span>
-                                    </h4>
-                                    <hr style="margin: 3px 0 10px 0; border-width: 2px" />
+                            <div class="btn-group" style="@buttonGroupStyle">
+                                <button type="button"
+                                        name="subform-save"
+                                        class="btn btn-sm btn-default btn-success-text hidden"
+                                        onclick="saveSubformData(event, 'UpdateLayaway', getUILayawayData)">
+                                    <strong>Save</strong>
+                                    <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
+                                </button>
+                                <button type="button"
+                                        name="scan-upc"
+                                        value="Scan Barcode"
+                                        class="btn btn-sm btn-default"
+                                        onclick="toggleBarcodeInput(event)">
+                                    Scan Barcode
+                                </button>
+                                <button type="button"
+                                        name="product-lookup"
+                                        value="Add Item"
+                                        class="btn btn-sm btn-default"
+                                        onclick="openProductLookup(event, '@layaway.Id', 'Layaways')">
+                                    Add Item
+                                </button>
+                                <button type="button"
+                                        name="charge-items"
+                                        class="btn btn-sm btn-default margin-bottom-3 hidden"
+                                        onclick="showChargeItems(event)">
+                                    Show Items
+                                </button>
+                                <div class="btn-group dropup">
+                                    <button type="button"
+                                            name="payments-menu"
+                                            class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                        Payments
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" style="padding: 0">
+                                        <li>
+                                            <button type="button"
+                                                    name="payments-menu-add-payment"
+                                                    class="btn btn-sm btn-default btn-block"
+                                                    onclick="addPayment(event, 'layaways')">
+                                                Add Payment
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button"
+                                                    name="payments-menu-show-payments"
+                                                    class="btn btn-sm btn-default btn-block"
+                                                    onclick="showPayments(event)">
+                                                Edit Payments
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button"
+                                                    name="payments-menu-show-payment-list"
+                                                    class="btn btn-sm btn-default btn-block"
+                                                    onclick="showPaymentList(event)">
+                                                Payment List
+                                            </button>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div style="@buttonGroupStyle">
-                                    <button type="button"
-                                            name="subform-save"
-                                            class="btn btn-sm btn-default btn-success-text hidden"
-                                            onclick="saveSubformData(event, 'UpdateLayaway', getUILayawayData)">
-                                        <strong>Save</strong>
-                                        <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
-                                    </button>
-                                    <button type="button"
-                                            name="scan-upc"
-                                            value="Scan Barcode"
-                                            class="btn btn-sm btn-default"
-                                            onclick="toggleBarcodeInput(event)">
-                                        Scan Barcode
-                                    </button>
-                                    <button type="button"
-                                            value="Add Item"
-                                            class="btn btn-sm btn-default"
-                                            onclick="openProductLookup(event, '@layaway.Id', 'Layaways')">
-                                        Add Item
-                                    </button>
-                                    @{
-                                        if (layaway.LayawayItems.Count == 0)
-                                        {
-                                            <button type="button"
-                                                    value="Delete"
-                                                    class="btn btn-sm btn-default btn-danger-text"
-                                                    onclick="deleteLayaway(event)">
-                                                Delete
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <button type="button"
-                                                    value="Delete"
-                                                    class="btn btn-sm btn-default btn-danger-text"
-                                                    disabled>
-                                                Delete
-                                            </button>
-                                        }
+                                @{
+                                    if (layaway.LayawayItems.Count == 0)
+                                    {
+                                        <button type="button"
+                                                value="Delete"
+                                                class="btn btn-sm btn-default btn-danger-text"
+                                                onclick="deleteLayaway(event)">
+                                            Delete
+                                        </button>
                                     }
-                                    <div name="upc-input-container" style="padding: 0" class="hidden">
-                                        <span class="fas fa-barcode text-primary" style="font-size: 35px; margin: 3px -15px 0 0; padding: 0">&nbsp;&nbsp;</span>
-                                        <input name="upc-input"
-                                               type="text"
-                                               class="form-control input-sm"
-                                               style="display: inline; max-width: 70%; transform: translateY(-8px)"
-                                               onkeypress="getProductByUPC(event, '@layaway.Id', 'Layaway')" />
-                                    </div>
+                                    else
+                                    {
+                                        <button type="button"
+                                                value="Delete"
+                                                class="btn btn-sm btn-default btn-danger-text"
+                                                disabled>
+                                            Delete
+                                        </button>
+                                    }
+                                }
+                                <div name="upc-input-container" style="padding: 0" class="hidden">
+                                    <span class="fas fa-barcode text-primary" style="font-size: 35px; margin: 3px -15px 0 0; padding: 0">&nbsp;&nbsp;</span>
+                                    <input name="upc-input"
+                                           type="text"
+                                           class="form-control input-sm"
+                                           style="display: inline; max-width: 70%; transform: translateY(-8px)"
+                                           onkeypress="getProductByUPC(event, '@layaway.Id', 'Layaway')" />
                                 </div>
+                            </div>
                             </form>
                     </div>
                     @{
-                        var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0; background-color: " + colorLightBlue + "; border: none";
-                        var subItemInputStyle2 = "display: inline; max-width: 95%; margin: 0 0 5px 0";
+                        var subItemInputStyle1 = "display: inline; max-width: 95%; margin: 0 0 5px 0";
+                        var subItemInputStyle2 = "display: inline; max-width: 55%; margin: 0 0 5px 0";
+                        var subItemLabelStyle = "display: inline; max-width: 35%; margin-right: 15px; margin-top: 10px; font-size: 90%";
                     }
-                    <div id="layaway-items-table" class="col-md-6 fixed-header" style="flex: 1; background-color: @colorLightBlue; padding-left: 0">
+                    <div id="sub-items-table" class="col-md-6 CustomerManagerLayaways-fixed-header" style="flex: 1; background-color: @colorLightBlue; padding-left: 0">
                         <h4 style="margin-left: 10px">Layaway Items</h4>
                         <table class="table">
                             @{
@@ -238,7 +301,7 @@
                             {
                                 ++itemIndex;
                                 rowElementId = "row-" + layawayIndex + "-" + itemIndex;
-                                <tr id=@rowElementId style="margin-top: 20px">
+                                <tr id=@rowElementId style="margin-top: 20px; background-color: #fbf9f8">
                                     <td style="position: relative">
                                         <div>
                                             <img onclick="popUpProductDetail('@item.ProductId')"
@@ -275,39 +338,72 @@
                                                         @readonly = "true"
                                                     }
                                                 })
-                                            </strong><br />
-                                            @Html.DisplayFor(m => item.ProductDescription, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
+                                            </strong>
                                         </div>
-                                        <div style="padding-top: 7px; width: 70%">
-                                            <label class="control-label layaway-label" style="display: inline; margin-right: 10px">Quantity:</label>
-                                            <span name="item-quantity" class="text-primary">
-                                                @Html.DisplayFor(m => item.Quantity, new { htmlAttributes = new { @class = "form-control", @style = @subItemInputStyle2 } })
-                                            </span>
-                                        </div>
-                                        <div style="margin-bottom: 5px; width: 70%">
-                                            @Html.LabelFor(m => item.Price, htmlAttributes: new
-                                            {
-                                                @class = "control-label layaway-label",
-                                                @style = "display: inline; margin-right: 10px; margin-top: 10px"
-                                            })
-
-                                            @Html.EditorFor(m => item.Price, new
+                                        <div style="padding-top: 7px; width: 90%t">
+                                            @Html.EditorFor(m => item.ProductDescription, new
                                             {
                                                 htmlAttributes = new
                                                 {
                                                     @class = "form-control input-sm",
-                                                    @style = @subItemInputStyle2,
+                                                    @style = subItemInputStyle1,
                                                     @onkeyup = "showLayawayItemSaveBtn(event)",
-                                                    @onchange = "showLayawayItemSaveBtn(event)"
+                                                    @onchange = "showLayawayItemSaveBtn(event)",
+                                                    @onpaste = "showLayawayItemSaveBtn(event)",
+                                                    @oncut = "showLayawayItemSaveBtn(event)"
                                                 }
                                             })
-                                            <p name="line-total"><label style="margin-right: 5px">Item Total: </label><span class="text-primary">@(item.Quantity * item.Price)</span></p>
+                                        </div>
+                                        <div style="padding-top: 7px; width: 90%; text-align: right">
+                                            @Html.EditorFor(m => item.Quantity, new
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @class = "form-control input-sm pull-right",
+                                                    @style = @subItemInputStyle2,
+                                                    @onkeyup = "showLayawayItemSaveBtn(event)",
+                                                    @onchange = "showLayawayItemSaveBtn(event)",
+                                                    @onpaste = "showLayawayItemSaveBtn(event)",
+                                                    @oncut = "showLayawayItemSaveBtn(event)"
+                                                }
+                                            })
+
+                                            @Html.LabelFor(m => item.Quantity, htmlAttributes: new
+                                            {
+                                                @class = "control-label invoice-label pull-right pull-right",
+                                                @style = @subItemLabelStyle
+                                            })
+                                        </div>
+                                        <div style="margin-bottom: 5px; width: 90%; text-align: right">
+                                            @Html.EditorFor(m => item.Price, new
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @class = "form-control input-sm pull-right",
+                                                    @style = @subItemInputStyle2,
+                                                    @onkeyup = "showLayawayItemSaveBtn(event)",
+                                                    @onchange = "showLayawayItemSaveBtn(event)",
+                                                    @onpaste = "showLayawayItemSaveBtn(event)",
+                                                    @oncut = "showLayawayItemSaveBtn(event)"
+                                                }
+                                            })
+
+                                            @Html.LabelFor(m => item.Price, htmlAttributes: new
+                                            {
+                                                @class = "control-label layaway-label pull-right",
+                                                @style = @subItemLabelStyle
+                                            })
+                                        </div>
+                                        <div style="margin-bottom: 5px; width: 100%">
+                                            <span name="ProductDescriptionOldValue" class="hidden">@item.ProductDescription</span>
+                                            <span name="QuantityOldValue" class="hidden">@item.Quantity</span>
                                             <span name="PriceOldValue" class="hidden">@item.Price</span>
+                                            <p><label style="margin-right: 5px; width: 40%">Item Total </label><span name="line-total" class="text-primary">@(item.Quantity * item.Price)</span></p>
                                             <button name="layaway-item-save"
                                                     type="button"
                                                     style="margin: 0"
                                                     class="btn btn-sm btn-default btn-success-text hidden"
-                                                    onclick="updateLayawayItemPrice(event, '@item.Id')">
+                                                    onclick="updateLayawayItem(event, '@item.Id')">
                                                 <strong>Save</strong>
                                                 <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                                             </button>
@@ -320,7 +416,35 @@
                             }
                         </table>
                     </div>
+
+                    <div id="new-payment"
+                            class="col-md-6 CustomerManagerLayaways-fixed-header hidden"
+                            style="flex: 1; background-color: #fff5cc; padding: 0 15px 0 0; margin: 0 0 0 0"
+                         > @* #fff5cc = yellow 2 *@
+                        @Html.Partial("NewPayment")
+                    </div>
+
+                    <div id="payment-list-table" 
+                         class="col-md-6 CustomerManagerLayaways-fixed-header hidden" 
+                         style="flex: 1; background-color: #fff5cc; padding-left: 0">
+                        @{
+                            ViewBag.CurrReceivableSourceId = layaway.Id;
+                        }
+                        @Html.Partial("PaymentList", layaway.LayawayPayments)
+                    </div>
+
+                    <div id="payments-table" 
+                         class="col-md-6 CustomerManagerLayaways-fixed-header hidden" 
+                         style="flex: 1; background-color: #fff5cc; padding-left: 0">
+                        @{
+                            ViewBag.CurrReceivableSourceId = layaway.Id;
+                        }
+                        @Html.Partial("Payments", layaway.LayawayPayments)
+                    </div>
                 </div>
+
+                @*  ################### RECORD NAVIGATION BUTTONS #####################  *@
+
                 <div name="layaway-nav-group" class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
                     Layaway <span name="layaways-table-row-number">@layawayIndex</span> of <span name="layaways-row-count" style="margin-right: 30px">@layawayCount</span>
                     <div style="display: inline">

@@ -15,7 +15,7 @@ namespace BusinessManager.Core.Contracts
         object UpdateInvoice(IRepository<Invoice> invoiceContext, string data);
         object AddItemToInvoice(IRepository<InvoiceItem> invoiceItemContext, string data);
         object RemoveItemFromInvoice(IRepository<InvoiceItem> invoiceItemContext, string Id);
-        object UpdateInvoiceItemPrice(IRepository<InvoiceItem> invoiceItemContext, string Id, decimal price);
+        object UpdateInvoiceItem(IRepository<InvoiceItem> invoiceItemContext, string Id, string productDescription, int quantity, decimal price);
         object UpdateInvoiceItemQuantity(IRepository<InvoiceItem> invoiceItemContext, string Id, int quantity);
     }
 }

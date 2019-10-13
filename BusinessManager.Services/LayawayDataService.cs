@@ -155,7 +155,7 @@ namespace BusinessManager.Services
 
         }
 
-        public object UpdateLayawayItemPrice(IRepository<LayawayItem> layawayItemContext, string Id, decimal price)
+        public object UpdateLayawayItem(IRepository<LayawayItem> layawayItemContext, string Id, string productDescription, int quantity, decimal price)
         {
             LayawayItem layawayItem = layawayItemContext.Find(Id);
 
@@ -163,6 +163,8 @@ namespace BusinessManager.Services
             {
                 try
                 {
+                    layawayItem.ProductDescription = productDescription;
+                    layawayItem.Quantity = quantity;
                     layawayItem.Price = price;
                     layawayItem.ModifiedAt = DateTime.Now;
                     layawayItemContext.Update(layawayItem);

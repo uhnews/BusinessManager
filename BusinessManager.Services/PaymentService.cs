@@ -97,28 +97,28 @@ namespace BusinessManager.Services
         {
             foreach(Invoice invoice in customer.Invoices)
             {
-                this.GetPayments(invoice, "Invoice");
+                this.GetPayments(invoice, "invoices");
             }
 
-            //foreach (Layaway layaway in customer.Layaways)
-            //{
-            //    this.GetPayments(layaway, "Layaway");
-            //}
+            foreach (Layaway layaway in customer.Layaways)
+            {
+                this.GetPayments(layaway, "layaways");
+            }
 
             return;
         }
 
-        public void GetPayments(Object model, string modelName)
+        public void GetPayments(Object model, string dataSet)
         {
             string modelId = "";
-            modelName = modelName.ToLower();
-            switch (modelName)
+            dataSet = dataSet.ToLower();
+            switch (dataSet)
             {
-                case "invoice":
+                case "invoices":
                     model = (Invoice)model;
                     modelId = ((Invoice)model).Id;
                     break;
-                case "layaway":
+                case "layaways":
                     model = (Layaway)model;
                     modelId = ((Layaway)model).Id;
                     break;
@@ -130,19 +130,19 @@ namespace BusinessManager.Services
             DbSet<Payment> dbSet = dataContext.Set<Payment>();
 
             payments = dataContext.Payments
-                       .Where(p => p.ReceivableSource.ToLower() == modelName && p.ReceivableSourceId == modelId)
+                       .Where(p => p.ReceivableSource.ToLower() == dataSet && p.ReceivableSourceId == modelId)
                        .OrderByDescending(p => p.ModifiedAt)
                        .ToList();
             dataContext.Dispose();
 
             if (payments != null)
             {
-                switch (modelName)
+                switch (dataSet)
                 {
-                    case "invoice":
+                    case "invoices":
                         ((Invoice)model).InvoicePayments = payments;
                         break;
-                    case "layaway":
+                    case "layaways":
                         ((Layaway)model).LayawayPayments = payments;
                         break;
                 }                

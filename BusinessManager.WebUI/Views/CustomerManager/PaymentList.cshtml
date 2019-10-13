@@ -1,0 +1,101 @@
+﻿@model IEnumerable<BusinessManager.Core.Models.Payment>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    var paymentCount = Model.Count();
+    var paymentIndex = 0;
+    var rowElementId = "";
+
+    <h4 style="margin-left: 5px">Invoice Payments</h4>
+    <table id="payment-list-table-@ViewBag.CurrReceivableSourceId" class="table" style="background-color: #fffcf0">
+        @* #fffcf0 = yellow 3 *@
+        <thead>
+            <tr class="col-md-8" style="width: 100%; font-size: 85%; padding: 0px 10px 0px 10px" >
+                <td style="min-width: 12%; max-width: 12%; padding: 4px 7px 3px 7px">
+                    <div style="font-weight: bold; text-align: left; width: 100%; opacity: 0">00</div>
+                </td>
+                <td style="min-width: 23%; max-width: 23%; padding: 4px 7px 3px 7px">
+                    <div style="font-weight: bold; text-align: right; width: 100%">Date</div>
+                </td>
+                <td style="min-width: 23%; max-width: 23%; padding: 4px 7px 3px 7px">
+                    <div style="font-weight: bold; text-align: right; width: 100%">Amount</div>
+                </td>
+                <td style="min-width: 17%; max-width: 17%; padding: 4px 7px 3px 7px">
+                    <div style="font-weight: bold; text-align: left; width: 100%">Mode</div>
+                </td>
+                <td style="min-width: 30%; max-width: 30%; padding: 4px 7px 3px 7px">
+                    <div style="font-weight: bold; text-align: left; width: 100%; margin-left: 10px">Chk #</div>
+                </td>
+                <td class="hidden">
+                </td>
+            </tr>
+        </thead>
+        @foreach (var payment in Model)
+        {
+            ++paymentIndex;
+            rowElementId = "row-" + ViewBag.ReceivableSourceIndex + "-" + paymentIndex;
+            <tr id=@rowElementId class="col-md-8" style="width: 100%; font-size: 90%; padding: 0px 10px 0px 10px">
+                <td style="min-width: 12%; max-width: 12%; text-align: left; padding: 4px 7px 3px 7px">
+                    <a href="#" onclick="goToPaymentEdit(event)" title="Go to Payment Detail" style="text-decoration: underline; width: 100%">
+                        @paymentIndex
+    @*<a href="javascript: goToPaymentEdit(event)" class="btn btn-primary badge badge-pill">&#8592;</a><span>&nbsp;&nbsp;</span>*@
+                    </a>
+                </td>
+                <td style="min-width: 23%; max-width: 23%; text-align: right; padding: 4px 7px 3px 7px">
+                    <div style="width: 100%">
+                        @{
+                            int chrIndex = payment.PaymentDate.ToString().IndexOf(" ");
+                        }
+                        @Html.DisplayFor(model => payment.PaymentDate).ToString().Substring(0, chrIndex - 1)
+                    </div>
+                </td>
+                <td style="min-width: 23%; max-width: 23%; text-align: right; padding: 4px 7px 3px 7px">                            
+                    <div style="width: 100%">
+                        @Html.DisplayFor(model => payment.Amount)
+                    </div>
+                </td>
+                <td style="min-width: 17%; max-width: 17%; text-align: left; padding: 4px 7px 3px 7px">
+                    <div style="width: 100%">
+                        @if (payment.PaymentMode == "credit card")
+                        {
+                            <span>crd</span>
+                        }
+                        else if (payment.PaymentMode == "check")
+                        {
+                            <span>chk</span>
+                        }
+                        else if (payment.PaymentMode == "cash")
+                        {
+                            <span>csh</span>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(model => payment.PaymentMode)
+                        }
+                    </div>
+                </td>
+                <td style="min-width: 30%; max-width: 30%; text-align: left; padding: 4px 7px 3px 7px">
+                    <div style="width: 100%">
+                        @Html.DisplayFor(model => payment.CheckNo)
+                    </div>
+                </td>
+                <td class="hidden">
+                    <div>
+                        <div>
+                            <span name="CreatedAt"></span>
+                        </div>
+                        <div>
+                            <span name="Id">@payment.Id</span>
+                        </div>
+                        <div>
+                            <span name="ReceivableSource">@payment.ReceivableSource</span>
+                        </div>
+                    </div>
+                    <span name="payment-list-table-@ViewBag.CurrReceivableSourceId-row-number" class="hidden">@paymentIndex</span>
+                </td>
+            </tr>
+        }
+    </table>
+}
