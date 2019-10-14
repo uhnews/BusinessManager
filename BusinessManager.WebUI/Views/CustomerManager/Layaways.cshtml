@@ -34,14 +34,16 @@
             <td>
                 <div class="col-md-12" style="display: flex; height: 625px">
                     @{
-                        //var colorLightBlue = "#f6fbfd";
-                        var colorLightBlue = "#ede2de";
+                        var colorBGReceivableSourceDetail = "#ede2de";
+                        var colorBGItemDetail = "#fdfcfc";
+                        ViewBag.ItemDetailBackgroundColor = colorBGItemDetail;
 
                         // Layaway Items table styling strings
-                        string inputStyle = "display: inline; width: 45%; max-width: 100%";
-                        string inputGroupStyle = "margin: 1px 6px 1px 6px";
+                        string dateStyle = "padding: 5px; line-height: 100%; display: inline; margin-left: 10px; max-width: 55%";
+                        string inputStyle = "display: inline; margin-left: 10px; width: 55%";
+                        string inputGroupStyle = "margin: 1px 6px 1px 0px";
                         string buttonGroupStyle = "margin: 6px 6px 30x 6px";
-                        string dateStyle = "padding: 5px; line-height: 100%; display: inline; max-width: 45%";
+                        string labelStyle = "width: 40%; text-align: right";
                     }
                     <style>
                         .layaway-label {
@@ -59,18 +61,20 @@
                             display: block;
                         }
                     </style>
-                    <div id="layaway-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorLightBlue">
+                    <div id="layaway-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorBGReceivableSourceDetail">
                         <form id="layaway-form">
                             <div name="layaway-customer-id" style="display: none">@layaway.CustomerId</div>
                             <div id="receivable-source-id" name="layaway-id" style="display: none">@layaway.Id</div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(m => m.CreatedAt)</label>
-                                @Html.DisplayFor(model => layaway.CreatedAt, new { htmlAttributes = new { @class = "form-control" } }).ToString().Replace("-07:00", "")
+                                <label class="control-label layaway-label" style="@labelStyle">@Html.DisplayNameFor(m => m.CreatedAt)</label>
+                                <span style="@inputStyle">
+                                    @Html.DisplayFor(model => layaway.CreatedAt, new { htmlAttributes = new { @class = "form-control" } }).ToString().Replace("-07:00", "")
+                                </span>
                             </div>
                             <div style="@inputGroupStyle">
                                 <label onclick="focusMatchingInput('layaway_AgreementDate')" 
                                        class="control-label layaway-label" 
-                                       style="width: 45%"
+                                       style="@labelStyle"
                                        >
                                     @Html.DisplayNameFor(model => model.AgreementDate)
                                 </label>
@@ -91,7 +95,7 @@
                             <div style="@inputGroupStyle">
                                 <label onclick="focusMatchingInput('layaway_DueDate')" 
                                        class="control-label layaway-label" 
-                                       style="width: 45%"
+                                       style="@labelStyle"
                                        >
                                     @Html.DisplayNameFor(model => model.DueDate)
                                 </label>
@@ -107,7 +111,9 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('layaway_DownPayment')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.DownPayment)</label>
+                                <label onclick="focusMatchingInput('layaway_DownPayment')" class="control-label layaway-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.DownPayment)
+                                </label>
                                 @Html.EditorFor(model => layaway.DownPayment, new
                                 {
                                     htmlAttributes = new
@@ -120,7 +126,9 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('layaway_ServiceFee')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.ServiceFee)</label>
+                                <label onclick="focusMatchingInput('layaway_ServiceFee')" class="control-label layaway-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.ServiceFee)
+                                </label>
                                 @Html.EditorFor(model => layaway.ServiceFee, new
                                 {
                                     htmlAttributes = new
@@ -133,7 +141,9 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('layaway_CancellationFee')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.CancellationFee)</label>
+                                <label onclick="focusMatchingInput('layaway_CancellationFee')" class="control-label layaway-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.CancellationFee)
+                                </label>
                                 @Html.EditorFor(model => layaway.CancellationFee, new
                                 {
                                     htmlAttributes = new
@@ -146,7 +156,9 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('layaway_OrderStatus')" class="control-label layaway-label" style="width: 45%">@Html.DisplayNameFor(model => model.OrderStatus)</label>
+                                <label onclick="focusMatchingInput('layaway_OrderStatus')" class="control-label layaway-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.OrderStatus)
+                                </label>
                                 @Html.EditorFor(model => layaway.OrderStatus, new
                                 {
                                     htmlAttributes = new
@@ -289,7 +301,7 @@
                         var subItemInputStyle2 = "display: inline; max-width: 55%; margin: 0 0 5px 0";
                         var subItemLabelStyle = "display: inline; max-width: 35%; margin-right: 15px; margin-top: 10px; font-size: 90%";
                     }
-                    <div id="sub-items-table" class="col-md-6 CustomerManagerLayaways-fixed-header" style="flex: 1; background-color: @colorLightBlue; padding-left: 0">
+                    <div id="sub-items-table" class="col-md-6 CustomerManagerLayaways-fixed-header" style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding-left: 0">
                         <h4 style="margin-left: 10px">Layaway Items</h4>
                         <table class="table">
                             @{
@@ -301,7 +313,7 @@
                             {
                                 ++itemIndex;
                                 rowElementId = "row-" + layawayIndex + "-" + itemIndex;
-                                <tr id=@rowElementId style="margin-top: 20px; background-color: #fbf9f8">
+                                <tr id=@rowElementId style="margin-top: 20px; background-color: @colorBGItemDetail">
                                     <td style="position: relative">
                                         <div>
                                             <img onclick="popUpProductDetail('@item.ProductId')"
@@ -419,14 +431,14 @@
 
                     <div id="new-payment"
                             class="col-md-6 CustomerManagerLayaways-fixed-header hidden"
-                            style="flex: 1; background-color: #fff5cc; padding: 0 15px 0 0; margin: 0 0 0 0"
+                            style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding: 0 15px 0 0; margin: 0 0 0 0"
                          > @* #fff5cc = yellow 2 *@
                         @Html.Partial("NewPayment")
                     </div>
 
                     <div id="payment-list-table" 
                          class="col-md-6 CustomerManagerLayaways-fixed-header hidden" 
-                         style="flex: 1; background-color: #fff5cc; padding-left: 0">
+                         style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding-left: 0">
                         @{
                             ViewBag.CurrReceivableSourceId = layaway.Id;
                         }
@@ -435,7 +447,7 @@
 
                     <div id="payments-table" 
                          class="col-md-6 CustomerManagerLayaways-fixed-header hidden" 
-                         style="flex: 1; background-color: #fff5cc; padding-left: 0">
+                         style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding-left: 0">
                         @{
                             ViewBag.CurrReceivableSourceId = layaway.Id;
                         }
