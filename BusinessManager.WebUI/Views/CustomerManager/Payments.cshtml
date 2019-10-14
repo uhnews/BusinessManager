@@ -20,9 +20,10 @@
                 <td class="col-md-8">
                     <div id="payment-record-form" class="form-group">
                         <div class="form-group form-group-payment" style="margin-bottom: 5px">
-                            <p class="edit-payment-label" style="margin-left: 4px">Payment Date</p>
+                            <p class="edit-payment-label" style="margin-left: 4px" onclick="focusMatchingInput('PaymentDate')">Payment Date</p>
                             <div>
-                                <input name="PaymentDate"
+                                <input id="PaymentDate"
+                                       name="PaymentDate"
                                        type="date"
                                        value="@payment.PaymentDate.ToString("yyyy'-'MM'-'dd")"
                                        class="form-control input-sm date-input"
@@ -32,9 +33,10 @@
                         </div>
 
                         <div class="form-group form-group-payment">
-                            <p class="edit-payment-label">Amount</p>
+                            <p class="edit-payment-label" onclick="focusMatchingInput('Amount')">Amount</p>
                             <div>
-                                <input name="Amount"
+                                <input id="Amount"
+                                       name="Amount"
                                        type="text"
                                        value="@payment.Amount"
                                        class="form-control input-sm edit-payment-input"
@@ -87,9 +89,10 @@
 
                         <div id="creditcard-group" @(!creditCardChecked ? "class=hidden" : "")>
                             <div class="form-group form-group-payment">
-                                <p class="edit-payment-label">Card Holder</p>
+                                <p class="edit-payment-label" onclick="focusMatchingInput('CreditCardHolder')">Card Holder</p>
                                 <div>
-                                    <input name="CreditCardHolder"
+                                    <input id="CreditCardHolder"
+                                           name="CreditCardHolder"
                                            type="text"
                                            value="@payment.CreditCardHolder"
                                            class="form-control input-sm edit-payment-input"
@@ -99,9 +102,10 @@
                             </div>
 
                             <div class="form-group form-group-payment" style="margin-top: 5px">
-                                <p class="edit-payment-label">Card Name</p>
+                                <p class="edit-payment-label" onclick="focusMatchingInput('CreditCardName')">Card Name</p>
                                 <div>
-                                    <input name="CreditCardName"
+                                    <input id="CreditCardName" 
+                                           name="CreditCardName"
                                            type="text"
                                            value="@payment.CreditCardName"
                                            class="form-control input-sm edit-payment-input"
@@ -111,9 +115,10 @@
                             </div>
 
                             <div class="form-group form-group-payment" style="margin-top: 5px">
-                                <p class="edit-payment-label">Card Number</p>
+                                <p class="edit-payment-label" onclick="focusMatchingInput('CreditCardNo')">Card Number</p>
                                 <div>
-                                    <input name="CreditCardNo"
+                                    <input id="CreditCardNo"
+                                           name="CreditCardNo"
                                            type="text"
                                            value="@payment.CreditCardNo"
                                            class="form-control input-sm edit-payment-input"
@@ -124,9 +129,10 @@
 
                             <div class="form-group form-group-payment" style="margin-top: 5px; margin-bottom: 5px">
                                 <div class="pull-left" style="width: 25%; display: inline-block; margin-right: 3%">
-                                    <p class="edit-payment-label" style="margin-left: 0px">Exp Month</p>
+                                    <p class="edit-payment-label" style="margin-left: 0px" onclick="focusMatchingInput('CreditCardExpMonth')">Exp Month</p>
                                     <div>
-                                        <input name="CreditCardExpMonth"
+                                        <input id="CreditCardExpMonth"
+                                               name="CreditCardExpMonth"
                                                type="number"
                                                value="@payment.CreditCardExpMonth"
                                                class="form-control input-sm edit-payment-input"
@@ -136,9 +142,10 @@
                                     </div>
                                 </div>
                                 <div class="pull-left" style="width: 30%; display: inline-block; margin-right: 3%">
-                                    <p class="edit-payment-label" style="margin-left: 0px">Exp Year</p>
+                                    <p class="edit-payment-label" style="margin-left: 0px" onclick="focusMatchingInput('CreditCardExpYear')">Exp Year</p>
                                     <div>
-                                        <input name="CreditCardExpYear"
+                                        <input id="CreditCardExpYear"
+                                               name="CreditCardExpYear"
                                                type="number"
                                                value="@payment.CreditCardExpYear"
                                                class="form-control input-sm edit-payment-input"
@@ -148,9 +155,10 @@
                                     </div>
                                 </div>
                                 <div class="pull-left" style="width: 30%; display: inline-block">
-                                    <p class="edit-payment-label" style="margin-left: 0px">CVV Code</p>
+                                    <p class="edit-payment-label" style="margin-left: 0px" onclick="focusMatchingInput('CreditCardCVV')">CVV Code</p>
                                     <div style="padding: 0">
-                                        <input name="CreditCardCVV"
+                                        <input id="CreditCardCVV"
+                                               name="CreditCardCVV"
                                                value="@payment.CreditCardCVV"
                                                type="text"
                                                class="form-control input-sm edit-payment-input"
@@ -164,10 +172,11 @@
                         </div>
 
                         <div id="check-group" @(!checkChecked ? "class=hidden" : "")>
-                            <div class="form-group form-group-payment">
-                                <p class="edit-payment-label">Check Number</p>
+                            <div class="form-group form-group-payment" style="margin-top: 5px">
+                                <p class="edit-payment-label" onclick="focusMatchingInput('CheckNo')">Check Number</p>
                                 <div>
-                                    <input name="CheckNo"
+                                    <input id="CheckNo"
+                                           name="CheckNo"
                                            type="text"
                                            value="@payment.CheckNo"
                                            class="form-control input-sm edit-payment-input"
@@ -176,10 +185,11 @@
                                 </div>
                             </div>
 
-                            <div class="form-group form-group-payment">
-                                <p class="edit-payment-label">Issued By</p>
+                            <div class="form-group form-group-payment" style="margin-top: 5px">
+                                <p class="edit-payment-label" onclick="focusMatchingInput('CheckWriter')">Issued By</p>
                                 <div>
-                                    <input name="CheckWriter"
+                                    <input id="CheckWriter"
+                                           name="CheckWriter"
                                            type="text"
                                            value="@payment.CheckWriter"
                                            class="form-control input-sm edit-payment-input"
@@ -188,10 +198,11 @@
                                 </div>
                             </div>
 
-                            <div class="form-group form-group-payment">
-                                <p class="edit-payment-label">Check Image</p>
+                            <div class="form-group form-group-payment" style="margin-top: 5px">
+                                <p class="edit-payment-label" onclick="focusMatchingInput('CheckImage')">Check Image</p>
                                 <div>
-                                    <input name="CheckImage"
+                                    <input id="CheckImage"
+                                           name="CheckImage"
                                            type="text"
                                            value="@payment.CheckImage"
                                            class="form-control input-sm edit-payment-input"

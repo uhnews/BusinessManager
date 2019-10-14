@@ -259,10 +259,10 @@
         function focusMatchingInput(input_id) {
             var parentElement1 = event.target.parentNode;
             var parentElement2 = parentElement1.parentNode;
-            if (parentElement2.querySelector("#" + input_id).type === "text") 
-                parentElement2.querySelector("#" + input_id).select();
-            else if (parentElement2.querySelector("#" + input_id).type === "date") 
+            if (parentElement2.querySelector("#" + input_id).type === "date") 
                 parentElement2.querySelector("#" + input_id).focus();
+            else
+                parentElement2.querySelector("#" + input_id).select();
         }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1934,7 +1934,7 @@
                     checkGrp.classList.add("hidden");
                     return;
             }
-            showPaymentSaveBtn(event);
+            //showPaymentSaveBtn(event);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
