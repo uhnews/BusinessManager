@@ -3,23 +3,25 @@
 @{
     ViewBag.Title = "Edit Customer";
     ViewBag.Prducts = Model.ProductList;
+    //string customGray = "#adbfd2";
+    string customGray = "#ced8e4";
 }
 
 @using (Html.BeginForm("Edit", "CustomerManager", FormMethod.Post, new { onsubmit = "return false", id = "customer-edit-form" }))
 {
-    @Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()    
 
     <h2>Edit Customer</h2>
     <hr style="margin-top: 0; margin-bottom: 0" />
     <style>
         .product-lookup-popup {
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
     </style>
-    <div style="display: flex">
-        <div id="customer-section" class="form-horizontal col-md-4 border border-warning border-remove-right " style="padding: 10px; background-color: #adbfd2">
+    <div id="customer-form" style="display: flex" class="border">
+        <div id="customer-section" class="form-horizontal col-md-4" style="padding: 10px; background-color: @customGray">
             <div id="customer-info">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.Id)
@@ -177,7 +179,7 @@
         <div id="alt-subform-container" class="col-md-8 bg-warning" style="padding: 0; margin: 0">
            
         </div>
-        <div id="layaways-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: #adbfd2">
+        <div id="layaways-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: @customGray">
             @{
                 var itemCount = 0;
                 var layawayCount = Model.Layaways.Count;
@@ -201,7 +203,7 @@
             </div>
             @Html.Partial("Layaways", Model.Layaways)
         </div>
-        <div id="invoices-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: #adbfd2">  @* #ffeea8 = yellow 1 *@
+        <div id="invoices-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: @customGray">  @* #ffeea8 = yellow 1 *@
             @{
                 var invoiceItemCount = 0;
                 var invoiceCount = Model.Invoices.Count;
@@ -393,7 +395,7 @@
             });
 
             // restore Customer fields border
-            document.getElementById("customer-section").className = state.CustomerEditBorder;
+            document.getElementById("customer-form").className = state.CustomerEditBorder;
 
             expireCookie("PageState");
         }
@@ -407,7 +409,7 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function getCustomerEditBorderState() {
-            return document.getElementById("customer-section").className;
+            return document.getElementById("customer-form").className;
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -480,9 +482,9 @@
 
         function addCustomerSectionBorder(subform) {
             //select Customer-Edit section
-            var customerSection = document.getElementById("customer-section");
+            var customerSection = document.getElementById("customer-form");
             // clear all borders from it
-            var removeTheseFirst = ["border-golden", "border-primary", "border-warning"];
+            var removeTheseFirst = ["border-golden", "border-copper", "border-warning"];
             removeTheseFirst.forEach((item) => {
                 customerSection.classList.remove(item);
             });
@@ -491,11 +493,10 @@
                 customerSection.classList.add("border-golden");
             }
             else if (subform.toLowerCase().indexOf("layaway") > -1) {
-                customerSection.classList.add("border-primary");
+                customerSection.classList.add("border-copper");
             }
             else {
                 customerSection.classList.add("border-warning");
-                return;
             }
         }
         
@@ -1544,15 +1545,10 @@
             }
             //
             var rows = table.rows;
-            for (let i = 0; i < rows.length; i++) {
+            for (let i = 0; i < rows.length - 1; i++) {
                 var row = rows[i];
-                var rowIndex = parseInt(row.querySelector("[name='" + tableElementId + "-row-number']").innerText);
-                if (rowIndex < rows.length - 1) {
-                    // hide row
-                    row.classList.add("hidden");
-                }
-                else {
-                }
+                // hide row
+                row.classList.add("hidden");
             }
             // show Last row
             rows[rows.length - 1].classList.remove("hidden");

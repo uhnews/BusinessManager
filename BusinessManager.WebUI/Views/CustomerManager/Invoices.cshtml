@@ -8,6 +8,7 @@
     decimal customerCharges = 0;
     decimal invoicePayments = 0;
     decimal invoiceBalance = 0;
+    string paymentNavBtnClass = "btn-pill-golden";
 }
 
 <table id="invoices-table" class="table">
@@ -15,6 +16,7 @@
     {
         ++invoiceIndex;
         ViewBag.ReceivableSourceIndex = invoiceIndex;
+        ViewBag.PaymentNavBtnClass = paymentNavBtnClass;
         string rowClass = invoiceIndex > 1 ? "hidden" : "table-row-shown";
 
         invoiceCharges = invoice.InvoiceItems.Sum(item => item.Quantity * item.Price);

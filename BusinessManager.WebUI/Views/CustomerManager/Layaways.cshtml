@@ -8,6 +8,7 @@
     decimal customerCharges = 0;
     decimal layawayPayments = 0;
     decimal layawayBalance = 0;
+    string paymentNavBtnClass = "btn-pill-copper";
 }
 
 <table id="layaways-table" class="table">
@@ -15,6 +16,7 @@
     {
         ++layawayIndex;
         ViewBag.ReceivableSourceIndex = layawayIndex;
+        ViewBag.PaymentNavBtnClass = paymentNavBtnClass;
         string rowClass = layawayIndex > 1 ? "hidden" : "table-row-shown";
 
         layawayCharges = layaway.LayawayItems.Sum(item => item.Quantity * item.Price);
@@ -39,7 +41,7 @@
                         ViewBag.ItemDetailBackgroundColor = colorBGItemDetail;
 
                         // Layaway Items table styling strings
-                        string dateStyle = "padding: 5px; line-height: 100%; display: inline; margin-left: 10px; max-width: 55%";
+                        string dateStyle = "padding: 6px 5px 3px 5px; line-height: 100%; display: inline; margin-left: 10px; width: 55%";
                         string inputStyle = "display: inline; margin-left: 10px; width: 55%";
                         string inputGroupStyle = "margin: 1px 6px 1px 0px";
                         string buttonGroupStyle = "margin: 6px 6px 30x 6px";
@@ -460,22 +462,22 @@
                 <div name="layaway-nav-group" class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
                     Layaway <span name="layaways-table-row-number">@layawayIndex</span> of <span name="layaways-row-count" style="margin-right: 30px">@layawayCount</span>
                     <div style="display: inline">
-                        <button type="button" class="btn-pill" onclick="navFirst(event)">
+                        <button type="button" class="btn-pill-copper" onclick="navFirst(event)">
                             <span class="glyphicon glyphicon-fast-backward" 
                                   style="padding: 0 3px 0 3px" >
                             </span>
                         </button>
-                        <button type="button" class="btn-pill" onclick="navPrev(event)">
+                        <button type="button" class="btn-pill-copper" onclick="navPrev(event)">
                             <span class="glyphicon glyphicon-arrow-left" 
                                   style="padding: 0 3px 0 3px" >
                             </span>
                         </button>
-                        <button type="button" class="btn-pill" onclick="navNext(event)">
+                        <button type="button" class="btn-pill-copper" onclick="navNext(event)">
                             <span class="glyphicon glyphicon-arrow-right" 
                                   style="padding: 0 3px 0 3px" >
                             </span>
                         </button>
-                        <button type="button" class="btn-pill" onclick="navLast(event)">
+                        <button type="button" class="btn-pill-copper" onclick="navLast(event)">
                             <span class="glyphicon glyphicon-fast-forward" 
                                   style="padding: 0 3px 0 3px" >
                             </span>

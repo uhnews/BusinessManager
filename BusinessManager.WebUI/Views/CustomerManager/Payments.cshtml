@@ -250,22 +250,22 @@
     <div class="form-group text-danger" style="margin: -15px 0 0 0; padding: 0 0 20px 0 ">
         Payment <span name="payments-table-@ViewBag.CurrReceivableSourceId-row-number-alt">1</span> of <span name="payments-table-row-count" style="margin: 0 10px 0 0">@paymentCount</span>
         <div style="display: inline">
-            <button type="button" class="btn-pill-golden" onclick="navFirst(event, 'payments-table-@ViewBag.CurrReceivableSourceId')">
+            <button type="button" class="@ViewBag.PaymentNavBtnClass" onclick="navFirst(event, 'payments-table-@ViewBag.CurrReceivableSourceId')">
                 <span class="glyphicon glyphicon-fast-backward"
                       style="padding: 0 3px 0 3px" >
                 </span>
             </button>
-            <button type="button" class="btn-pill-golden" onclick="navPrev(event, 'payments-table-@ViewBag.CurrReceivableSourceId')">
+            <button type="button" class="@ViewBag.PaymentNavBtnClass" onclick="navPrev(event, 'payments-table-@ViewBag.CurrReceivableSourceId')">
                 <span class="glyphicon glyphicon-arrow-left"
                       style="padding: 0 3px 0 3px" >
                 </span>
             </button>
-            <button type="button" class="btn-pill-golden" onclick="navNext(event, 'payments-table-@ViewBag.CurrReceivableSourceId')">
+            <button type="button" class="@ViewBag.PaymentNavBtnClass" onclick="navNext(event, 'payments-table-@ViewBag.CurrReceivableSourceId')">
                 <span class="glyphicon glyphicon-arrow-right"
                       style="padding: 0 3px 0 3px" >
                 </span>
             </button>
-            <button type="button" class="btn-pill-golden" onclick="navLast(event, 'payments-table-@ViewBag.CurrReceivableSourceId')">
+            <button type="button" class="@ViewBag.PaymentNavBtnClass" onclick="navLast(event, 'payments-table-@ViewBag.CurrReceivableSourceId')">
                 <span class="glyphicon glyphicon-fast-forward"
                       style="padding: 0 3px 0 3px" >
                 </span>

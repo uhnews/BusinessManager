@@ -119,7 +119,7 @@ textarea {
     }
 
 .btn-pill-golden {
-    background-color: #997a00;
+    background-color: #cca300;
     border: none;
     color: white;
     padding: 0px 6px 3px 6px;
@@ -133,11 +133,33 @@ textarea {
 }
 
     .btn-pill-golden:hover {
-        background-color: #cca300;
+        background-color: #ffd633;
     }
 
     .btn-pill-golden:active {
-        background-color: #997a00;
+        background-color: #cca300;
+    }
+
+.btn-pill-copper {
+    background-color: #a46e5b;
+    border: none;
+    color: white;
+    padding: 0px 6px 3px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    max-height: 16px;
+    border-radius: 16px;
+    font-size: 80%;
+}
+
+    .btn-pill-copper:hover {
+        background-color: #c9a89c;
+    }
+
+    .btn-pill-copper:active {
+        background-color: #a46e5b;
     }
 
 
@@ -258,6 +280,10 @@ textarea {
 
 .border-info {
     border-color: #4c5b64 ;
+}
+
+.border-copper {
+    border-color: #a46e5b;
 }
 
 .border-gray {
