@@ -8,7 +8,7 @@ namespace BusinessManager.Core.Models
     {
         public Order()
         {
-            this.OrderItems = new List<OrderItem>();
+            this.OnlineOrderItems = new List<OnlineOrderItem>();
         }
 
         [StringLength(128)]
@@ -59,6 +59,6 @@ namespace BusinessManager.Core.Models
 
         public int TotalItemCount { get; set; }
 
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual ICollection<OnlineOrderItem> OnlineOrderItems { get; set; }
     }
 }

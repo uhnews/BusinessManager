@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+﻿using BusinessManager.Core.Contracts;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BusinessManager.Core.Models
 {
-    public class OrderItem : BaseEntity
+    public class OnlineOrderItem : BaseEntity, IChargeItem
     {
         [StringLength(128)]
         [Required]
@@ -17,6 +18,11 @@ namespace BusinessManager.Core.Models
         [Required]
         [DisplayName("Product Name")]
         public string ProductName { get; set; }
+
+        [StringLength(70)]
+        [DisplayName("Description")]
+        [Required]
+        public string ProductDescription { get; set; }
 
         [Required]
         public decimal Price { get; set; }

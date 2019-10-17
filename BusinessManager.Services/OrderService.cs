@@ -18,12 +18,14 @@ namespace BusinessManager.Services
         {
             foreach (var item in basketItems)
             {
-                baseOrder.OrderItems.Add(new OrderItem()
+                baseOrder.OnlineOrderItems.Add(new OnlineOrderItem()
                 {
+                    OrderId = baseOrder.Id,
                     ProductId = item.Id,
                     Image = item.Image,
                     Price = item.Price,
                     ProductName = item.ProductName,
+                    ProductDescription = item.ProductDescription,
                     Quantity = item.Quantity
                 });
             }

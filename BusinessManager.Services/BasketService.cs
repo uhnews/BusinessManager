@@ -69,6 +69,12 @@ namespace BusinessManager.Services
 
         public void AddToBasket(HttpContextBase httpContext, string productId)
         {
+            Product product = productContext.Find(productId);
+            if (product == null)
+            {
+                throw new Exception("Product not found in catalog.");
+            }
+
             Basket basket = GetBasket(httpContext, true);
             BasketItem item = basket.BasketItems.FirstOrDefault(p => p.ProductId == productId);
             if (item == null)
@@ -77,7 +83,11 @@ namespace BusinessManager.Services
                 {
                     BasketId = basket.Id,
                     ProductId = productId,
+                    ProductName = product.Name,
+                    ProductDescription = product.Description,
                     Quantity = 1,
+                    Price = product.Price,
+                    Image = product.Image,
                     ModifiedAt = DateTime.Now
                 };
 
@@ -86,6 +96,8 @@ namespace BusinessManager.Services
             else
             {
                 item.ModifiedAt = DateTime.Now;
+                if (item.ProductName == "") item.ProductName = product.Name;
+                if (item.ProductDescription == "") item.ProductDescription = product.Description;
                 ++item.Quantity;
             }
 
@@ -101,6 +113,8 @@ namespace BusinessManager.Services
             {
                 string basketId = item.BasketId;
                 item.BasketId = basketId;
+                if (item.ProductName == "") item.ProductName = "FakeName";
+                if (item.ProductDescription == "") item.ProductDescription = "FakeDescription";
                 basket.BasketItems.Remove(item);
                 basketContext.Commit();
             }
@@ -121,6 +135,7 @@ namespace BusinessManager.Services
                                   Quantity = item.Quantity,
                                   ModifiedAt = item.ModifiedAt,
                                   ProductName = product.Name,
+                                  ProductDescription = product.Description,
                                   Image = product.Image,
                                   Price = product.Price
                               }

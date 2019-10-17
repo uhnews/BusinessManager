@@ -127,7 +127,7 @@
     <Compile Include="Models\Layaway.cs" />
     <Compile Include="Models\LayawayItem.cs" />
     <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\OrderItem.cs" />
+    <Compile Include="Models\OnlineOrderItem.cs" />
     <Compile Include="Models\Payment.cs" />
     <Compile Include="Models\POSSale.cs" />
     <Compile Include="Models\POSSaleItem.cs" />

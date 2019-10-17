@@ -272,7 +272,7 @@
     <Content Include="Views\ProductCategoryManager\Edit.cshtml" />
     <Content Include="Views\ProductCategoryManager\Delete.cshtml" />
     <Content Include="Views\OrderManager\Index.cshtml" />
-    <Content Include="Views\OrderManager\OrderItems.cshtml" />
+    <Content Include="Views\OrderManager\OnlineOrderItems.cshtml" />
     <Content Include="Views\OrderManager\UpdateOrder.cshtml" />
     <Content Include="Views\Basket\Index.cshtml" />
     <Content Include="Views\Basket\BasketSummary.cshtml" />

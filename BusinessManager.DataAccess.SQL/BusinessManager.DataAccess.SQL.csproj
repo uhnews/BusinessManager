@@ -346,6 +346,18 @@
     <Compile Include="Migrations\201910142316574_AddProductDescptionToPOSSaleItem.Designer.cs">
       <DependentUpon>201910142316574_AddProductDescptionToPOSSaleItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910172023377_AddProductDescriptionToOrderItem.cs" />
+    <Compile Include="Migrations\201910172023377_AddProductDescriptionToOrderItem.Designer.cs">
+      <DependentUpon>201910172023377_AddProductDescriptionToOrderItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910172035381_ChangeOrderItemToOnlineOrderItem.cs" />
+    <Compile Include="Migrations\201910172035381_ChangeOrderItemToOnlineOrderItem.Designer.cs">
+      <DependentUpon>201910172035381_ChangeOrderItemToOnlineOrderItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910172128196_AddFieldsToBasketItem.cs" />
+    <Compile Include="Migrations\201910172128196_AddFieldsToBasketItem.Designer.cs">
+      <DependentUpon>201910172128196_AddFieldsToBasketItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -537,6 +549,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910142316574_AddProductDescptionToPOSSaleItem.resx">
       <DependentUpon>201910142316574_AddProductDescptionToPOSSaleItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910172023377_AddProductDescriptionToOrderItem.resx">
+      <DependentUpon>201910172023377_AddProductDescriptionToOrderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910172035381_ChangeOrderItemToOnlineOrderItem.resx">
+      <DependentUpon>201910172035381_ChangeOrderItemToOnlineOrderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910172128196_AddFieldsToBasketItem.resx">
+      <DependentUpon>201910172128196_AddFieldsToBasketItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
