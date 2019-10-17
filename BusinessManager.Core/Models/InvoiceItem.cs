@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+﻿using BusinessManager.Core.Contracts;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BusinessManager.Core.Models
 {
-    public class InvoiceItem : BaseEntity
+    public class InvoiceItem : BaseEntity, IChargeItem
     {
         [Required]
         public string InvoiceId { get; set; }

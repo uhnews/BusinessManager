@@ -1,10 +1,10 @@
-﻿using System;
+﻿using BusinessManager.Core.Contracts;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BusinessManager.Core.Models
 {
-    public class LayawayItem : BaseEntity
+    public class LayawayItem : BaseEntity, IChargeItem
     {
         [StringLength(128)]
         [Required]

@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+﻿using BusinessManager.Core.Contracts;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BusinessManager.Core.Models
 {
-    public class POSSaleItem : BaseEntity
+    public class POSSaleItem : BaseEntity, IChargeItem
     {
         [StringLength(128)]
         public string POSSaleId { get; set; }
