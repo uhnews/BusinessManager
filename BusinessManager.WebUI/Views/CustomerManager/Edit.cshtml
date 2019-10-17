@@ -212,8 +212,8 @@
                     <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@possaleCombinedName </span>
                     <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
                 </strong>
-                <span style="margin:3px">Sales: @possaleCount</span>
-                <span style="margin:3px">Total Items: @possaleItemCount</span>
+                <span style="margin: 3px 13px 3px 3px">Sales: @possaleCount</span>Total Items: 
+                <span name="item-count" style="margin:3px">@possaleItemCount</span>
             </div>
             @Html.Partial("POSSales", Model.POSSales)
         </div>
@@ -237,8 +237,8 @@
                     <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@layawayCombinedName</span>
                     <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
                 </strong>
-                <span style="margin:3px">Layaways: @layawayCount</span>
-                <span style="margin:3px">Total Items: @layawayItemCount</span>
+                <span style="margin: 3px 13px 3px 3px">Layaways: @layawayCount</span>Total Items: 
+                <span name="item-count" style="margin:3px">@layawayItemCount</span>
             </div>
             @Html.Partial("Layaways", Model.Layaways)
         </div>
@@ -262,8 +262,8 @@
                     <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@invoicecombinedName </span>
                     <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
                 </strong>
-                <span style="margin:3px">Invoices: @Model.Invoices.Count</span>
-                <span style="margin:3px">Total Items: @invoiceItemCount</span>
+                <span style="margin: 3px 13px 3px 3px">Invoices: @Model.Invoices.Count</span>Total Items: 
+                <span name="item-count" style="margin:3px">@invoiceItemCount</span>
             </div>
             @Html.Partial("Invoices", Model.Invoices)
         </div>
@@ -643,7 +643,7 @@
                 dueDateEl.value = newDueDate; 
             }
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function setCustomerTotals(event) {
@@ -678,7 +678,7 @@
             }
         }
 
-        //
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function addCommasToNumber(number) {
             var result = "";
@@ -1301,7 +1301,8 @@
                                             var rowCount = parseInt(rowCountSpan.innerHTML);
                                             rowCountSpan.innerHTML = rowCount - 1;
                                         }
-                                        updateCustomerTotals(tableName, (quantity*price)*-1, getPrentTablePgIndex_Function());
+                                        updateCustomerTotals(tableName, (quantity * price) * -1, getPrentTablePgIndex_Function());
+                                        updateTableHeaderItemCount(containerName, quantity * -1);
                                         //ShowMessage("<p class='text-primary'>Item deleted.</p>")
                                     }
                                 }
@@ -1318,6 +1319,14 @@
                     alert("Something went wrong!");
                 }
             );
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function updateTableHeaderItemCount(subtableContainer, quantityAdded) {
+            var currCountSpan = document.getElementById(subtableContainer).querySelector("[name='item-count']");
+            var currCount = parseInt(currCountSpan.innerText);
+            currCountSpan.innerText = currCount + quantityAdded;
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
