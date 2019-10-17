@@ -17,12 +17,16 @@
         }
 
         .search-box-menu {
-            width: 75%;
+            width: 350px;
             padding: 0px 20px 10px 20px;
-            margin: 1px 0px 0px 15%;
+            margin: 0px 0px 0px 0px;
             border: solid 1px #c3d9ef;
             border-radius: 5px;
-            display: none;
+            background-color: aliceblue;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
         }
 
         .product-lookup-item {
@@ -38,21 +42,52 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
+        var firstCall = true;
+        function hideSearchMenu() {
+            if (!firstCall)
+                toggleColSeltMenu();
+
+            firstCall = false;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
         function toggleColSeltMenu(event) {
-            event.preventDefault(event);
+            //event.preventDefault(event);
             var iconOpen = document.getElementById("search-box-menu-open");
             var iconClose = document.getElementById("search-box-menu-close");
             var menu = document.getElementById("search-box-menu");
+            var menuContainer = document.getElementById("search-objects-container");
 
-            if (iconClose.style.display === "none") {
-                iconOpen.style.display = "none";
-                iconClose.style.display = "inline";
-                menu.style.display = "block";
+            var btn = null;
+            if (event) {
+                btn = event.target;
             }
-            else if (iconOpen.style.display === "none") {
-                iconClose.style.display = "none";
-                iconOpen.style.display = "inline";
-                menu.style.display = "none";
+            else {
+                btn = document.getElementById("search-box-menu-btn");
+            }
+            if (btn.nodeName.toLowerCase() !== "button") {
+                btn = btn.parentNode;
+            }
+            var mainContainerRect = menuContainer.getBoundingClientRect();
+            var btnRect = btn.getBoundingClientRect();
+
+            xShift = (btnRect.left - mainContainerRect.left);
+            yShift = (btnRect.top + btnRect.height - mainContainerRect.top);
+
+            if (iconClose.classList.contains("hidden")) {
+                iconOpen.classList.add("hidden");
+                iconClose.classList.remove("hidden");
+                menu.classList.remove("hidden");
+                menu.style.transform = "translate(" + xShift + "px," + yShift + "px)";
+                firstCall = true;
+                document.addEventListener("click", hideSearchMenu);
+            }
+            else if (iconOpen.classList.contains("hidden")) {
+                iconClose.classList.add("hidden");
+                iconOpen.classList.remove("hidden");
+                menu.classList.add("hidden");
+                document.removeEventListener("click", hideSearchMenu);
             }
             else {
                 // ignore if no match
@@ -62,13 +97,14 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function filterItems(event, showAll = false) {
-            event.preventDefault(event);
+            //event.preventDefault(event);
             var iconOpen = document.getElementById("search-box-menu-open");
             var iconClose = document.getElementById("search-box-menu-close");
             var menu = document.getElementById("search-box-menu");
-            iconClose.style.display = "none";
-            iconOpen.style.display = "inline";
-            menu.style.display = "none";
+            iconClose.classList.add("hidden");
+            iconOpen.classList.remove("hidden");
+            menu.classList.add("hidden");
+            firstCall = true;
 
             var searchText = document.getElementById("product-lookup-search-string").value.toLowerCase();
             if (searchText === "" && !showAll) {
@@ -97,6 +133,7 @@
                 return;
             }
 
+            var itemsFound = 0;
             var rows = table.getElementsByTagName("tr");
             for (i = 0; i < rows.length; i++) {
                 var row = rows[i];
@@ -105,33 +142,44 @@
                 var categoryData = row.querySelector("tr span[name='Category']").innerHTML.toLowerCase();
                 var productCodeData = row.querySelector("tr span[name='ProductCode']").innerHTML.toLowerCase();
                 var upcData = row.querySelector("tr span[name='UPC']").innerHTML.toLowerCase();
-                var quantityData = row.querySelector("tr span[name='Quantity']").innerHTML.toLowerCase();
-                var pricecData = row.querySelector("tr span[name='Price']").innerHTML.toLowerCase();
+                var quantityData = row.querySelector("tr span[name='Quantity']").innerHTML;
+                var pricecData = row.querySelector("tr span[name='Price']").innerHTML;
 
                 if ((nameData.indexOf(searchText) > -1 && searchInName) || showAll) {
                     row.style.display = "table-row";
+                    itemsFound++;
                 }
                 else if (descriptionData.indexOf(searchText) > -1 && searchInDescription) {
                     row.style.display = "table-row";
+                    itemsFound++;
                 }
                 else if (categoryData.indexOf(searchText) > -1 && searchInCategory) {
                     row.style.display = "table-row";
+                    itemsFound++;
                 }
                 else if (productCodeData.indexOf(searchText) > -1 && searchInProductCode) {
                     row.style.display = "table-row";
+                    itemsFound++;
                 }
                 else if (upcData.indexOf(searchText) > -1 && searchInUPC) {
                     row.style.display = "table-row";
+                    itemsFound++;
                 }
                 else if (quantityData.indexOf(searchText) > -1 && searchInQuantity) {
                     row.style.display = "table-row";
+                    itemsFound++;
                 }
                 else if (pricecData.indexOf(searchText) > -1 && searchInPrice) {
                     row.style.display = "table-row";
+                    itemsFound++;
                 }
                 else {
                     row.style.display = "none";
                 }
+            }
+            if (itemsFound === 0) {
+                filterItems(event, SHOW_ALL);
+                ShowMessage("<h4 class='text-primary'>No matches were found &ndash; all products in catalog returned.</h4>");
             }
         }
         
@@ -151,7 +199,6 @@
             }
 
             colNames.forEach(function (name) {
-                var menu = document.getElementById("search-box-menu");
                 document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked = !allAreChecked;
             });
             document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
@@ -169,37 +216,34 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
     </script>
 
-    <div class="col-md-12" style="margin: 0 0 30px 0; padding: 0">
-        <div class="bg-warning" style="padding-bottom: 0; padding-top: 0; margin-bottom: 0">
+    <div id="search-objects-container" class="col-md-12" style="margin: 0 0 30px 0; padding: 0; position: relative">
+        <div style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; background-color: #ced8e4">
             <h4 style="display: inline-block; margin: 5px 5px 5px 10px">Product Search</h4>
             <div class="form-group" style="width: 100%; margin: 0; padding: 3px 0px 3px 3px ">
-
                 <input id="product-lookup-search-string"
                        placeholder="Enter text to find ..."
                        type="text"
                        class="form-control"
                        style="display: inline; margin: 0 0 0 0" />
-
                 <div style="display: inline-block">
                     <button id="search-box-btn-find" class="btn btn-default btn-primary-text"
                             onclick="filterItems(event)"
                             style="display: inline-block; margin-top:-4px; margin-right: 0">
                         <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
                     </button>
-                    <button class="btn btn-default btn-primary-text"
+                    <button id="search-box-menu-btn" class="btn btn-default btn-primary-text"
                             onclick="toggleColSeltMenu(event)"
                             style="display: inline-block; margin-top:-4px; margin-left: -2px">
-                        <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
-                        <span id="search-box-menu-close" class="glyphicon glyphicon-remove" style="margin: 0; display: none"></span>
+                        <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0"></span>
+                        <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
                     </button>
                 </div>
                 <hr style="margin: 3px 3px 3px 3px"/>
-
             </div>
         </div>
-        <div id="search-box-menu" class="search-box-menu" style="margin-top: -8px">
+        <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
             <div>
-                <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
+                <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px; margin-left: 10px">
                     <span>Search In:</span>
                     <input name="AllCheck"
                            type="checkbox"
@@ -207,7 +251,7 @@
                     <span class="checkmark"></span>
                 </label>
                 <hr style="margin: 0 0 5px 0; padding: 0" />
-                <div>
+                <div style="margin-left: 25px">
                     <label class="checkbox-container">
                         Name
                         <input name="NameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">

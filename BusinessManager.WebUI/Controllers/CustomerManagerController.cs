@@ -19,6 +19,8 @@ namespace BusinessManager.WebUI.Controllers
         IRepository<InvoiceItem> invoiceItemContext;
         IRepository<Sequence> sequenceContext;
         IRepository<Payment> paymentContext;
+        IRepository<POSSale> possaleContext;
+        IRepository<POSSaleItem> possaleItemContext;
 
         // dependency injection
         public CustomerManagerController(
@@ -28,7 +30,9 @@ namespace BusinessManager.WebUI.Controllers
                                             IRepository<Invoice> invoiceContext,
                                             IRepository<InvoiceItem> invoiceItemContext,
                                             IRepository<Sequence> sequenceContext,
-                                            IRepository<Payment> paymentContext
+                                            IRepository<Payment> paymentContext,
+                                            IRepository<POSSale> possaleContext,
+                                            IRepository<POSSaleItem> possaleItemContext
                                         )
         {
             this.customerContext = customerContext;
@@ -38,6 +42,8 @@ namespace BusinessManager.WebUI.Controllers
             this.invoiceItemContext = invoiceItemContext;
             this.sequenceContext = sequenceContext;
             this.paymentContext = paymentContext;
+            this.possaleContext = possaleContext;
+            this.possaleItemContext = possaleItemContext;
         }
 
         // GET: Customers
@@ -89,17 +95,14 @@ namespace BusinessManager.WebUI.Controllers
                     invoice.InvoiceItems = invoiceItems.OrderByDescending(i => i.ModifiedAt).ToList();
                 }
 
-                // get Layaways
-                // related Layaway and LayawayItem records added by EF
-
                 // get ProductList
                 IProductRetrieveService productService = new ProductRetrieveService();
                 customer.ProductList = productService.GetProducts();
 
-                //LayawayDataService layawayService  = new LayawayDataService();
-                //customer.Layaways = layawayService.GetLayaways(Id);
-
                 // get (online) Orders
+
+                // get Layaways
+                // related Layaway and LayawayItem records added by EF
 
                 // sort LayawayItems
                 ICollection<Layaway> layaways = customer.Layaways;
@@ -108,6 +111,18 @@ namespace BusinessManager.WebUI.Controllers
                 {
                     ICollection<LayawayItem> layawayItems = layaway.LayawayItems;
                     layaway.LayawayItems = layawayItems.OrderByDescending(i => i.ModifiedAt).ToList();
+                }
+
+                // load (sorted) Invoice POSSales
+                IPOSSaleService posSaleService = new POSSaleService(possaleContext, possaleItemContext);
+                posSaleService.GetPOSSales(customer);
+
+                // sort Invoice POSSaleItems
+                ICollection<POSSale> possales = customer.POSSales;
+                foreach (POSSale possale in customer.POSSales)
+                {
+                    ICollection<POSSaleItem> possaleItems = possale.POSSaleItems;
+                    possale.POSSaleItems = possaleItems.OrderByDescending(i => i.ModifiedAt).ToList();
                 }
 
                 // sort and load Invoice Payments
@@ -158,7 +173,6 @@ namespace BusinessManager.WebUI.Controllers
             }
         }
 
-        // GET: /CustomerManager/Delete
         public ActionResult Delete(string Id)
         {
             Customer customerToDelete = customerContext.Find(Id);
@@ -172,7 +186,6 @@ namespace BusinessManager.WebUI.Controllers
             }
         }
 
-        // POST: /CustomerManager/Delete
         [HttpPost]
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string Id)
@@ -191,6 +204,13 @@ namespace BusinessManager.WebUI.Controllers
             }
         }
 
+        // ==================================================================================
+        //                                   AJAX Methods 
+        // ==================================================================================
+
+        //
+        //       *********************** Invoice Methods ***********************
+        //
         public JsonResult AddInvoice(string customerId)
         {
             IInvoiceDataService dataService = new InvoiceDataService();
@@ -213,7 +233,6 @@ namespace BusinessManager.WebUI.Controllers
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /CustomerManager/DeleteLayawayItem
         public JsonResult AddInvoiceItem(string data)
         {
             IInvoiceDataService dataService = new InvoiceDataService();
@@ -222,7 +241,6 @@ namespace BusinessManager.WebUI.Controllers
             return Json(addResult, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /CustomerManager/DeleteLayawayItem
         public JsonResult DeleteInvoiceItem(string Id)
         {
             IInvoiceDataService dataService = new InvoiceDataService();
@@ -245,6 +263,9 @@ namespace BusinessManager.WebUI.Controllers
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
+        //
+        //       *********************** Layaway Methods ***********************
+        //
         public JsonResult AddLayaway(string customerId)
         {
             ILayawayDataService dataService = new LayawayDataService();
@@ -267,7 +288,6 @@ namespace BusinessManager.WebUI.Controllers
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /CustomerManager/DeleteLayawayItem
         public JsonResult AddLayawayItem(string data)
         {
             ILayawayDataService dataService = new LayawayDataService();
@@ -276,7 +296,6 @@ namespace BusinessManager.WebUI.Controllers
             return Json(addResult, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /CustomerManager/DeleteLayawayItem
         public JsonResult DeleteLayawayItem(string Id)
         {
             ILayawayDataService dataService = new LayawayDataService();
@@ -299,6 +318,64 @@ namespace BusinessManager.WebUI.Controllers
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
+        //
+        //       *********************** POSSale Methods ***********************
+        //
+        public JsonResult AddPOSSale(string customerId)
+        {
+            IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
+            var inserResult = dataService.AddPOSSale(customerId);
+            return Json(inserResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DeletePOSSale(string Id)
+        {
+            IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
+            var deleteResult = dataService.DeletePOSSale(Id);
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult UpdatePOSSale(string data)
+        {
+            IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
+
+            var updateResult = dataService.UpdatePOSSale(data);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AddPOSSaleItem(string data)
+        {
+            IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
+            var addResult = dataService.AddItemToPOSSale(data);
+
+            return Json(addResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DeletePOSSaleItem(string Id)
+        {
+            IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
+            var deleteResult = dataService.RemoveItemFromPOSSale(Id);
+
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
+        }
+
+        public JsonResult UpdatePOSSaleItem(string Id, string productDescription, int quantity, decimal price)
+        {
+            IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
+            object updateResult = dataService.UpdatePOSSaleItem(Id, productDescription, quantity, price);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult UpdatePOSSaleItemQuantity(string Id, int quantity)
+        {
+            IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
+            object updateResult = dataService.UpdatePOSSaleItemQuantity(Id, quantity);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        //       *********************** Product Methods ***********************
+        //
         public JsonResult GetProduct(string Id)
         {
             IProductRetrieveService productService = new ProductRetrieveService();
@@ -307,7 +384,9 @@ namespace BusinessManager.WebUI.Controllers
             return Json(product, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /CustomerManager/AddPayment
+        //
+        //       *********************** Payment Methods ***********************
+        //
         public JsonResult AddPayment(string data)
         {
             IPaymentService dataService = new PaymentService();
@@ -316,7 +395,6 @@ namespace BusinessManager.WebUI.Controllers
             return Json(addResult, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /CustomerManager/UpdatePayment
         public JsonResult UpdatePayment(string data)
         {
             IPaymentService dataService = new PaymentService();

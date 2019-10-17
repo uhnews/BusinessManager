@@ -9,6 +9,11 @@
     decimal layawayPayments = 0;
     decimal layawayBalance = 0;
     string paymentNavBtnClass = "btn-pill-copper";
+
+    string colorBGReceivableSourceDetail = "#ede2de";
+    string colorBGItemDetail = "#fdfcfc";
+    ViewBag.ItemDetailBackgroundColor = colorBGItemDetail;
+
 }
 
 <table id="layaways-table" class="table">
@@ -36,10 +41,6 @@
             <td>
                 <div class="col-md-12" style="display: flex; height: 625px">
                     @{
-                        var colorBGReceivableSourceDetail = "#ede2de";
-                        var colorBGItemDetail = "#fdfcfc";
-                        ViewBag.ItemDetailBackgroundColor = colorBGItemDetail;
-
                         // Layaway Items table styling strings
                         string dateStyle = "padding: 6px 5px 3px 5px; line-height: 100%; display: inline; margin-left: 10px; width: 55%";
                         string inputStyle = "display: inline; margin-left: 10px; width: 55%";
@@ -334,14 +335,9 @@
                                     </td>
                                     <td>
                                         <div style="padding-top: 7px">
-
-                                            @* LayawayItem.Id *@
                                             <div name="layawayitem-item-id" style="display: none">@item.Id</div>
-                                            @* LayawayItem.ProductId *@
                                             <div name="layawayitem-product-id" style="display: none">@item.ProductId</div>
-                                            @* LayawayItem.Quantity *@
                                             <div name="layawayitem-quantity" style="display: none">@item.Quantity</div>
-
                                             <strong>
                                                 @Html.DisplayFor(m => item.ProductName, new
                                                 {
@@ -385,7 +381,9 @@
                                             @Html.LabelFor(m => item.Quantity, htmlAttributes: new
                                             {
                                                 @class = "control-label invoice-label pull-right pull-right",
-                                                @style = @subItemLabelStyle
+                                                @for = "",
+                                                @style = @subItemLabelStyle,
+                                                @onclick = "focusMatchingInput('item_Quantity')"
                                             })
                                         </div>
                                         <div style="margin-bottom: 5px; width: 90%; text-align: right">
@@ -405,7 +403,9 @@
                                             @Html.LabelFor(m => item.Price, htmlAttributes: new
                                             {
                                                 @class = "control-label layaway-label pull-right",
-                                                @style = @subItemLabelStyle
+                                                @for = "",
+                                                @style = @subItemLabelStyle,
+                                                @onclick = "focusMatchingInput('item_Price')"
                                             })
                                         </div>
                                         <div style="margin-bottom: 5px; width: 100%">

@@ -29,6 +29,7 @@
                                        class="form-control input-sm date-input"
                                        style="margin-left: 2px"
                                        onchange="showPaymentSaveBtn(event)" />
+                                <input name="PaymentDateOldValue" type="text" class="hidden" value="@payment.PaymentDate.ToString("yyyy'-'MM'-'dd")"/>
                             </div>
                         </div>
 
@@ -42,12 +43,14 @@
                                        class="form-control input-sm edit-payment-input"
                                        onkeyup="showPaymentSaveBtn(event)"
                                        onchange="showPaymentSaveBtn(event)" />
+                                <input name="AmountOldValue" type="text" class="hidden" value="@payment.Amount" />
                             </div>
                         </div>
 
                         <div id="payment-mode-group" class="form-group" style="margin-left: -30px">
                             <div class="hidden">
                                 <input name="PaymentMode" readonly type="text" value="@payment.PaymentMode" class="form-control input-sm edit-payment-input" />
+                                <input name="PaymentModeOldValue" type="text" class="hidden" value="@payment.PaymentMode" />
                             </div>
                             @{
                                 bool cashChecked = @payment.PaymentMode == "cash" ? true : false;
@@ -98,19 +101,21 @@
                                            class="form-control input-sm edit-payment-input"
                                            onkeyup="showPaymentSaveBtn(event)"
                                            onchange="showPaymentSaveBtn(event)" />
+                                    <input name="CreditCardHolderOldValue" type="text" class="hidden" value="@payment.CreditCardHolder" />
                                 </div>
                             </div>
 
                             <div class="form-group form-group-payment" style="margin-top: 5px">
                                 <p class="edit-payment-label" onclick="focusMatchingInput('CreditCardName')">Card Name</p>
                                 <div>
-                                    <input id="CreditCardName" 
+                                    <input id="CreditCardName"
                                            name="CreditCardName"
                                            type="text"
                                            value="@payment.CreditCardName"
                                            class="form-control input-sm edit-payment-input"
                                            onkeyup="showPaymentSaveBtn(event)"
                                            onchange="showPaymentSaveBtn(event)" />
+                                    <input name="CreditCardNameOldValue" type="text" class="hidden" value="@payment.CreditCardName" />
                                 </div>
                             </div>
 
@@ -124,6 +129,7 @@
                                            class="form-control input-sm edit-payment-input"
                                            onkeyup="showPaymentSaveBtn(event)"
                                            onchange="showPaymentSaveBtn(event)" />
+                                    <input name="CreditCardNoOldValue" type="text" class="hidden" value="@payment.CreditCardNo" />
                                 </div>
                             </div>
 
@@ -139,6 +145,7 @@
                                                style="padding-right: 5px; padding-left: 5px"
                                                onkeyup="showPaymentSaveBtn(event)"
                                                onchange="showPaymentSaveBtn(event)" />
+                                        <input name="CreditCardExpMonthOldValue" type="text" class="hidden" value="@payment.CreditCardExpMonth" />
                                     </div>
                                 </div>
                                 <div class="pull-left" style="width: 30%; display: inline-block; margin-right: 3%">
@@ -152,6 +159,7 @@
                                                style="padding-right: 5px; padding-left: 5px"
                                                onkeyup="showPaymentSaveBtn(event)"
                                                onchange="showPaymentSaveBtn(event)" />
+                                        <input name="CreditCardExpYearOldValue" type="text" class="hidden" value="@payment.CreditCardExpYear" />
                                     </div>
                                 </div>
                                 <div class="pull-left" style="width: 30%; display: inline-block">
@@ -165,6 +173,7 @@
                                                style="width: 80%"
                                                onkeyup="showPaymentSaveBtn(event)"
                                                onchange="showPaymentSaveBtn(event)" />
+                                        <input name="CreditCardCVVOldValue" type="text" class="hidden" value="@payment.CreditCardCVV" />
                                     </div>
                                 </div>
                                 <div class="col-md-12" style="height: 15px; opacity: 0">*** FILLER TEXT ***</div>
@@ -182,6 +191,7 @@
                                            class="form-control input-sm edit-payment-input"
                                            onkeyup="showPaymentSaveBtn(event)"
                                            onchange="showPaymentSaveBtn(event)" />
+                                    <input name="CheckNoOldValue" type="text" class="hidden" value="@payment.CheckNo" />
                                 </div>
                             </div>
 
@@ -195,6 +205,7 @@
                                            class="form-control input-sm edit-payment-input"
                                            onkeyup="showPaymentSaveBtn(event)"
                                            onchange="showPaymentSaveBtn(event)" />
+                                    <input name="CheckWriterOldValue" type="text" class="hidden" value="@payment.CheckWriter" />
                                 </div>
                             </div>
 
@@ -207,6 +218,7 @@
                                            value="@payment.CheckImage"
                                            class="form-control input-sm edit-payment-input"
                                            onchange="showPaymentSaveBtn(event)" />
+                                    <input name="CheckImageOldValue" type="text" class="hidden" value="@payment.CheckImage" />
                                 </div>
                             </div>
                         </div>
@@ -245,7 +257,7 @@
                             <button type="button"
                                     name="save-payment"
                                     class="btn btn-sm btn-default btn-success-text margin-bottom-3 hidden"
-                                    onclick="saveSubformData(event, 'UpdatePayment', getUIPaymentData)">
+                                    onclick="saveSubformData(event, 'UpdatePayment', getUIPaymentData, updateCustomerTotalsWithPayment)">
                                 <strong>Save</strong>
                                 <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                             </button>

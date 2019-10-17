@@ -5,6 +5,7 @@
     ViewBag.Prducts = Model.ProductList;
     //string customGray = "#adbfd2";
     string customGray = "#ced8e4";
+    string customGrayWhite = "#fcfdfd";
 }
 
 @using (Html.BeginForm("Edit", "CustomerManager", FormMethod.Post, new { onsubmit = "return false", id = "customer-edit-form" }))
@@ -20,9 +21,9 @@
         top: 0;
     }
     </style>
-    <div id="customer-form" style="display: flex" class="border">
-        <div id="customer-section" class="form-horizontal col-md-4" style="padding: 10px; background-color: @customGray">
-            <div id="customer-info">
+    <div id="customer-form" style="display: flex; border-radius: 5px" class="border">
+        <div id="customer-section" class="form-horizontal col-md-4" style="padding: 10px; border-radius: 5px 0 0 5px; background-color: @customGray">
+            <div id="customer-info" style="background-color: @customGrayWhite; opacity: 1; margin: 10px 0 0 10px; padding-right: 10px; width: 100%;">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.Id)
                 @Html.HiddenFor(model => model.UserId)
@@ -140,14 +141,25 @@
                                     id="show-invoices-btn"
                                     type="button"
                                     class="btn btn-default btn-sm">
-                                Show Invoices
+                                Invoices
+                            </button>
+                            <button onclick="showPOSSales(event)"
+                                    id="show-possales-btn"
+                                    type="button"
+                                    class="btn btn-default btn-sm">
+                                POS Sales
                             </button>
                             <button onclick="showLayaways(event)"
                                     id="show-layaways-btn"
                                     type="button"
-                                    value="Show Layaways"
                                     class="btn btn-default btn-sm">
-                                Show Layaways
+                                Layaways
+                            </button>
+                            <button onclick="addPOSSale(event)"
+                                    id="add-possale-btn"
+                                    type="button"
+                                    class="btn btn-default btn-sm btn-danger-text hidden">
+                                Add Sale
                             </button>
                             <button onclick="addInvoice(event)"
                                     id="add-invoice-btn"
@@ -167,49 +179,77 @@
                 </div>
             </div>
 
-            <div id="product-lookup" class="product-lookup-popup" style="display: none">
+            <div id="product-lookup" class="product-lookup-popup" style="display: none; background-color: @customGrayWhite">
                 @Html.Partial("ProductLookup", Model.ProductList)
-                <hr style="border-width: 2px; border-color: red" />
+                <hr />
                 <button onclick="closeProductLookup(event)" class="btn btn-default btn-sm pull-right" style="margin: 6px 20px 3px 5px">
                     Close List
                 </button>
                 <div style="margin: 0 0 0 25px">@Html.ActionLink("Back to Customer List", "Index")</div>
             </div>
         </div>
-        <div id="alt-subform-container" class="col-md-8 bg-warning" style="padding: 0; margin: 0">
-           
+
+        <div id="alt-subform-container" class="col-md-8" style="padding: 0; margin: 0; border-radius: 0 5px 5px 0; background-color: @customGray">
+
         </div>
-        <div id="layaways-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: @customGray">
+
+        <div id="possales-container" class="col-md-8 hidden" style="padding: 0; margin: 0; border-radius: 0 5px 5px 0; background-color: @customGray">
             @{
-                var itemCount = 0;
+                var possaleItemCount = 0;
+                var possaleCount = Model.Layaways.Count;
+                foreach (var possale in Model.POSSales)
+                {
+                    possaleItemCount += possale.POSSaleItems.Sum(s => s.Quantity);
+                }
+                var possaleFullName = Model.FirstName + ' ' + Model.LastName;
+                var possaleCompanyName = Model.CompanyName == "" ? "" : " (" + Model.CompanyName + ")";
+                var possaleCombinedName = possaleFullName + possaleCompanyName;
+            }
+            <span id="curr-possale-id" style="display: none"></span>
+            <div style="margin: 0px 0px 5px 25px">
+                <h4>Customer POS Sales</h4>
+                <strong>
+                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@possaleCombinedName </span>
+                    <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                </strong>
+                <span style="margin:3px">Sales: @possaleCount</span>
+                <span style="margin:3px">Total Items: @possaleItemCount</span>
+            </div>
+            @Html.Partial("POSSales", Model.POSSales)
+        </div>
+
+        <div id="layaways-container" class="col-md-8 hidden" style="padding: 0; margin: 0; border-radius: 0 5px 5px 0; background-color: @customGray">
+            @{
+                var layawayItemCount = 0;
                 var layawayCount = Model.Layaways.Count;
                 foreach (var layaway in Model.Layaways)
                 {
-                    itemCount += layaway.LayawayItems.Count;
+                    layawayItemCount += layaway.LayawayItems.Sum(l => l.Quantity);
                 }
-                var fullName = Model.FirstName + ' ' + Model.LastName;
-                var companyName = Model.CompanyName == "" ? "" : " (" + Model.CompanyName + ")";
-                var combinedName = fullName + companyName;
+                var layawayFullName = Model.FirstName + ' ' + Model.LastName;
+                var layawayCompanyName = Model.CompanyName == "" ? "" : " (" + Model.CompanyName + ")";
+                var layawayCombinedName = layawayFullName + layawayCompanyName;
             }
             <span id="curr-layaway-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
                 <h4>Customer Layaways</h4>
                 <strong>
-                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@combinedName </span>
+                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@layawayCombinedName</span>
                     <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
                 </strong>
                 <span style="margin:3px">Layaways: @layawayCount</span>
-                <span style="margin:3px">Total Layaway Items: @itemCount</span>
+                <span style="margin:3px">Total Items: @layawayItemCount</span>
             </div>
             @Html.Partial("Layaways", Model.Layaways)
         </div>
-        <div id="invoices-container" class="col-md-8 hidden" style="padding: 0; margin: 0; background-color: @customGray">  @* #ffeea8 = yellow 1 *@
+
+        <div id="invoices-container" class="col-md-8 hidden" style="padding: 0; margin: 0; border-radius: 0 5px 5px 0; background-color: @customGray">
             @{
                 var invoiceItemCount = 0;
                 var invoiceCount = Model.Invoices.Count;
                 foreach (var invoice in Model.Invoices)
                 {
-                    invoiceItemCount += invoice.InvoiceItems.Count;
+                    invoiceItemCount += invoice.InvoiceItems.Sum(i => i.Quantity);
                 }
                 var invoiceFullName = Model.FirstName + ' ' + Model.LastName;
                 var invoiceCompanyName = Model.CompanyName == "" ? "" : " (" + Model.CompanyName + ")";
@@ -223,7 +263,7 @@
                     <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
                 </strong>
                 <span style="margin:3px">Invoices: @Model.Invoices.Count</span>
-                <span style="margin:3px">Total Invoice Items: @invoiceItemCount</span>
+                <span style="margin:3px">Total Items: @invoiceItemCount</span>
             </div>
             @Html.Partial("Invoices", Model.Invoices)
         </div>
@@ -264,6 +304,7 @@
             else
                 parentElement2.querySelector("#" + input_id).select();
         }
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function savePgState(forceState = null) {
@@ -275,6 +316,7 @@
                     CurrSubForm: getActiveSubForm(),
                     CurrLayawayPgIndex: getCurrLayawayPgIndex(),
                     CurrInvoicePgIndex: getCurrInvoicePgIndex(),
+                    CurrPOSSalePgIndex: getCurrPOSSalePgIndex(),
                     CustomerEditBorder: getCustomerEditBorderState()
                 };
             }
@@ -296,7 +338,9 @@
                [ "add-invoice-btn", "AddInvoiceButton" ],
                [ "show-invoices-btn", "ShowInvoicesButton" ],
                [ "add-layaway-btn", "AddLayawayButton" ],
-               [ "show-layaways-btn", "ShowLayawaysButton" ]
+               [ "show-layaways-btn", "ShowLayawaysButton" ],
+               [ "add-possale-btn", "AddPOSSaleButton" ],
+               [ "show-possales-btn", "ShowPOSSalesButton" ]
             ];
 
             btnElementIdList.forEach(elementDataPair => {
@@ -328,46 +372,37 @@
             if (state.CustomerId !== getCurrCustomerId()) {
                 return;
             }
-            // restore Layaways View state
-            var currLayawayPgIndex = state.CurrLayawayPgIndex;
-            if (currLayawayPgIndex) {
-                let table = document.getElementById("layaways-table");
-                let rows = table.rows;
-                for (let i = 0; i < rows.length; i++) {
-                    let row = rows[i];
-                    let pgIndex = row.querySelector("span[name='layaways-table-row-number']").innerHTML;
-                    pgIndex = parseInt(pgIndex);
-                    if (pgIndex === currLayawayPgIndex) {
-                        //row.style.display = "table-row";
-                        row.classList.remove("hidden");
-                    }
-                    else {
-                        //row.style.display = "none";
-                        row.classList.add("hidden");
-                    }
-                }
-            }
-            // restore Invoices View state
-            var currInvoicePgIndex = state.CurrInvoicePgIndex;
-            if (currInvoicePgIndex) {
-                let table = document.getElementById("invoices-table");
-                let rows = table.rows;
-                for (let i = 0; i < rows.length; i++) {
-                    let row = rows[i];
-                    let pgIndex = row.querySelector("span[name='invoices-table-row-number']").innerHTML;
-                    pgIndex = parseInt(pgIndex);
-                    if (pgIndex === currInvoicePgIndex) {
-                        //row.style.display = "table-row"
-                        row.classList.remove("hidden");
-                    }
-                    else {
-                        //row.style.display = "none"
-                        row.classList.add("hidden");
+
+            // current Item Types
+            var ItemTypes = ["POSSale", "Invoice", "Layaway"];
+            
+            // gen subform names from Item Types
+            var subforms = [];
+            ItemTypes.forEach(itemType => { subforms.push(itemType.toLowerCase() + "s"); });
+
+            // restore Subforms View state
+            subforms.forEach((subform, index) => {
+                //var currSubformPgIndex = state.CurrLayawayPgIndex;
+                var currSubformPgIndex = state["Curr" + ItemTypes[index] + "PgIndex"];
+                if (currSubformPgIndex) {
+                    let table = document.getElementById(subform + "-table");
+                    let rows = table.rows;
+                    for (let i = 0; i < rows.length; i++) {
+                        let row = rows[i];
+                        let pgIndex = row.querySelector("span[name='" + subform + "-table-row-number']").innerHTML;
+                        pgIndex = parseInt(pgIndex);
+                        if (pgIndex === currSubformPgIndex) {
+                            row.classList.remove("hidden");
+                        }
+                        else {
+                            row.classList.add("hidden");
+                        }
                     }
                 }
-            }            
+            });
+
             // restore Alt form's View state
-            var subformElementIds = ["alt-subform-container", "layaways-container", "invoices-container"];
+            var subformElementIds = ["alt-subform-container", "layaways-container", "invoices-container", "possales-container"];
             subformElementIds.forEach(elementId => {
                 var subform = document.getElementById(elementId);
                 if (elementId === state.CurrSubForm) {
@@ -377,6 +412,7 @@
                     subform.classList.add("hidden");
                 }
             });
+
             // restore Customer Buttons view state
             var btnsState = {
                 "save-customer-btn": state.SaveCustomerButton,
@@ -384,6 +420,8 @@
                 "show-invoices-btn": state.ShowInvoicesButton,
                 "add-layaway-btn": state.AddLayawayButton,
                 "show-layaways-btn": state.ShowLayawaysButton,
+                "add-possale-btn": state.AddPOSSaleButton,
+                "show-possales-btn": state.ShowPOSSalesButton
             }
             Object.keys(btnsState).forEach(key => {
                 var btn = document.getElementById(key);
@@ -416,7 +454,7 @@
 
         function getActiveSubForm() {
             var result = "";
-            var subformElementIds = ["alt-subform-container", "layaways-container", "invoices-container"];
+            var subformElementIds = ["alt-subform-container", "layaways-container", "invoices-container", "possales-container"];
             subformElementIds.forEach(function (elementId, index) {
                 var subform = document.getElementById(elementId);
                 if (!subform.classList.contains("hidden")) {
@@ -433,7 +471,6 @@
             var tableRows = layawaysTable.rows;
             for (let i = 0; i < tableRows.length; i++) {
                 var row = tableRows[i];
-                //if (row.style.display !== "none") {
                 if (!row.classList.contains("hidden")) {
                     var layawayPgIndex = row.querySelector("span[name='layaways-table-row-number']").innerHTML;
                     if (layawayPgIndex) {
@@ -452,7 +489,6 @@
             var tableRows = invoicesTable.rows;
             for (let i = 0; i < tableRows.length; i++) {
                 var row = tableRows[i];
-                //if (row.style.display !== "none") {
                 if (!row.classList.contains("hidden")) {
                     var invoicePgIndex = row.querySelector("span[name='invoices-table-row-number']").innerHTML;
                     if (invoicePgIndex) {
@@ -465,15 +501,36 @@
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
+        
+        function getCurrPOSSalePgIndex() {
+            var possalesTable = document.getElementById("possales-table");
+            var tableRows = possalesTable.rows;
+            for (let i = 0; i < tableRows.length; i++) {
+                var row = tableRows[i];
+                if (!row.classList.contains("hidden")) {
+                    var possalePgIndex = row.querySelector("span[name='possales-table-row-number']").innerHTML;
+                    if (possalePgIndex) {
+                        possalePgIndex = parseInt(possalePgIndex);
+                        return possalePgIndex;
+                    }
+                }
+            }
+            return null;
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function hideAllSubForms() {
             document.getElementById("alt-subform-container").classList.add("hidden");
+            document.getElementById("possales-container").classList.add("hidden");
             document.getElementById("layaways-container").classList.add("hidden");
             document.getElementById("invoices-container").classList.add("hidden");
             // also hide all the Add buttons
+            document.getElementById("add-possale-btn").classList.add("hidden");
             document.getElementById("add-invoice-btn").classList.add("hidden");
             document.getElementById("add-layaway-btn").classList.add("hidden");
             // also show all the Show buttons
+            document.getElementById("show-possales-btn").classList.remove("hidden");
             document.getElementById("show-invoices-btn").classList.remove("hidden");
             document.getElementById("show-layaways-btn").classList.remove("hidden");
         }
@@ -483,29 +540,50 @@
         function addCustomerSectionBorder(subform) {
             //select Customer-Edit section
             var customerSection = document.getElementById("customer-form");
+
             // clear all borders from it
-            var removeTheseFirst = ["border-golden", "border-copper", "border-warning"];
-            removeTheseFirst.forEach((item) => {
-                customerSection.classList.remove(item);
-            });
+            [
+                "border-golden",
+                "border-copper",
+                "border-warning",
+                "border-green"
+            ].forEach(item => { customerSection.classList.remove(item); });
+
             // now select specified border
             if (subform.toLowerCase().indexOf("invoice") > -1) {
+                customerSection.classList.add("border");
                 customerSection.classList.add("border-golden");
             }
             else if (subform.toLowerCase().indexOf("layaway") > -1) {
+                customerSection.classList.add("border");
                 customerSection.classList.add("border-copper");
             }
-            else {
-                customerSection.classList.add("border-warning");
+            else if (subform.toLowerCase().indexOf("possale") > -1) {
+                customerSection.classList.add("border");
+                customerSection.classList.add("border-green");
             }
+            else {
+                customerSection.classList.add("border");
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showPOSSales(event) {
+            hideAllSubForms();
+            document.getElementById("show-possales-btn").classList.add("hidden");
+            document.getElementById("possales-container").classList.remove("hidden");
+            document.getElementById("add-possale-btn").classList.remove("hidden");
+            addCustomerSectionBorder("POSSale");
+            savePgState();
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showInvoices(event) {
             hideAllSubForms();
-            document.getElementById("invoices-container").classList.remove("hidden");
             document.getElementById("show-invoices-btn").classList.add("hidden");
+            document.getElementById("invoices-container").classList.remove("hidden");
             document.getElementById("add-invoice-btn").classList.remove("hidden");
             addCustomerSectionBorder("Invoice");
             savePgState();
@@ -515,8 +593,8 @@
 
         function showLayaways(event) {
             hideAllSubForms();
-            document.getElementById("layaways-container").classList.remove("hidden");
             document.getElementById("show-layaways-btn").classList.add("hidden");
+            document.getElementById("layaways-container").classList.remove("hidden");
             document.getElementById("add-layaway-btn").classList.remove("hidden");
             addCustomerSectionBorder("Layaway");
             savePgState();
@@ -587,6 +665,16 @@
             for (let i = 0; i < rows.length; i++) {
                 let row = rows[i];
                 row.querySelector("[name='all-pending-transaction-charges']").innerHTML = customerLayawayChargesTotal;
+            }           
+
+            // POSSales
+            var table3 = document.getElementById("possales-table");
+            rows = table3.rows;
+            row = rows[rows.length - 1];
+            var customerPOSSaleChargesTotal = row.querySelector("[name='charges-accumulator']").innerHTML;
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                row.querySelector("[name='all-pending-transaction-charges']").innerHTML = customerPOSSaleChargesTotal;
             }
         }
 
@@ -611,10 +699,41 @@
                     }
                 }
             }
-            console.log(result);
-            return result;
+            return result.replace("-,", "-");;
         }
-        
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function updateCustomerTotalsWithPayment(tableRow) {
+            //
+            var oldAmount = parseFloat(tableRow.querySelector("[name='AmountOldValue']").value);
+            var newAmount = parseFloat(tableRow.querySelector("[name='Amount']").value);
+            var amountAdded = (newAmount - oldAmount) * -1;
+            //
+            var parentTableRow = getParent(tableRow, "tr");
+            var grandParentTable = getParent(parentTableRow, "table");
+            //
+            var table_id = grandParentTable.id;
+            var rowIndex = parseInt(parentTableRow.querySelector("[name='" + table_id + "-row-number']").innerText);
+            //
+            updateCustomerTotals(table_id, amountAdded, rowIndex);
+
+            // reset old values for Payment record
+            var r = tableRow;
+            r.querySelector("[name='PaymentDateOldValue']").value = r.querySelector("[name='PaymentDate']").value;
+            r.querySelector("[name='AmountOldValue']").value = r.querySelector("[name='Amount']").value;
+            r.querySelector("[name='PaymentModeOldValue']").value = r.querySelector("[name='PaymentMode']").value;
+            r.querySelector("[name='CheckNoOldValue']").value = r.querySelector("[name='CheckNo']").value;
+            r.querySelector("[name='CheckImageOldValue']").value = r.querySelector("[name='CheckImage']").value;
+            r.querySelector("[name='CheckWriterOldValue']").value = r.querySelector("[name='CheckWriter']").value;
+            r.querySelector("[name='CreditCardHolderOldValue']").value = r.querySelector("[name='CreditCardHolder']").value;
+            r.querySelector("[name='CreditCardNoOldValue']").value = r.querySelector("[name='CreditCardNo']").value;
+            r.querySelector("[name='CreditCardNameOldValue']").value = r.querySelector("[name='CreditCardName']").value;
+            r.querySelector("[name='CreditCardExpMonthOldValue']").value = r.querySelector("[name='CreditCardExpMonth']").value;
+            r.querySelector("[name='CreditCardExpYearOldValue']").value = r.querySelector("[name='CreditCardExpYear']").value;
+            r.querySelector("[name='CreditCardExpCVVOldValue']").value = r.querySelector("[name='CreditCardExpCVV']").value;
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateCustomerTotals(table_id, amountAdded = null, rowIndex = null) {
@@ -622,19 +741,25 @@
                 return;
             }
             amountAdded = parseFloat(amountAdded).toFixed(2);
-
             var table = document.getElementById(table_id);
             var rows = table.rows;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 if (i === (rowIndex - 1)) {
+                    // update parent table Charges
                     var oldTransactionCharges = (row.querySelector("span[name='transaction-charges']").innerHTML).replace("$ ", "");          // remove leading '$ ' from UI data
                     oldTransactionCharges = parseFloat(oldTransactionCharges);
                     var newTransactionCharges = parseFloat(oldTransactionCharges) + parseFloat(amountAdded);
                     row.querySelector("span[name='transaction-charges']").innerHTML = parseFloat(newTransactionCharges).toFixed(2);
+                    
+                    // update parent table Balance
+                    var oldBalance = (row.querySelector("span[name='current-balance']").innerHTML).replace("$ ", "");          // remove leading '$ ' from UI data
+                    oldBalance = parseFloat(oldBalance);
+                    var newBalance = parseFloat(oldBalance) + parseFloat(amountAdded);
+                    row.querySelector("span[name='current-balance']").innerHTML = parseFloat(newBalance).toFixed(2);
                 }
                 var oldAllTransactionCharges = (row.querySelector("[name='all-pending-transaction-charges']").innerHTML).replace("$ ", "");   // remove leading '$ ' from UI data
-                oldAllTransactionCharges = oldAllTransactionCharges.replace(/,/g, "");                                                        // remove all commas  
+                oldAllTransactionCharges = oldAllTransactionCharges.replace(/,/g, "");
                 var newAllTransactionCharges = parseFloat(oldAllTransactionCharges) + parseFloat(amountAdded);
                 row.querySelector("[name='all-pending-transaction-charges']").innerHTML = "$ " + addCommasToNumber(parseFloat(newAllTransactionCharges).toFixed(2));
             }
@@ -649,6 +774,7 @@
                 CurrSubForm: "layaways-container",
                 CurrLayawayPgIndex: 1,
                 CurrInvoicePgIndex: getCurrInvoicePgIndex(),
+                CurrPOSSalePgIndex: getCurrPOSSalePgIndex(),
                 CustomerEditBorder: getCustomerEditBorderState()
             }
             savePgState(state);
@@ -682,6 +808,7 @@
                 CurrSubForm: "invoices-container",
                 CurrLayawayPgIndex: getCurrLayawayPgIndex(),
                 CurrInvoicePgIndex: 1,
+                CurrPOSSalePgIndex: getCurrPOSSalePgIndex(),
                 CustomerEditBorder: getCustomerEditBorderState()
             }
             savePgState(state);
@@ -708,6 +835,74 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function addPOSSale(event) {
+            // save page state
+            var state = {
+                CustomerId: getCurrCustomerId(),
+                CurrSubForm: "possales-container",
+                CurrLayawayPgIndex: getCurrLayawayPgIndex(),
+                CurrInvoicePgIndex: getCurrInvoicePgIndex(),
+                CurrPOSSalePgIndex: 1,
+                CustomerEditBorder: getCustomerEditBorderState()
+            }
+            savePgState(state);
+            
+            var customerId = document.getElementById("Id").value;
+
+            //upload data
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var responseText = this.responseText;
+                    var responseObject = JSON.parse(responseText);
+                    if (responseObject.Successful === true) {
+                        location.reload();
+                    }
+                    else if (responseObject.Message) {
+                        ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                    }
+                }
+            };
+            xhttp.open("GET", "/CustomerManager/AddPOSSale/?customerId=" + customerId, true);
+            xhttp.send();
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function addPOSSale() {
+            // save page state
+            var state = {
+                CustomerId: getCurrCustomerId(),
+                CurrSubForm: "possales-container",
+                CurrLayawayPgIndex: getCurrLayawayPgIndex(),
+                CurrInvoicePgIndex: getCurrInvoicePgIndex(),
+                CurrPOSSalePgIndex: 1,
+                CustomerEditBorder: getCustomerEditBorderState()
+            }
+            savePgState(state);
+            
+            var customerId = document.getElementById("Id").value;
+
+            //upload data
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var responseText = this.responseText;
+                    var responseObject = JSON.parse(responseText);
+                    if (responseObject.Successful === true) {
+                        location.reload();
+                    }
+                    else if (responseObject.Message) {
+                        ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                    }
+                }
+            };
+            xhttp.open("GET", "/CustomerManager/AddPOSSale/?customerId=" + customerId, true);
+            xhttp.send();
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
         function deleteLayaway(event) {
             // save page state
             var currPg = getCurrLayawayPgIndex();
@@ -724,6 +919,7 @@
                 CurrSubForm: "layaways-container",
                 CurrLayawayPgIndex: newPg,
                 CurrInvoicePgIndex: getCurrInvoicePgIndex(),
+                CurrPOSSalePgIndex: getCurrPOSSalePgIndex(),
                 CustomerEditBorder: getCustomerEditBorderState()
             }
             savePgState(state);
@@ -766,6 +962,7 @@
                 CurrSubForm: "invoices-container",
                 CurrLayawayPgIndex: getCurrLayawayPgIndex(),
                 CurrInvoicePgIndex: newPg,
+                CurrPOSSalePgIndex: getCurrPOSSalePgIndex(),
                 CustomerEditBorder: getCustomerEditBorderState()
             }
             savePgState(state);
@@ -792,7 +989,50 @@
         
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function saveSubformData(event, route, getData, clearInput) {
+        function deletePOSSale(event) {
+            // save page state
+            var currPg = getCurrInvoicePgIndex();
+            var newPg = 0;
+            var table = document.getElementById("possales-table");
+            if (table.rows.length > parseInt(currPg)) {
+                newPg = parseInt(currPg);
+            }
+            else {
+                newPg = parseInt(currPg) - 1;
+            }
+            var state = {
+                CustomerId: getCurrCustomerId(),
+                CurrSubForm: "possales-container",
+                CurrLayawayPgIndex: getCurrLayawayPgIndex(),
+                CurrInvoicePgIndex: getCurrInvoicePgIndex(),
+                CurrPOSSalePgIndex: getCurrPOSSalePgIndex(),
+                CustomerEditBorder: newPg
+            }
+            savePgState(state);
+
+            var possaleId = (event.target.parentNode).parentNode.querySelector("[name='possale-id']").innerHTML;
+
+            //upload data
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var responseText = this.responseText;
+                    var responseObject = JSON.parse(responseText);
+                    if (responseObject.Successful === true) {
+                        location.reload();
+                    }
+                    else if (responseObject.Message) {
+                        ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                    }
+                }
+            };
+            xhttp.open("GET", "/CustomerManager/DeletePOSSale/?Id=" + possaleId, true);
+            xhttp.send();
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function saveSubformData(event, route, getData, finalProcess = null) {
             //
             var clickedElement = event.target;
 
@@ -809,7 +1049,7 @@
                 btn = getParent(clickedElement, "button");
             }
 
-            // reference 'Scan Bardcode' button
+            // try to reference 'Scan Bardcode' button (will be undefined for Payments sub table)
             var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
 
             //upload data
@@ -820,9 +1060,11 @@
                     var responseObject = JSON.parse(responseText);
                     if (responseObject.Successful === true) {
                         btn.classList.add("hidden");
-                        scanUpcBtn.classList.remove("hidden");
-                        if (clearInput) {
-                            clearInput(tableRow);
+
+                        if (scanUpcBtn) scanUpcBtn.classList.remove("hidden");
+
+                        if (finalProcess) {
+                            finalProcess(tableRow);
                         }
                         ShowMessage("<h4 class='text-primary' style='margin-left: 20px'>Payment Saved!</h4>");
                     }
@@ -875,6 +1117,25 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
+        function getUIPOSSaleData(tableRow) {
+            var possale = {
+                Id: tableRow.querySelector("[name='possale-id']").innerHTML,
+                CustomerId: tableRow.querySelector("[name='possale-customer-id']").innerHTML,
+                FirstName: tableRow.querySelector("[id='possale_FirstName']").value,
+                LastName: tableRow.querySelector("[id='possale_LastName']").value,
+                CompanyName: tableRow.querySelector("[id='possale_CompanyName']").value,
+                Street: tableRow.querySelector("[id='possale_Street']").value,
+                City: tableRow.querySelector("[id='possale_City']").value,
+                State: tableRow.querySelector("[id='possale_State']").value,
+                ZipCode: tableRow.querySelector("[id='possale_ZipCode']").value,
+                Email: tableRow.querySelector("[id='possale_Email']").value,
+                Phone: tableRow.querySelector("[id='possale_Phone']").value
+            };
+            return possale;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
         function getUIPaymentData(tableRow) {
             var payment = {
                 PaymentDate: tableRow.querySelector("[name='PaymentDate']").value,
@@ -919,6 +1180,7 @@
             switch(subform) {
                 case "Invoice":
                 case "Layaway":
+                case "POSSale":
                     break;
 
                 default:
@@ -945,7 +1207,7 @@
                     "<div style='display: inline-block; margin-left: 10px'>" +
                         "<p>Click Delete to remove</p>" +
                         "<p class='text-danger'><strong>" + productName + "</strong></p>" +
-                        "<P>from " + subform + ".</P>" +
+                        "<P>from " + subform.replace("POSSale", "POS Sale") + ".</P>" +
                     "</div>" +
                 "</div>";
 
@@ -955,76 +1217,51 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function deleteLayawayItem(event, itemId, rowIndex, image, productName) {
-            // save page state
-            savePgState();
-
-            let mesgHtml = deleteSubItemConfirmHTML("Layaway", productName, image);
-            let titleHtml = "<span class='text-danger'>Please confirm delete action...</span>";
-            ShowMessage(mesgHtml, titleHtml, "delete, cancel").then(
-                function (response) {
-                    if (response === "Delete") {
-                        var xhttp = new XMLHttpRequest();
-                        xhttp.onreadystatechange = function () {
-                            if (this.readyState === 4 && this.status === 200) {
-                                var responseText = this.responseText;
-                                var responseObject = JSON.parse(responseText);
-                                if (responseObject.Successful === true) {
-                                    //
-                                    var layawaysContainer = document.getElementById("layaways-container");
-                                    var parentRow = layawaysContainer.querySelector("[id='" + rowIndex + "']");
-                                    
-                                    var quantity = parentRow.querySelector("[name='item-quantity']").innerHTML;
-                                    var price = parentRow.querySelector("[id='item_Price']").value;
-
-                                    var deletedItemIndex = parseInt(parentRow.querySelector("[name='layawayitems-row-number']").innerHTML);
-                                    var itemsTable = parentRow.parentNode;
-                                    itemsTable.removeChild(parentRow);
-
-                                    if (itemsTable.childElementCount === 0) {
-                                        //ShowMessage("<p class='text-primary'>Item deleted.</p>").then(function (result) { location.reload(); }, function (error) { });
-                                        location.reload();
-                                    }
-                                    else {
-                                        var rows = itemsTable.rows;
-                                        for (let i = 0; i < rows.length; i++) {
-                                            var row = rows[i];
-
-                                            var rowIndexSpan = row.querySelector("span[name='layawayitems-row-number']");
-                                            var itemIndex = parseInt(rowIndexSpan.innerHTML);
-                                            if (deletedItemIndex < itemIndex) {
-                                                rowIndexSpan.innerHTML = itemIndex - 1;
-                                            }
-
-                                            var rowCountSpan = row.querySelector("span[name='layawayitems-row-count']");
-                                            var rowCount = parseInt(rowCountSpan.innerHTML);
-                                            rowCountSpan.innerHTML = rowCount - 1;
-                                        }
-                                        updateCustomerTotals("layaways-table", (quantity*price)*-1, getCurrLayawayPgIndex());
-                                        //ShowMessage("<p class='text-primary'>Item deleted.</p>")
-                                    }
-                                }
-                                else if (responseObject.Message) {
-                                    ShowMessage(responseObject.Message);
-                                }
-                            }
-                        };
-                        xhttp.open("GET", "/CustomerManager/DeleteLayawayItem/?id=" + itemId, true);
-                        xhttp.send();
-                    }
-                },
-                function (error) {
-                    alert("Something went wrong!");
-                }
-            );
+            deleteChargeItem("Layaway", itemId, rowIndex, image, productName);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function deleteInvoiceItem(event, itemId, rowIndex, image, productName) {
+            deleteChargeItem("Invoice", itemId, rowIndex, image, productName);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function deletePOSSaleItem(event, itemId, rowIndex, image, productName) {
+            deleteChargeItem("POSSale", itemId, rowIndex, image, productName);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function deleteChargeItem(itemType, itemId, rowIndex, image, productName) {
             // save page state
             savePgState();
+            var ItemType = itemType;              // capitalized variable saves original form, e.g. POSSale, Invoice, Layaway, etc.
+            itemType = itemType.toLowerCase();    // e.g. 'POSSale' => 'possale'; 'Invoice' => 'invoice'; etc.
+
+            var containerName = itemType + "s-container";
+            var itemQuantityElement = itemType + "item-quantity";
+            var rowNumberElementName = itemType + "items-row-number";
+            var rowCountElementName = itemType + "items-row-count";
+            var tableName = itemType + "s-table";
             
-            let mesgHtml = deleteSubItemConfirmHTML("Invoice", productName, image);
+            var getPrentTablePgIndex_Function = null;
+            switch (ItemType) {
+                case "POSSale":
+                    getPrentTablePgIndex_Function = getCurrPOSSalePgIndex;
+                    break;
+                case "Invoice":
+                    getPrentTablePgIndex_Function = getCurrInvoicePgIndex;
+                    break;
+                case "Layaway":
+                    getPrentTablePgIndex_Function = getCurrLayawayPgIndex;
+                    break;
+                default:
+                    return;
+            }
+
+            let mesgHtml = deleteSubItemConfirmHTML(ItemType, productName, image);
             let titleHtml = "<span class='text-danger'>Please confirm delete action...</span>";
             ShowMessage(mesgHtml, titleHtml, "delete, cancel").then(
                 function (response) {
@@ -1036,13 +1273,12 @@
                                 var responseObject = JSON.parse(responseText);
                                 if (responseObject.Successful === true) {
                                     //
-                                    var invoicesContainer = document.getElementById("invoices-container");
-                                    var parentRow = invoicesContainer.querySelector("[id='" + rowIndex + "']");
+                                    var container = document.getElementById(containerName);
+                                    var parentRow = container.querySelector("[id='" + rowIndex + "']");
 
-                                    var quantity = parentRow.querySelector("[name='item-quantity']").innerHTML;
-                                    var price = parentRow.querySelector("[id='item_Price']").value;                                    
-
-                                    var deletedItemIndex = parseInt(parentRow.querySelector("[name='invoiceitems-row-number']").innerHTML);
+                                    var quantity = parentRow.querySelector("[name='" + itemQuantityElement + "']").innerHTML;
+                                    var price = parentRow.querySelector("[id='item_Price']").value;
+                                    var deletedItemIndex = parseInt(parentRow.querySelector("[name='" + rowNumberElementName + "']").innerHTML);
                                     var itemsTable = parentRow.parentNode;
                                     itemsTable.removeChild(parentRow);
 
@@ -1055,17 +1291,17 @@
                                         for (let i = 0; i < rows.length; i++) {
                                             var row = rows[i];
 
-                                            var rowIndexSpan = row.querySelector("span[name='invoiceitems-row-number']");
+                                            var rowIndexSpan = row.querySelector("span[name='" + rowNumberElementName + "']");
                                             var itemIndex = parseInt(rowIndexSpan.innerHTML);
                                             if (deletedItemIndex < itemIndex) {
                                                 rowIndexSpan.innerHTML = itemIndex - 1;
                                             }
 
-                                            var rowCountSpan = row.querySelector("span[name='invoiceitems-row-count']");
+                                            var rowCountSpan = row.querySelector("span[name='" + rowCountElementName + "']");
                                             var rowCount = parseInt(rowCountSpan.innerHTML);
                                             rowCountSpan.innerHTML = rowCount - 1;
                                         }
-                                        updateCustomerTotals("invoices-table", (quantity*price)*-1, getCurrInvoicePgIndex());
+                                        updateCustomerTotals(tableName, (quantity*price)*-1, getPrentTablePgIndex_Function());
                                         //ShowMessage("<p class='text-primary'>Item deleted.</p>")
                                     }
                                 }
@@ -1074,7 +1310,7 @@
                                 }
                             }
                         };
-                        xhttp.open("GET", "/CustomerManager/DeleteInvoiceItem/?id=" + itemId, true);
+                        xhttp.open("GET", "/CustomerManager/Delete" + ItemType + "Item/?id=" + itemId, true);
                         xhttp.send();
                     }
                 },
@@ -1125,7 +1361,7 @@
                             <p style="margin-bottom: 2px"><strong>Price: </strong><span class="text-primary pull-right">${product.Price}</span></p>
                             <p style="margin-bottom: 2px"><strong>Wholesale Price: </strong><span class="text-primary pull-right">${product.WholesalePrice}</span></p>
                             <p style="margin-bottom: 2px"><strong>Category: </strong><span class="text-primary pull-right">${product.Category}</span></span></span></p>
-                            <p style="margin-bottom: 2px"><strong>Quantity: </strong><span class="text-primary pull-right">${product.Quantity}</span></p>
+                            <p style="margin-bottom: 2px"><strong>Quantity In Stock: </strong><span class="text-primary pull-right">${product.Quantity}</span></p>
                             <p style="margin-bottom: 2px"><strong>Min: </strong><span class="text-primary pull-right">${product.QuantityMin}</p>
                             <p style="margin-bottom: 2px"><strong>On Layaway: </strong><span class="text-primary pull-right">${product.QuantityOnLayaway}</span></p>
                             <p style="margin-bottom: 2px"><strong>Is Service: </strong><span class="text-primary pull-right">${product.IsService}</span></p>
@@ -1152,13 +1388,17 @@
                 case "Layaways":
                     document.getElementById("curr-layaway-id").innerHtml = currTargetRecordId;
                     recordType = "Layaway"
+                    break;               
+                case "POSSales":
+                    document.getElementById("curr-possale-id").innerHtml = currTargetRecordId;
+                    recordType = "POSSale"
                     break;
                 default:
                     return;
             }
             var addBtns = document.querySelectorAll("[name='add-item-to-subform']");
             for (let i = 0; i < addBtns.length; i++) {
-                addBtns[i].innerText = "Add To " + recordType;
+                addBtns[i].innerText = "Add To " + recordType.replace("POS", "");
             }
             document.getElementById("customer-info").style.opacity = 0;
             document.getElementById("product-lookup").style.display = "block";
@@ -1178,7 +1418,6 @@
             event.preventDefault();
             var activeSubform = getActiveSubForm();
 
-            // layaways-container
             switch (activeSubform) {
                 case "invoices-container":
                     addProductToInvoice(event, productId, productTableRow, currTargetRecordId);
@@ -1186,6 +1425,10 @@
 
                 case "layaways-container":
                     addProductToLayaway(event, productId, productTableRow, currTargetRecordId);
+                    break;
+
+                case "possales-container":
+                    addProductToPOSSale(event, productId, productTableRow, currTargetRecordId);
                     break;
 
                 default:
@@ -1199,7 +1442,7 @@
             // save page state
             savePgState();
         
-            var currInvoiceId = currInvoiceId || document.getElementById("curr-invoice-id").innerHtml;
+            currInvoiceId = currInvoiceId || document.getElementById("curr-invoice-id").innerHtml;
 
             var tableRow
             if (!productTableRow) {
@@ -1303,7 +1546,7 @@
             // save page state
             savePgState();
 
-            var currLayawayId = currLayawayId || document.getElementById("curr-layaway-id").innerHtml;
+            currLayawayId = currLayawayId || document.getElementById("curr-layaway-id").innerHtml;
 
             var tableRow
             if (!productTableRow) {
@@ -1399,6 +1642,110 @@
 
             // clean up
             document.getElementById("curr-layaway-id").innerHtml = "";
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function addProductToPOSSale(event, productId, productTableRow = null, currPOSSaleId = "") {
+            // save page state
+            savePgState();
+        
+            currPOSSaleId = currPOSSaleId || document.getElementById("curr-possale-id").innerHtml;
+
+            var tableRow
+            if (!productTableRow) {
+                var tableRow = (event.target.parentNode).parentNode;
+            }
+            else {
+                tableRow = productTableRow;
+            }
+
+            var productCopyFoundInPOSSale = false;
+            var possaleItemId = "";
+            var possalesTable = document.getElementById("possales-container").querySelector("table");
+            
+            // loop over POSSales
+            for (let possalesRow of possalesTable.rows) {
+                var possaleIdElement = possalesRow.querySelector("[name='possale-id']");
+                var possaleId = possaleIdElement.innerHTML;
+                if (possaleId === currPOSSaleId) {
+                    var possaleItemsTable = possalesRow.querySelector("table");
+                    // loop over POSSaleItems
+                    for (let possaleItemsRow of possaleItemsTable.rows) {
+                        var possaleItemIdElement = possaleItemsRow.querySelector("[name='possaleitem-item-id']");
+                        possaleItemId = possaleItemIdElement.innerHTML;
+
+                        var possaleProductIdElement = possaleItemsRow.querySelector("[name='possaleitem-product-id']");
+                        var possaleProductId = possaleProductIdElement.innerHTML;
+
+                        var possaleItemQuantityElement = possaleItemsRow.querySelector("[name='possaleitem-quantity']");
+                        var possaleItemQuantity = possaleItemQuantityElement.innerHTML;
+                        ++possaleItemQuantity;
+
+                        if (productId === possaleProductId) {
+                            productCopyFoundInPOSSale = true;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            if (productCopyFoundInPOSSale) {
+                //upload (update) data for Quantity field of Product record
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        var responseText = this.responseText;
+                        var responseObject = JSON.parse(responseText);
+                        if (responseObject.Successful === true) {
+                            //ShowMessage("<p class='text-primary'>Item updated.</p>").then(function (result) { location.reload(); }, function (error) { });
+                            location.reload();
+                        }
+                        else if (responseObject.Message) {
+                            ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                        }
+                        else {
+                            ShowMessage("Oops! Something went wrong.", "<span class='text-warning'>Server Error</span>");
+                        }
+                    }
+                };
+                xhttp.open("GET", "/CustomerManager/UpdatePOSSaleItemQuantity/?Id=" + possaleItemId + "&quantity=" + possaleItemQuantity, true);
+                xhttp.send();
+            }
+            else {
+                // get product data from the Product Search List UI
+                var possaleItem = {
+                    Id: "",
+                    POSSaleId: possaleId,
+                    ProductId: tableRow.querySelector("span[name='Id']").innerText,
+                    ProductName: tableRow.querySelector("span[name='Name']").innerText,
+                    ProductDescription: tableRow.querySelector("span[name='Description']").innerText,
+                    Price: tableRow.querySelector("span[name='Price']").innerText,
+                    Quantity: 1,
+                    Image: tableRow.querySelector("span[name='Image']").innerText
+                }
+                //upload (reate) data for entire Product record
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        var responseText = this.responseText;
+                        var responseObject = JSON.parse(responseText);
+                        if (responseObject.Successful === true) {
+                            //ShowMessage("<p class='text-primary'>Item added.</p>").then(function (result) { location.reload(); }, function (error) { });
+                            location.reload();
+                        }
+                        else if (responseObject.Message) {
+                            ShowMessage(responseObject.Message);
+                        }
+                    }
+                };
+                xhttp.open("GET", "/CustomerManager/AddPOSSaleItem/?data=" + JSON.stringify(possaleItem), true);
+                xhttp.send();
+            }
+
+            // clean up
+            document.getElementById("curr-possale-id").innerHtml = "";
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1585,6 +1932,9 @@
                     break;
                 case "Layaway":
                     currIdElement = "curr-layaway-id";
+                    break;
+                case "POSSale":
+                    currIdElement = "curr-possale-id";
                     break;
                 default:
                     return;

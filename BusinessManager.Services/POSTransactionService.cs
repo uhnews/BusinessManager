@@ -126,12 +126,12 @@ namespace BusinessManager.Services
                                   Quantity = b.Quantity,
                                   ModifiedAt = b.ModifiedAt,
                                   ProductName = p.Name,
+                                  ProductDescription = p.Description,
                                   UPC = p.UPC,
                                   ProductCode = p.ProductCode,
                                   Image = p.Image,
                                   Price = p.Price
                               }).ToList();
-                return result;
                 return result;
             }
             else

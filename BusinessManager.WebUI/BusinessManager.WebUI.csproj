@@ -314,6 +314,7 @@
     <Content Include="Views\CustomerManager\NewPayment.cshtml" />
     <Content Include="Views\CustomerManager\Payments.cshtml" />
     <Content Include="Views\CustomerManager\PaymentList.cshtml" />
+    <Content Include="Views\CustomerManager\POSSales.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

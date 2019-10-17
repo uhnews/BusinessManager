@@ -120,6 +120,7 @@
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Basket.cs" />
     <Compile Include="Models\BasketItem.cs" />
+    <Compile Include="Models\ChargeItem.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Invoice.cs" />
     <Compile Include="Models\InvoiceItem.cs" />

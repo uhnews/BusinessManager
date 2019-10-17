@@ -105,6 +105,11 @@ namespace BusinessManager.Services
                 this.GetPayments(layaway, "layaways");
             }
 
+            foreach (POSSale posssale in customer.POSSales)
+            {
+                this.GetPayments(posssale, "possales");
+            }
+
             return;
         }
 
@@ -121,6 +126,10 @@ namespace BusinessManager.Services
                 case "layaways":
                     model = (Layaway)model;
                     modelId = ((Layaway)model).Id;
+                    break;
+                case "possales":
+                    model = (POSSale)model;
+                    modelId = ((POSSale)model).Id;
                     break;
                 default:
                     return;
@@ -144,6 +153,9 @@ namespace BusinessManager.Services
                         break;
                     case "layaways":
                         ((Layaway)model).LayawayPayments = payments;
+                        break;
+                    case "possales":
+                        ((POSSale)model).POSSalePayments = payments;
                         break;
                 }                
             }

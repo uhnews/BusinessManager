@@ -14,6 +14,11 @@ namespace BusinessManager.Core.Models
         [DisplayName("Product Name")]
         public string ProductName { get; set; }
 
+        [StringLength(70)]
+        [DisplayName("Description")]
+        [Required]
+        public string ProductDescription { get; set; }
+
         public decimal Price { get; set; }
 
         [StringLength(200)]

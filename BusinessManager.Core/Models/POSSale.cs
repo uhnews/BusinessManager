@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessManager.Core.Models
 {
@@ -10,6 +11,7 @@ namespace BusinessManager.Core.Models
         public POSSale()
         {
             this.POSSaleItems = new List<POSSaleItem>();
+            this.POSSalePayments = new List<Payment>();
             this.Customers = new List<CustomerViewModel>();
         }
 
@@ -56,5 +58,8 @@ namespace BusinessManager.Core.Models
         public virtual ICollection<POSSaleItem> POSSaleItems { get; set; }
 
         public virtual ICollection<CustomerViewModel> Customers { get; set; }
+
+        [NotMapped]
+        public virtual ICollection<Payment> POSSalePayments { get; set; }
     }
 }

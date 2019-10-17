@@ -24,7 +24,7 @@ textarea {
 }
 
 /* ************************************************************************************************************ */
-/*                                             CUSTON CSS CLASSES                                               */
+/*                                             CUSTOM CSS CLASSES                                               */
 /* ************************************************************************************************************ */
 
 /* STYLE FOR DATE INPUT ******** */
@@ -162,6 +162,28 @@ textarea {
         background-color: #a46e5b;
     }
 
+.btn-pill-green {
+    background-color: #298938;
+    border: none;
+    color: white;
+    padding: 0px 6px 3px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    max-height: 16px;
+    border-radius: 16px;
+    font-size: 80%;
+}
+
+    .btn-pill-green:hover {
+        background-color: #b0e8b9;
+    }
+
+    .btn-pill-green:active {
+        background-color: #298938;
+    }
+
 
 /* USE THIS TO CENTER AN <a> OR <img> TAG INSIDE A <div> WITH A CLASS 'CONTAINER-CENTER-VERTICAL' *************************************************************** */
 .container-center-vertical {
@@ -253,13 +275,13 @@ textarea {
 .border {
     border: solid;
     border-width: thin;
-    border-radius: 4px;
-    /*border-color: #cca300;*/
+    border-radius: 5px;
+    border-color: #7b96b7;
 }
 
 /* set boder colors here */
 .border-golden {
-    border-color: #cca300;
+    border-color: #ffe680;
 }
 
 .border-primary {
@@ -275,7 +297,11 @@ textarea {
 }
 
 .border-success {
-    border-color: #5bc0de ;
+    border-color: #5bc0de;
+}
+
+.border-green {
+    border-color: #9de2a7;
 }
 
 .border-info {
@@ -283,7 +309,7 @@ textarea {
 }
 
 .border-copper {
-    border-color: #a46e5b;
+    border-color: #c9a89c;
 }
 
 .border-gray {

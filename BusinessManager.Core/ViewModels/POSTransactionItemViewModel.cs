@@ -12,6 +12,9 @@ namespace BusinessManager.Core.ViewModels
         [DisplayName("Product Name")]
         public string ProductName { get; set; }
 
+        [DisplayName("Description")]
+        public string ProductDescription { get; set; }
+
         public string UPC { get; set; }
 
         [DisplayName("Product Code")]
