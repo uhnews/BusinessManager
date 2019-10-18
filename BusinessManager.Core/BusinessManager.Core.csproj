@@ -111,7 +111,7 @@
     <Compile Include="Contracts\IInvoiceService.cs" />
     <Compile Include="Contracts\ILayawayDataService.cs" />
     <Compile Include="Contracts\ILayawayService.cs" />
-    <Compile Include="Contracts\IOrderService.cs" />
+    <Compile Include="Contracts\IOnlineOrderService.cs" />
     <Compile Include="Contracts\IPaymentService.cs" />
     <Compile Include="Contracts\IPOSSaleService.cs" />
     <Compile Include="Contracts\IPOSTransactionService.cs" />
@@ -126,7 +126,7 @@
     <Compile Include="Models\InvoiceItem.cs" />
     <Compile Include="Models\Layaway.cs" />
     <Compile Include="Models\LayawayItem.cs" />
-    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OnlineOrder.cs" />
     <Compile Include="Models\OnlineOrderItem.cs" />
     <Compile Include="Models\Payment.cs" />
     <Compile Include="Models\POSSale.cs" />

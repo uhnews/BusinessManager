@@ -58,7 +58,7 @@
     <Compile Include="InvoiceService.cs" />
     <Compile Include="LayawayDataService.cs" />
     <Compile Include="LayawayService.cs" />
-    <Compile Include="OrderService.cs" />
+    <Compile Include="OnlineOrderService.cs" />
     <Compile Include="PaymentService.cs" />
     <Compile Include="POSSaleService.cs" />
     <Compile Include="POSTransactionService.cs" />

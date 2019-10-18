@@ -80,9 +80,9 @@ namespace BusinessManager.Services
             }
         }
 
-        public List<Order> GetOrders(string customerId)
+        public List<OnlineOrder> GetOrders(string customerId)
         {
-            return new List<Order>();
+            return new List<OnlineOrder>();
         }
     }
 }

@@ -10,9 +10,9 @@ namespace BusinessManager.WebUI.Controllers
     {
         IRepository<Customer> customers;
         IBasketService basketService;
-        IOrderService orderService;
+        IOnlineOrderService orderService;
 
-        public BasketController(IBasketService basketService, IOrderService orderService, IRepository<Customer> customers)
+        public BasketController(IBasketService basketService, IOnlineOrderService orderService, IRepository<Customer> customers)
         {
             this.basketService = basketService;
             this.orderService = orderService;
@@ -56,7 +56,7 @@ namespace BusinessManager.WebUI.Controllers
 
             if (customer != null)
             {
-                Order order = new Order()
+                OnlineOrder order = new OnlineOrder()
                 {
                     CustomerId = customer.Id,
                     FirstName = customer.FirstName,
@@ -81,7 +81,7 @@ namespace BusinessManager.WebUI.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult Checkout(Order order)
+        public ActionResult Checkout(OnlineOrder order)
         {
             var basketItems = basketService.GetBasketItems(this.HttpContext);
             order.OrderStatus = "Order Created";
@@ -100,7 +100,7 @@ namespace BusinessManager.WebUI.Controllers
 
             //
             order.OrderStatus = "Payment Processed";
-            orderService.CreateOrder(order, basketItems);
+            orderService.CreateOnlineOrder(order, basketItems);
             basketService.ClearBasket(this.HttpContext);
 
             //

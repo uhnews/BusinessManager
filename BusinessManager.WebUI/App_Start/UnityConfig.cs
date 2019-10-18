@@ -53,7 +53,7 @@ namespace BusinessManager.WebUI
             container.RegisterType<IRepository<Basket>, SQLRepository<Basket>>();
             container.RegisterType<IRepository<BasketItem>, SQLRepository<BasketItem>>();
             container.RegisterType<IRepository<Customer>, SQLRepository<Customer>>();
-            container.RegisterType<IRepository<Order>, SQLRepository<Order>>();
+            container.RegisterType<IRepository<OnlineOrder>, SQLRepository<OnlineOrder>>();
             container.RegisterType<IRepository<OnlineOrderItem>, SQLRepository<OnlineOrderItem>>();
             container.RegisterType<IRepository<POSTransaction>, SQLRepository<POSTransaction>>();
             container.RegisterType<IRepository<POSTransactionItem>, SQLRepository<POSTransactionItem>>();
@@ -69,7 +69,7 @@ namespace BusinessManager.WebUI
 
             // Data Service Contracts
             container.RegisterType<IBasketService, BasketService>();
-            container.RegisterType<IOrderService, OrderService>();
+            container.RegisterType<IOnlineOrderService, OnlineOrderService>();
             container.RegisterType<IPOSTransactionService, POSTransactionService>();
             container.RegisterType<IPOSSaleService, POSSaleService>();
             container.RegisterType<ICustomerService, CustomerService>();

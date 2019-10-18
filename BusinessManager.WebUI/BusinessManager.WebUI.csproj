@@ -194,7 +194,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LayawayManagerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\OrderManagerController.cs" />
+    <Compile Include="Controllers\OnlineOrderManagerController.cs" />
+    <Compile Include="Controllers\OrderManagerController_old.cs" />
     <Compile Include="Controllers\PaymentManagerController.cs" />
     <Compile Include="Controllers\POSSaleManagerController.cs" />
     <Compile Include="Controllers\POSTransactionController.cs" />
@@ -271,9 +272,9 @@
     <Content Include="Views\ProductCategoryManager\Create.cshtml" />
     <Content Include="Views\ProductCategoryManager\Edit.cshtml" />
     <Content Include="Views\ProductCategoryManager\Delete.cshtml" />
-    <Content Include="Views\OrderManager\Index.cshtml" />
-    <Content Include="Views\OrderManager\OnlineOrderItems.cshtml" />
-    <Content Include="Views\OrderManager\UpdateOrder.cshtml" />
+    <Content Include="Views\OnlineOrderManager\Index.cshtml" />
+    <Content Include="Views\OnlineOrderManager\OnlineOrderItems.cshtml" />
+    <Content Include="Views\OnlineOrderManager\UpdateOnlineOrder.cshtml" />
     <Content Include="Views\Basket\Index.cshtml" />
     <Content Include="Views\Basket\BasketSummary.cshtml" />
     <Content Include="Views\Basket\Checkout.cshtml" />

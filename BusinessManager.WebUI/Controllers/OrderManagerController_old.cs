@@ -8,9 +8,9 @@ namespace BusinessManager.WebUI.Controllers
     [Authorize(Roles = "Admin")]
     public class OrderManagerController : Controller
     {
-        IOrderService orderService;
+        IOnlineOrderService orderService;
 
-        public OrderManagerController(IOrderService orderService)
+        public OrderManagerController(IOnlineOrderService orderService)
         {
             this.orderService = orderService;
         }
@@ -18,7 +18,7 @@ namespace BusinessManager.WebUI.Controllers
         // GET: OrderManager
         public ActionResult Index()
         {
-            List<Order> orders = orderService.GetOrderList();
+            List<OnlineOrder> orders = orderService.GetOnlineOrderList();
             return View(orders);
         }
 
@@ -31,17 +31,17 @@ namespace BusinessManager.WebUI.Controllers
                 "Order Shipped",
                 "Order Complete"
             };
-            Order order = orderService.GetOrder(Id);
+            OnlineOrder order = orderService.GetOnlineOrder(Id);
             return View(order);
         }
 
         [HttpPost]
-        public ActionResult UpdateOrder(Order updatedOrder, string Id)
+        public ActionResult UpdateOrder(OnlineOrder updatedOrder, string Id)
         {
             // only allow update for OrderStatus 
-            Order order = orderService.GetOrder(Id);
+            OnlineOrder order = orderService.GetOnlineOrder(Id);
             order.OrderStatus = updatedOrder.OrderStatus;
-            orderService.UpdateOrder(order);
+            orderService.UpdateOnlineOrder(order);
 
             return RedirectToAction("Index");
         }

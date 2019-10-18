@@ -56,7 +56,7 @@ namespace BusinessManager.Core.Models
 
         public virtual ICollection<Invoice> Invoices { get; set; }
 
-        public virtual ICollection<Order> OnlineOrders { get; set; }
+        public virtual ICollection<OnlineOrder> OnlineOrders { get; set; }
 
         [NotMapped]
         public virtual ICollection<POSSale> POSSales { get; set; }
@@ -68,7 +68,7 @@ namespace BusinessManager.Core.Models
         {
             this.Layaways = new List<Layaway>();
             this.Invoices = new List<Invoice>();
-            this.OnlineOrders = new List<Order>();
+            this.OnlineOrders = new List<OnlineOrder>();
             this.ProductList = new List<Product>();
         }
     }

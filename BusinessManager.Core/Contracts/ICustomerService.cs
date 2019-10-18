@@ -10,6 +10,6 @@ namespace BusinessManager.Core.Contracts
 
         Customer GetCustomer(string customerId);
 
-        List<Order> GetOrders(string customerId);
+        List<OnlineOrder> GetOrders(string customerId);
     }
 }

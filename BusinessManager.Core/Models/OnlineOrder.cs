@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BusinessManager.Core.Models
 {
-    public class Order : BaseEntity
+    public class OnlineOrder : BaseEntity
     {
-        public Order()
+        public OnlineOrder()
         {
             this.OnlineOrderItems = new List<OnlineOrderItem>();
         }

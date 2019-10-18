@@ -6,15 +6,15 @@ using System.Linq;
 
 namespace BusinessManager.Services
 {
-    public class OrderService : IOrderService
+    public class OnlineOrderService : IOnlineOrderService
     {
-        IRepository<Order> orderContext;
-        public OrderService(IRepository<Order> orderContext)
+        IRepository<OnlineOrder> orderContext;
+        public OnlineOrderService(IRepository<OnlineOrder> orderContext)
         {
             this.orderContext = orderContext;
         }
 
-        public void CreateOrder(Order baseOrder, List<BasketItemViewModel> basketItems)
+        public void CreateOnlineOrder(OnlineOrder baseOrder, List<BasketItemViewModel> basketItems)
         {
             foreach (var item in basketItems)
             {
@@ -34,17 +34,17 @@ namespace BusinessManager.Services
             orderContext.Commit();
         }
 
-        public List<Order> GetOrderList()
+        public List<OnlineOrder> GetOnlineOrderList()
         {
             return orderContext.Collection().ToList();
         }
 
-        public Order GetOrder(string Id)
+        public OnlineOrder GetOnlineOrder(string Id)
         {
             return orderContext.Find(Id);
         }
 
-        public void UpdateOrder(Order updatedOrder)
+        public void UpdateOnlineOrder(OnlineOrder updatedOrder)
         {
             orderContext.Update(updatedOrder);
             orderContext.Commit();
