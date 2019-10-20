@@ -1,112 +1,79 @@
-﻿@model IEnumerable<BusinessManager.Core.Models.Invoice>
+﻿@model IEnumerable<BusinessManager.Core.Models.OnlineOrder>
 
 @{
-    ViewBag.Title = "Invoices";
-    int invoiceIndex = 0;
-    int invoiceCount = Model.Count();
-    decimal invoiceCharges = 0;
+    ViewBag.Title = "Online Orders";
+    int onlineorderIndex = 0;
+    int onlineorderCount = Model.Count();
+    decimal onlineorderCharges = 0;
     decimal customerBalance = 0;
-    decimal invoicePayments = 0;
-    decimal invoiceBalance = 0;
-    string paymentNavBtnClass = "btn-pill-golden";
+    decimal onlineorderPayments = 0;
+    decimal onlineorderBalance = 0;
+    string paymentNavBtnClass = "btn-pill-blue";
 
-    string colorBGReceivableSourceDetail = "#fff5cc";          // #fff5cc = yellow 2 
-    string colorBGItemDetail = "#fffcf0";                      // #fffcf0 = yellow 3
+    string colorBGReceivableSourceDetail = "#dbe4ff";          // #fff5cc = yellow 2 
+    string colorBGItemDetail = "#fafbff";                      // #fffcf0 = yellow 3
     ViewBag.ItemDetailBackgroundColor = colorBGItemDetail;
 }
 
-<table id="invoices-table" class="table">
-    @foreach (var invoice in Model)
+<table id="onlineorders-table" class="table">
+    @foreach (var onlineorder in Model)
     {
-        ++invoiceIndex;
-        ViewBag.ReceivableSourceIndex = invoiceIndex;
+        ++onlineorderIndex;
+        ViewBag.ReceivableSourceIndex = onlineorderIndex;
         ViewBag.PaymentNavBtnClass = paymentNavBtnClass;
-        string rowClass = invoiceIndex > 1 ? "hidden" : "table-row-shown";
+        string rowClass = onlineorderIndex > 1 ? "hidden" : "table-row-shown";
 
-        invoiceCharges = invoice.InvoiceItems.Sum(item => item.Quantity * item.Price);
-        string invoiceChargesStr = "$ " + String.Format("{0:#,##0.00}", invoiceCharges);
+        onlineorderCharges = onlineorder.OnlineOrderItems.Sum(item => item.Quantity * item.Price);
+        string onlineorderChargesStr = "$ " + String.Format("{0:#,##0.00}", onlineorderCharges);
 
-        invoicePayments = invoice.InvoicePayments.Sum(item => item.Amount);
-        string invoicePaymentsStr = "$ " + String.Format("{0:#,##0.00}", invoicePayments);
+        onlineorderPayments = onlineorder.OnlineOrderPayments.Sum(item => item.Amount);
+        string onlineorderPaymentsStr = "$ " + String.Format("{0:#,##0.00}", onlineorderPayments);
 
-        invoiceBalance = invoiceCharges - invoicePayments;
-        string invoiceBalanceStr = "$ " + String.Format("{0:#,##0.00}", invoiceBalance);
+        onlineorderBalance = onlineorderCharges - onlineorderPayments;
+        string onlineorderBalanceStr = "$ " + String.Format("{0:#,##0.00}", onlineorderBalance);
 
-        customerBalance += (invoiceCharges - invoicePayments);
+        customerBalance += (onlineorderCharges - onlineorderPayments);
         string customerBalanceStr = String.Format("$ {0:#,##0.00}", customerBalance);
 
-        <tr id="invoice-row" class="@rowClass">
+        <tr id="onlineorder-row" class="@rowClass">
             <td>
                 <div class="col-md-12" style="display: flex; height: 625px">
                     @{
-                        // Invoice Items table styling strings
+                        // Online Order Items table styling strings
                         string inputStyle = "display: inline; margin-left: 10px; width: 60%";
                         string inputGroupStyle = "margin: 1px 6px 1px 0px";
                         string buttonGroupStyle = "margin: 6px 6px 30x 6px";
                         string labelStyle = "width: 35%; text-align: right";
                     }
                     <style>
-                        .CustomerManagerInvoices-fixed-header tbody {
+                        .CustomerManagerOnlineOrders-fixed-header tbody {
                             display: block;
                             overflow: auto;
                             height: 550px;
                             width: 100%;
                         }
 
-                        .CustomerManagerInvoices-fixed_header thead tr {
+                        .CustomerManagerOnlineOrders-fixed_header thead tr {
                             display: block;
                         }
                     </style>
                     <script>
                     </script>
-                    <div id="invoice-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorBGReceivableSourceDetail">
-                        <form id="invoice-form">
-                            <div name="invoice-customer-id" style="display: none">@invoice.CustomerId</div>
-                            <div id="receivable-source-id" name="invoice-id" style="display: none">@invoice.Id</div>
+                    <div id="onlineorder-edit" class="col-md-6" style="flex: 1; padding: 1em; background-color: @colorBGReceivableSourceDetail">
+                        <form id="onlineorder-form">
+                            <div name="onlineorder-customer-id" style="display: none">@onlineorder.CustomerId</div>
+                            <div id="receivable-source-id" name="onlineorder-id" style="display: none">@onlineorder.Id</div>
                             <div style="@inputGroupStyle">
                                 <label class="control-label invoice-label" style="@labelStyle">@Html.DisplayNameFor(m => m.CreatedAt)</label>
                                 <span style="@inputStyle">
-                                    @Html.DisplayFor(model => invoice.CreatedAt, new { htmlAttributes = new { @class = "form-control" } }).ToString().Replace("-07:00", "")
+                                    @Html.DisplayFor(model => onlineorder.CreatedAt, new { htmlAttributes = new { @class = "form-control" } }).ToString().Replace("-07:00", "")
                                 </span>
                             </div>
                             <div style="@inputGroupStyle">
-                                <label class="control-label invoice-label" style="@labelStyle">@Html.DisplayNameFor(model => model.InvoiceNumber)</label>
-                                @{
-                                    var testdate = invoice.InvoiceDate.ToString("yyyy'-'MM'-'dd");
-                                }
-                                <span name="invoice-number" style="@inputStyle">
-                                    @Html.DisplayFor(model => invoice.InvoiceNumber, new
-                                    {
-                                        htmlAttributes = new
-                                        {
-                                            @class = "form-control",
-                                            @onchange = "showSubformSaveBtn(event)"
-                                        }
-                                    })
-                                </span>
-                            </div>
-                            <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_InvoiceDate')"
-                                       class="control-label invoice-label"
-                                       style="@labelStyle">
-                                    @Html.DisplayNameFor(model => model.InvoiceDate)
+                                <label onclick="focusMatchingInput('onlineorder_FirstName')" class="control-label invoice-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.FirstName)
                                 </label>
-                                @Html.EditorFor(model => invoice.InvoiceDate, new
-                                {
-                                    htmlAttributes = new
-                                    {
-                                        @class = "form-control date-input",
-                                        @style = @inputStyle,
-                                        @type = "date",
-                                        @onchange = "showSubformSaveBtn(event)"
-                                    }
-                                })
-                            </div>
-                            <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_PayerFirstName')" class="control-label invoice-label" style="@labelStyle">
-                                    @Html.DisplayNameFor(model => model.PayerFirstName)
-                                </label>
-                                @Html.EditorFor(model => invoice.PayerFirstName, new
+                                @Html.EditorFor(model => onlineorder.FirstName, new
                                 {
                                     htmlAttributes = new
                                     {
@@ -118,10 +85,10 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_PayerLastName')" class="control-label invoice-label" style="@labelStyle">
-                                    @Html.DisplayNameFor(model => model.PayerLastName)
+                                <label onclick="focusMatchingInput('onlineorder_LastName')" class="control-label invoice-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.LastName)
                                 </label>
-                                @Html.EditorFor(model => invoice.PayerLastName, new
+                                @Html.EditorFor(model => onlineorder.LastName, new
                                 {
                                     htmlAttributes = new
                                     {
@@ -136,10 +103,10 @@
 
 
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_PayerPhone')" class="control-label invoice-label" style="@labelStyle">
-                                    @Html.DisplayNameFor(model => model.PayerPhone)
+                                <label onclick="focusMatchingInput('onlineorder_Phone')" class="control-label invoice-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.Phone)
                                 </label>
-                                @Html.EditorFor(model => invoice.PayerPhone, new
+                                @Html.EditorFor(model => onlineorder.Phone, new
                                 {
                                     htmlAttributes = new
                                     {
@@ -152,10 +119,10 @@
                             </div>
 
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_PayerEmail')" class="control-label invoice-label" style="@labelStyle">
-                                    @Html.DisplayNameFor(model => model.PayerEmail)
+                                <label onclick="focusMatchingInput('onlineorder_Email')" class="control-label invoice-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.Email)
                                 </label>
-                                @Html.EditorFor(model => invoice.PayerEmail, new
+                                @Html.EditorFor(model => onlineorder.Email, new
                                 {
                                     htmlAttributes = new
                                     {
@@ -168,10 +135,10 @@
                             </div>
 
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_PayerCompany')" class="control-label invoice-label" style="@labelStyle">
-                                    @Html.DisplayNameFor(model => model.PayerCompany)
+                                <label onclick="focusMatchingInput('onlineorder_CompanyName')" class="control-label invoice-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.CompanyName)
                                 </label>
-                                @Html.EditorFor(model => invoice.PayerCompany, new
+                                @Html.EditorFor(model => onlineorder.CompanyName, new
                                 {
                                     htmlAttributes = new
                                     {
@@ -183,10 +150,10 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_PayerStreet')" class="control-label invoice-label" style="@labelStyle">
-                                    @Html.DisplayNameFor(model => model.PayerStreet)
+                                <label onclick="focusMatchingInput('onlineorder_Street')" class="control-label invoice-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.Street)
                                 </label>
-                                @Html.EditorFor(model => invoice.PayerStreet, new
+                                @Html.EditorFor(model => onlineorder.Street, new
                                 {
                                     htmlAttributes = new
                                     {
@@ -198,10 +165,10 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_PayerCity')" class="control-label invoice-label" style="@labelStyle">
-                                    @Html.DisplayNameFor(model => model.PayerCity)
+                                <label onclick="focusMatchingInput('onlineorder_City')" class="control-label invoice-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.City)
                                 </label>
-                                @Html.EditorFor(model => invoice.PayerCity, new
+                                @Html.EditorFor(model => onlineorder.City, new
                                 {
                                     htmlAttributes = new
                                     {
@@ -213,26 +180,10 @@
                                 })
                             </div>
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_PayerState')" class="control-label invoice-label" style="@labelStyle">
-                                    @Html.DisplayNameFor(model => model.PayerState)
+                                <label onclick="focusMatchingInput('onlineorder_State')" class="control-label invoice-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.State)
                                 </label>
-                                @Html.EditorFor(model => invoice.PayerState, new
-                                {
-                                    htmlAttributes = new
-                                    {
-                                        @class = "form-control input-sm",
-                                        @style = @inputStyle,
-                                        @onchange = "showSubformSaveBtn(event)",
-                                        @onkeyup = "showSubformSaveBtn(event)"
-                                    }
-                                })
-                            </div>
-
-                            <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_PayerZipCode')" class="control-label invoice-label" style="@labelStyle">
-                                    @Html.DisplayNameFor(model => model.PayerZipCode)
-                                </label>
-                                @Html.EditorFor(model => invoice.PayerZipCode, new
+                                @Html.EditorFor(model => onlineorder.State, new
                                 {
                                     htmlAttributes = new
                                     {
@@ -245,10 +196,26 @@
                             </div>
 
                             <div style="@inputGroupStyle">
-                                <label onclick="focusMatchingInput('invoice_OrderStatus')" class="control-label invoice-label" style="@labelStyle">
+                                <label onclick="focusMatchingInput('onlineorder_ZipCode')" class="control-label invoice-label" style="@labelStyle">
+                                    @Html.DisplayNameFor(model => model.ZipCode)
+                                </label>
+                                @Html.EditorFor(model => onlineorder.ZipCode, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control input-sm",
+                                        @style = @inputStyle,
+                                        @onchange = "showSubformSaveBtn(event)",
+                                        @onkeyup = "showSubformSaveBtn(event)"
+                                    }
+                                })
+                            </div>
+
+                            <div style="@inputGroupStyle">
+                                <label onclick="focusMatchingInput('onlineorder_OrderStatus')" class="control-label invoice-label" style="@labelStyle">
                                     @Html.DisplayNameFor(model => model.OrderStatus)
                                 </label>
-                                @Html.EditorFor(model => invoice.OrderStatus, new
+                                @Html.EditorFor(model => onlineorder.OrderStatus, new
                                 {
                                     htmlAttributes = new
                                     {
@@ -260,28 +227,28 @@
                                 })
                             </div>
 
-                            <div name="invoice-summary" style="position: relative; margin: 0px 0px 3px 0px">
+                            <div name="onlineorder-summary" style="position: relative; margin: 0px 0px 3px 0px">
                                 <hr style="margin:  10px 0 0 0; border-width: 2px" />
-                                <h5 style="margin: 0 0 3px 15px; text-decoration: underline; font-size: 15px">This Invoice </h5>
+                                <h5 style="margin: 0 0 3px 15px; text-decoration: underline; font-size: 15px">This Order </h5>
                                 <div style="margin: 0 0 0 40px">
                                     <span>Total Charges: </span>
                                     <span name="transaction-charges"
                                           class="pull-right"
-                                          style="margin-right: 25px">@invoiceChargesStr</span>
+                                          style="margin-right: 25px">@onlineorderChargesStr</span>
                                 </div>
                                 <div style="margin: 0 0 0 40px">
                                     <span>Payments: </span>
                                     <span name="current-payments"
                                             class="pull-right"
-                                            style="margin-right: 25px">@invoicePaymentsStr</span>
+                                            style="margin-right: 25px">@onlineorderPaymentsStr</span>
                                 </div>
                                 <div style="margin: 0 0 0 40px">
                                     <span>Balance: </span>
                                     <span name="current-balance"
                                             class="pull-right"
-                                            style="margin-right: 25px">@invoiceBalanceStr</span>
+                                            style="margin-right: 25px">@onlineorderBalanceStr</span>
                                 </div>
-                                <h5 style="margin: 2px 0 2px 15px; text-decoration: underline; font-size: 15px">All Customer Invoices</h5>
+                                <h5 style="margin: 2px 0 2px 15px; text-decoration: underline; font-size: 15px">All Customer Orders</h5>
                                 <div style="margin: 0 0 0 40px">
                                     <span name="customer-balance" class="hidden">@customerBalanceStr</span>
                                     <span>Amount Pending:</span>
@@ -296,7 +263,7 @@
                                 <button type="button"
                                         name="subform-save"
                                         class="btn btn-sm btn-default btn-success-text hidden"
-                                        onclick="saveSubformData(event, 'UpdateInvoice', getUIInvoiceData)">
+                                        onclick="saveSubformData(event, 'UpdateOnlineOrder', getUIOnlineOrderData)">
                                     <strong>Save</strong>
                                     <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                                 </button>
@@ -309,7 +276,7 @@
                                 <button type="button"
                                         name="product-lookup"
                                         class="btn btn-sm btn-default margin-bottom-3"
-                                        onclick="openProductLookup(event, '@invoice.Id', 'Invoices')">
+                                        onclick="openProductLookup(event, '@onlineorder.Id', 'OnlineOrders')">
                                     Add Item
                                 </button>
                                 <button type="button"
@@ -330,7 +297,7 @@
                                             <button type="button"
                                                     name="payments-menu-add-payment"
                                                     class="btn btn-sm btn-default btn-block"
-                                                    onclick="addPayment(event, 'invoices')">
+                                                    onclick="addPayment(event, 'onlineorders')">
                                                 Add Payment
                                             </button>
                                         </li>
@@ -353,11 +320,11 @@
                                     </ul>
                                 </div>
                                 @{
-                                    if (invoice.InvoiceItems.Count == 0)
+                                    if (onlineorder.OnlineOrderItems.Count == 0)
                                     {
                                         <button type="button"
                                                 class="btn btn-sm btn-default btn-danger-text margin-bottom-3"
-                                                onclick="deleteInvoice(event)">
+                                                onclick="deleteOnlineOrder(event)">
                                             Delete
                                         </button>
                                     }
@@ -376,7 +343,7 @@
                                             type="text"
                                             class="form-control input-sm"
                                             style="display: inline; max-width: 70%; transform: translateY(-8px)"
-                                            onkeypress="getProductByUPC(event, '@invoice.Id', 'Invoice')" />
+                                            onkeypress="getProductByUPC(event, '@onlineorder.Id', 'OnlineOrder')" />
                                 </div>
                             </div>
                         </form>
@@ -386,18 +353,18 @@
                         var subItemInputStyle2 = "display: inline; max-width: 55%; margin: 0 0 5px 0";
                         var subItemLabelStyle = "display: inline; max-width: 35%; margin-right: 15px; margin-top: 10px; font-size: 90%";
                     }
-                    <div id="sub-items-table" class="col-md-6 CustomerManagerInvoices-fixed-header" style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding-left: 0">
-                        <h4 style="margin-left: 10px">Invoice Items</h4>
+                    <div id="sub-items-table" class="col-md-6 CustomerManagerOnlineOrders-fixed-header" style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding-left: 0">
+                        <h4 style="margin-left: 10px">Order Items</h4>
                         <table class="table">
                             @{
-                                var itemsCount = invoice.InvoiceItems.Count;
+                                var itemsCount = onlineorder.OnlineOrderItems.Count;
                                 var itemIndex = 0;
                                 var rowElementId = "";
                             }
-                            @foreach (var item in invoice.InvoiceItems)
+                            @foreach (var item in onlineorder.OnlineOrderItems)
                             {
                                 ++itemIndex;
-                                rowElementId = "row-" + invoiceIndex + "-" + itemIndex;
+                                rowElementId = "row-" + onlineorderIndex + "-" + itemIndex;
                                 <tr id=@rowElementId style="margin-top: 20px; background-color: @colorBGItemDetail">                                               
                                     <td style="position: relative">
                                         <div>
@@ -407,19 +374,19 @@
                                                     src="~/Content/ProductImages/@item.Image"
                                                     alt="Image" />
                                         </div>
-                                        @* InvoiceItem delete button here *@
-                                        <input id="invoice-item-delete"
+                                        @* OnlineOrderItem delete button here *@
+                                        <input id="onlineorder-item-delete"
                                                 type="button"
                                                 value="Delete"
                                                 style="float: left; margin: 5px"
                                                 class="btn btn-sm btn-default btn-danger-text"
-                                                onclick="deleteInvoiceItem(event, '@item.Id', '@rowElementId', '@item.Image', '@item.ProductName')" />
+                                                onclick="deleteOnlineOrderItem(event, '@item.Id', '@rowElementId', '@item.Image', '@item.ProductName')" />
                                     </td>
                                     <td>
                                         <div style="padding-top: 7px">
-                                            <div name="invoiceitem-item-id" style="display: none">@item.Id</div>
-                                            <div name="invoiceitem-product-id" style="display: none">@item.ProductId</div>
-                                            <div name="invoiceitem-quantity" style="display: none">@item.Quantity</div>
+                                            <div name="onlineorderitem-item-id" style="display: none">@item.Id</div>
+                                            <div name="onlineorderitem-product-id" style="display: none">@item.ProductId</div>
+                                            <div name="onlineorderitem-quantity" style="display: none">@item.Quantity</div>
                                             <strong>
                                                 @Html.DisplayFor(m => item.ProductName, new
                                                 {
@@ -439,10 +406,10 @@
                                                 {
                                                     @class = "form-control input-sm",
                                                     @style = subItemInputStyle1,
-                                                    @onkeyup = "showInvoiceItemSaveBtn(event)",
-                                                    @onchange = "showInvoiceItemSaveBtn(event)",
-                                                    @onpaste = "showInvoiceItemSaveBtn(event)",
-                                                    @oncut = "showInvoiceItemSaveBtn(event)"
+                                                    @onkeyup = "showOnlineOrderItemSaveBtn(event)",
+                                                    @onchange = "showOnlineOrderItemSaveBtn(event)",
+                                                    @onpaste = "showOnlineOrderItemSaveBtn(event)",
+                                                    @oncut = "showOnlineOrderItemSaveBtn(event)"
                                                 }
                                             })
                                         </div>
@@ -453,10 +420,10 @@
                                                 {
                                                     @class = "form-control input-sm pull-right",
                                                     @style = subItemInputStyle2,
-                                                    @onkeyup = "showInvoiceItemSaveBtn(event)",
-                                                    @onchange = "showInvoiceItemSaveBtn(event)",
-                                                    @onpaste = "showInvoiceItemSaveBtn(event)",
-                                                    @oncut = "showInvoiceItemSaveBtn(event)"
+                                                    @onkeyup = "showOnlineOrderItemSaveBtn(event)",
+                                                    @onchange = "showOnlineOrderItemSaveBtn(event)",
+                                                    @onpaste = "showOnlineOrderItemSaveBtn(event)",
+                                                    @oncut = "showOnlineOrderItemSaveBtn(event)"
                                                 }
                                             })
 
@@ -475,10 +442,10 @@
                                                 {
                                                     @class = "form-control input-sm pull-right",
                                                     @style = @subItemInputStyle2,
-                                                    @onkeyup = "showInvoiceItemSaveBtn(event)",
-                                                    @onchange = "showInvoiceItemSaveBtn(event)",
-                                                    @onpaste = "showInvoiceItemSaveBtn(event)",
-                                                    @oncut = "showInvoiceItemSaveBtn(event)"
+                                                    @onkeyup = "showOnlineOrderItemSaveBtn(event)",
+                                                    @onchange = "showOnlineOrderItemSaveBtn(event)",
+                                                    @onpaste = "showOnlineOrderItemSaveBtn(event)",
+                                                    @oncut = "showOnlineOrderItemSaveBtn(event)"
                                                 }
                                             })
 
@@ -495,16 +462,16 @@
                                             <span name="QuantityOldValue" class="hidden">@item.Quantity</span>
                                             <span name="PriceOldValue" class="hidden">@item.Price</span>
                                             <p><label style="margin-right: 5px; width: 40%">Item Total </label><span name="line-total" class="text-primary">@(item.Quantity * item.Price)</span></p>
-                                            <button name="invoice-item-save"
+                                            <button name="onlineorder-item-save"
                                                     type="button"
                                                     style="margin: 0 0 3px 0"
                                                     class="btn btn-sm btn-default btn-success-text hidden"
-                                                    onclick="updateInvoiceItem(event, '@item.Id')">
+                                                    onclick="updateOnlineOrderItem(event, '@item.Id')">
                                                 <strong>Save</strong>
                                                 <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                                             </button>
                                             <div class="text-danger">
-                                                <span name="invoiceitems-row-number">@itemIndex</span> / <span name="invoiceitems-row-count">@itemsCount</span>
+                                                <span name="onlineorderitems-row-number">@itemIndex</span> / <span name="onlineorderitems-row-count">@itemsCount</span>
                                             </div>
                                         </div>
                                     </td>
@@ -514,51 +481,51 @@
                     </div>
 
                     <div id="new-payment"
-                            class="col-md-6 CustomerManagerInvoices-fixed-header hidden"
+                            class="col-md-6 CustomerManagerOnlineOrders-fixed-header hidden"
                             style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding: 0 15px 0 0; margin: 0 0 0 0">
                         @Html.Partial("NewPayment")
                     </div>
 
                     <div id="payment-list-table"
-                            class="col-md-6 CustomerManagerInvoices-fixed-header hidden"
+                            class="col-md-6 CustomerManagerOnlineOrders-fixed-header hidden"
                             style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding-left: 0">
                         @{
-                            ViewBag.CurrReceivableSourceId = invoice.Id;
+                            ViewBag.CurrReceivableSourceId = onlineorder.Id;
                         }
-                        @Html.Partial("PaymentList", invoice.InvoicePayments)
+                        @Html.Partial("PaymentList", onlineorder.OnlineOrderPayments)
                     </div>
 
                     <div id="payments-table"
-                            class="col-md-6 CustomerManagerInvoices-fixed-header hidden"
+                            class="col-md-6 CustomerManagerOnlineOrders-fixed-header hidden"
                             style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding-left: 0">
                         @{
-                            ViewBag.CurrReceivableSourceId = invoice.Id;
+                            ViewBag.CurrReceivableSourceId = onlineorder.Id;
                         }
-                        @Html.Partial("Payments", invoice.InvoicePayments)
+                        @Html.Partial("Payments", onlineorder.OnlineOrderPayments)
                     </div>
                 </div>
 
                 @*  ################### RECORD NAVIGATION BUTTONS #####################  *@
 
-                <div name="invoice-nav-group" class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
-                    Invoice <span id="subtable-row-number" name="invoices-table-row-number">@invoiceIndex</span> of <span name="invoices-row-count" style="margin-right: 20px">@invoiceCount</span>
+                <div name="onlineorder-nav-group" class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
+                    Online Order <span id="subtable-row-number" name="onlineorders-table-row-number">@onlineorderIndex</span> of <span name="onlineorders-row-count" style="margin-right: 20px">@onlineorderCount</span>
                     <div style="display: inline">
-                        <button type="button" class="btn-pill-golden" onclick="navFirst(event)">
+                        <button type="button" class="btn-pill-blue" onclick="navFirst(event)">
                             <span class="glyphicon glyphicon-fast-backward"
                                     style="padding: 0 3px 0 3px" >
                             </span>
                         </button>
-                        <button type="button" class="btn-pill-golden" onclick="navPrev(event)">
+                        <button type="button" class="btn-pill-blue" onclick="navPrev(event)">
                             <span class="glyphicon glyphicon-arrow-left"
                                     style="padding: 0 3px 0 3px" >
                             </span>
                         </button>
-                        <button type="button" class="btn-pill-golden" onclick="navNext(event)">
+                        <button type="button" class="btn-pill-blue" onclick="navNext(event)">
                             <span class="glyphicon glyphicon-arrow-right"
                                     style="padding: 0 3px 0 3px" >
                             </span>
                         </button>
-                        <button type="button" class="btn-pill-golden" onclick="navLast(event)">
+                        <button type="button" class="btn-pill-blue" onclick="navLast(event)">
                             <span class="glyphicon glyphicon-fast-forward"
                                     style="padding: 0 3px 0 3px" >
                             </span>

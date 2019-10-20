@@ -195,7 +195,6 @@
     <Compile Include="Controllers\LayawayManagerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OnlineOrderManagerController.cs" />
-    <Compile Include="Controllers\OrderManagerController_old.cs" />
     <Compile Include="Controllers\PaymentManagerController.cs" />
     <Compile Include="Controllers\POSSaleManagerController.cs" />
     <Compile Include="Controllers\POSTransactionController.cs" />
@@ -316,6 +315,7 @@
     <Content Include="Views\CustomerManager\Payments.cshtml" />
     <Content Include="Views\CustomerManager\PaymentList.cshtml" />
     <Content Include="Views\CustomerManager\POSSales.cshtml" />
+    <Content Include="Views\CustomerManager\OnlineOrders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

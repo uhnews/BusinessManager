@@ -21,6 +21,8 @@ namespace BusinessManager.WebUI.Controllers
         IRepository<Payment> paymentContext;
         IRepository<POSSale> possaleContext;
         IRepository<POSSaleItem> possaleItemContext;
+        IRepository<OnlineOrder> onlineorderContext;
+        IRepository<OnlineOrderItem> onlineorderItemContext;
 
         // dependency injection
         public CustomerManagerController(
@@ -32,7 +34,9 @@ namespace BusinessManager.WebUI.Controllers
                                             IRepository<Sequence> sequenceContext,
                                             IRepository<Payment> paymentContext,
                                             IRepository<POSSale> possaleContext,
-                                            IRepository<POSSaleItem> possaleItemContext
+                                            IRepository<POSSaleItem> possaleItemContext,
+                                            IRepository<OnlineOrder> onlineorderContext,
+                                            IRepository<OnlineOrderItem> onlineorderItemContext
                                         )
         {
             this.customerContext = customerContext;
@@ -44,6 +48,8 @@ namespace BusinessManager.WebUI.Controllers
             this.paymentContext = paymentContext;
             this.possaleContext = possaleContext;
             this.possaleItemContext = possaleItemContext;
+            this.onlineorderContext = onlineorderContext;
+            this.onlineorderItemContext = onlineorderItemContext;
         }
 
         // GET: Customers
@@ -83,10 +89,14 @@ namespace BusinessManager.WebUI.Controllers
             }
             else
             {
+                // get ProductList
+                IProductRetrieveService productService = new ProductRetrieveService();
+                customer.ProductList = productService.GetProducts();
+
                 // get Invoices
                 // related Invoice records added by EF
 
-                // sort InvoicesItems
+                // sort Invoices and InvoicesItems
                 ICollection<Invoice> invoices = customer.Invoices;
                 customer.Invoices = invoices.OrderByDescending(i => i.ModifiedAt).ToList();
                 foreach (Invoice invoice in customer.Invoices)
@@ -95,16 +105,22 @@ namespace BusinessManager.WebUI.Controllers
                     invoice.InvoiceItems = invoiceItems.OrderByDescending(i => i.ModifiedAt).ToList();
                 }
 
-                // get ProductList
-                IProductRetrieveService productService = new ProductRetrieveService();
-                customer.ProductList = productService.GetProducts();
+                // get OnlineOrders
+                // related OnlineOrder and OnlineOrderItem records added by EF
 
-                // get (online) Orders
+                // sort OnlineOrders and OnlineOrderItems
+                ICollection<OnlineOrder> onlineorders = customer.OnlineOrders;
+                customer.OnlineOrders = onlineorders.OrderByDescending(i => i.ModifiedAt).ToList();
+                foreach (OnlineOrder onlineorder in customer.OnlineOrders)
+                {
+                    ICollection<OnlineOrderItem> onlineorderItems = onlineorder.OnlineOrderItems;
+                    onlineorder.OnlineOrderItems = onlineorderItems.OrderByDescending(i => i.ModifiedAt).ToList();
+                }
 
                 // get Layaways
                 // related Layaway and LayawayItem records added by EF
 
-                // sort LayawayItems
+                // sort Layaways and LayawayItems
                 ICollection<Layaway> layaways = customer.Layaways;
                 customer.Layaways = layaways.OrderByDescending(i => i.ModifiedAt).ToList();
                 foreach (Layaway layaway in customer.Layaways)
@@ -214,38 +230,35 @@ namespace BusinessManager.WebUI.Controllers
         public JsonResult AddInvoice(string customerId)
         {
             IInvoiceDataService dataService = new InvoiceDataService();
-            var inserResult = dataService.AddInvoice(invoiceContext, sequenceContext, customerId);
+            object inserResult = dataService.AddInvoice(invoiceContext, sequenceContext, customerId);
             return Json(inserResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult DeleteInvoice(string Id)
         {
             IInvoiceDataService dataService = new InvoiceDataService();
-            var deleteResult = dataService.DeleteInvoice(invoiceContext, Id);
+            object deleteResult = dataService.DeleteInvoice(invoiceContext, Id);
             return Json(deleteResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult UpdateInvoice(string data)
         {
             IInvoiceDataService dataService = new InvoiceDataService();
-
-            var updateResult = dataService.UpdateInvoice(invoiceContext, data);
+            object updateResult = dataService.UpdateInvoice(invoiceContext, data);
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult AddInvoiceItem(string data)
         {
             IInvoiceDataService dataService = new InvoiceDataService();
-            var addResult = dataService.AddItemToInvoice(invoiceItemContext, data);
-
+            object addResult = dataService.AddItemToInvoice(invoiceItemContext, data);
             return Json(addResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult DeleteInvoiceItem(string Id)
         {
             IInvoiceDataService dataService = new InvoiceDataService();
-            var deleteResult = dataService.RemoveItemFromInvoice(invoiceItemContext, Id);
-
+            object deleteResult = dataService.RemoveItemFromInvoice(invoiceItemContext, Id);
             return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
         }
 
@@ -269,38 +282,35 @@ namespace BusinessManager.WebUI.Controllers
         public JsonResult AddLayaway(string customerId)
         {
             ILayawayDataService dataService = new LayawayDataService();
-            var inserResult = dataService.AddLayaway(layawayContext, customerId);
+            object inserResult = dataService.AddLayaway(layawayContext, customerId);
             return Json(inserResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult DeleteLayaway(string Id)
         {
             ILayawayDataService dataService = new LayawayDataService();
-            var deleteResult = dataService.DeleteLayaway(layawayContext, Id);
+            object deleteResult = dataService.DeleteLayaway(layawayContext, Id);
             return Json(deleteResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult UpdateLayaway(string data)
         {
             ILayawayDataService dataService = new LayawayDataService();
-
-            var updateResult = dataService.UpdateLayaway(layawayContext, data);
+            object updateResult = dataService.UpdateLayaway(layawayContext, data);
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult AddLayawayItem(string data)
         {
             ILayawayDataService dataService = new LayawayDataService();
-            var addResult = dataService.AddItemToLayaway(layawayItemContext, data);
-
+            object addResult = dataService.AddItemToLayaway(layawayItemContext, data);
             return Json(addResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult DeleteLayawayItem(string Id)
         {
             ILayawayDataService dataService = new LayawayDataService();
-            var deleteResult = dataService.RemoveItemFromLayaway(layawayItemContext, Id);
-
+            object deleteResult = dataService.RemoveItemFromLayaway(layawayItemContext, Id);
             return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
         }
 
@@ -324,38 +334,35 @@ namespace BusinessManager.WebUI.Controllers
         public JsonResult AddPOSSale(string customerId)
         {
             IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
-            var inserResult = dataService.AddPOSSale(customerId);
+            object inserResult = dataService.AddPOSSale(customerId);
             return Json(inserResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult DeletePOSSale(string Id)
         {
             IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
-            var deleteResult = dataService.DeletePOSSale(Id);
+            object deleteResult = dataService.DeletePOSSale(Id);
             return Json(deleteResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult UpdatePOSSale(string data)
         {
             IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
-
-            var updateResult = dataService.UpdatePOSSale(data);
+            object updateResult = dataService.UpdatePOSSale(data);
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult AddPOSSaleItem(string data)
         {
             IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
-            var addResult = dataService.AddItemToPOSSale(data);
-
+            object addResult = dataService.AddItemToPOSSale(data);
             return Json(addResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult DeletePOSSaleItem(string Id)
         {
             IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
-            var deleteResult = dataService.RemoveItemFromPOSSale(Id);
-
+            object deleteResult = dataService.RemoveItemFromPOSSale(Id);
             return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
         }
 
@@ -370,6 +377,59 @@ namespace BusinessManager.WebUI.Controllers
         {
             IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
             object updateResult = dataService.UpdatePOSSaleItemQuantity(Id, quantity);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        //       *********************** OnlineOrder Methods ***********************
+        //
+        public JsonResult AddOnlineOrder(string customerId)
+        {
+            IOnlineOrderService dataService = new OnlineOrderService(onlineorderContext);
+            object inserResult = dataService.AddOnlineOrder(customerId);
+            return Json(inserResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DeleteOnlineOrder(string Id)
+        {
+            IOnlineOrderService dataService = new OnlineOrderService(onlineorderContext);
+            object deleteResult = dataService.DeleteOnlineOrder(Id);
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult UpdateOnlineOrder(string data)
+        {
+            IOnlineOrderService dataService = new OnlineOrderService(onlineorderContext);
+            object updateResult = dataService.UpdateOnlineOrder(data);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AddOnlineOrderItem(string data)
+        {
+            IOnlineOrderService dataService = new OnlineOrderService(onlineorderContext, onlineorderItemContext);
+            object addResult = dataService.AddItemToOnlineOrder(data);
+            return Json(addResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DeleteOnlineOrderItem(string Id)
+        {
+            IOnlineOrderService dataService = new OnlineOrderService(onlineorderContext, onlineorderItemContext);
+            object deleteResult = dataService.RemoveItemFromOnlineOrder(Id);
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
+        }
+
+        public JsonResult UpdateOnlineOrderItem(string Id, string productDescription, int quantity, decimal price)
+        {
+            //IOnlineOrderService dataService = new OnlineOrderService(onlineorderContext, onlineorderItemContext);
+            IOnlineOrderService dataService = new OnlineOrderService(onlineorderContext);
+            object updateResult = dataService.UpdateOnlineOrderItem(Id, productDescription, quantity, price);
+            return Json(updateResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult UpdateOnlineOrderItemQuantity(string Id, int quantity)
+        {
+            IOnlineOrderService dataService = new OnlineOrderService(onlineorderContext, onlineorderItemContext);
+            object updateResult = dataService.UpdateOnlineOrderItemQuantity(Id, quantity);
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 

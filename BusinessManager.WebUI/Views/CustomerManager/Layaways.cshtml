@@ -5,7 +5,7 @@
     int layawayIndex = 0;
     int layawayCount = Model.Count();
     decimal layawayCharges = 0;
-    decimal customerCharges = 0;
+    decimal customerBalance = 0;
     decimal layawayPayments = 0;
     decimal layawayBalance = 0;
     string paymentNavBtnClass = "btn-pill-copper";
@@ -34,8 +34,8 @@
         string layawayBalanceStr = "$ " + String.Format("{0:#,##0.00}", layawayBalance);
         
 
-        customerCharges += (layawayCharges - layawayPayments);
-        string customerChargesStr = String.Format("$ {0:#,##0.00}", customerCharges);
+        customerBalance += (layawayCharges - layawayPayments);
+        string customerBalanceStr = String.Format("$ {0:#,##0.00}", customerBalance);
 
         <tr id="layaway-row" class="@rowClass">
             <td>
@@ -197,7 +197,7 @@
                                 </div>                                
                                 <h5 style="margin: 2px 0 2px 15px; text-decoration: underline; font-size: 15px">All Customer Layaways</h5>
                                 <div style="margin: 0 0 0 40px">
-                                    <span name="charges-accumulator" class="hidden">@customerChargesStr</span>
+                                    <span name="customer-balance" class="hidden">@customerBalanceStr</span>
                                     <span>Amount Pending:</span>
                                     <span name="all-pending-transaction-charges"
                                             class="pull-right"
@@ -460,7 +460,7 @@
                 @*  ################### RECORD NAVIGATION BUTTONS #####################  *@
 
                 <div name="layaway-nav-group" class="text-danger" style="position: absolute; left: 25px; bottom: 4px; margin-top: 0">
-                    Layaway <span name="layaways-table-row-number">@layawayIndex</span> of <span name="layaways-row-count" style="margin-right: 30px">@layawayCount</span>
+                    Layaway <span id="subtable-row-number" name="layaways-table-row-number">@layawayIndex</span> of <span name="layaways-row-count" style="margin-right: 30px">@layawayCount</span>
                     <div style="display: inline">
                         <button type="button" class="btn-pill-copper" onclick="navFirst(event)">
                             <span class="glyphicon glyphicon-fast-backward" 

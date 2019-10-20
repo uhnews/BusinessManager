@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessManager.Core.Models
 {
@@ -9,6 +10,7 @@ namespace BusinessManager.Core.Models
         public OnlineOrder()
         {
             this.OnlineOrderItems = new List<OnlineOrderItem>();
+            this.OnlineOrderPayments = new List<Payment>();
         }
 
         [StringLength(128)]
@@ -60,5 +62,8 @@ namespace BusinessManager.Core.Models
         public int TotalItemCount { get; set; }
 
         public virtual ICollection<OnlineOrderItem> OnlineOrderItems { get; set; }
+
+        [NotMapped]
+        public virtual ICollection<Payment> OnlineOrderPayments { get; set; }
     }
 }

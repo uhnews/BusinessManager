@@ -110,6 +110,11 @@ namespace BusinessManager.Services
                 this.GetPayments(posssale, "possales");
             }
 
+            foreach (OnlineOrder onlineorder in customer.OnlineOrders)
+            {
+                this.GetPayments(onlineorder, "onlineorders");
+            }
+
             return;
         }
 
@@ -130,6 +135,10 @@ namespace BusinessManager.Services
                 case "possales":
                     model = (POSSale)model;
                     modelId = ((POSSale)model).Id;
+                    break;
+                case "onlineorders":
+                    model = (OnlineOrder)model;
+                    modelId = ((OnlineOrder)model).Id;
                     break;
                 default:
                     return;
@@ -156,6 +165,9 @@ namespace BusinessManager.Services
                         break;
                     case "possales":
                         ((POSSale)model).POSSalePayments = payments;
+                        break;
+                    case "onlineorders":
+                        ((OnlineOrder)model).OnlineOrderPayments = payments;
                         break;
                 }                
             }

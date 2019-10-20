@@ -10,5 +10,12 @@ namespace BusinessManager.Core.Contracts
         List<OnlineOrder> GetOnlineOrderList();
         OnlineOrder GetOnlineOrder(string Id);
         void UpdateOnlineOrder(OnlineOrder updatedOrder);
+        object UpdateOnlineOrder(string data);
+        object AddOnlineOrder(string customerId);
+        object DeleteOnlineOrder(string Id);
+        object AddItemToOnlineOrder(string data);
+        object RemoveItemFromOnlineOrder(string Id);
+        object UpdateOnlineOrderItem(string Id, string productDescription, int quantity, decimal price);
+        object UpdateOnlineOrderItemQuantity(string Id, int quantity);
     }
 }

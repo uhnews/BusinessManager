@@ -184,6 +184,28 @@ textarea {
         background-color: #298938;
     }
 
+.btn-pill-blue {
+    background-color: #668cff;
+    border: none;
+    color: white;
+    padding: 0px 6px 3px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    max-height: 16px;
+    border-radius: 16px;
+    font-size: 80%;
+}
+
+    .btn-pill-blue:hover {
+        background-color: #b3c6ff;
+    }
+
+    .btn-pill-blue:active {
+        background-color: #668cff;
+    }
+
 
 /* USE THIS TO CENTER AN <a> OR <img> TAG INSIDE A <div> WITH A CLASS 'CONTAINER-CENTER-VERTICAL' *************************************************************** */
 .container-center-vertical {
@@ -302,6 +324,10 @@ textarea {
 
 .border-green {
     border-color: #9de2a7;
+}
+
+.border-blue {
+    border-color: #99b3ff;
 }
 
 .border-info {

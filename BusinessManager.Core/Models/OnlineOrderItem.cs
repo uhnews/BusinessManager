@@ -8,7 +8,7 @@ namespace BusinessManager.Core.Models
     {
         [StringLength(128)]
         [Required]
-        public string OrderId { get; set; }
+        public string OnlineOrderId { get; set; }
 
         [StringLength(128)]
         [Required]

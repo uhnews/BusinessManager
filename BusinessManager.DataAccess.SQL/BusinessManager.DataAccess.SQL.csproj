@@ -358,6 +358,26 @@
     <Compile Include="Migrations\201910172128196_AddFieldsToBasketItem.Designer.cs">
       <DependentUpon>201910172128196_AddFieldsToBasketItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910191847277_ChangeOrderIdToOnlineOrderId.cs" />
+    <Compile Include="Migrations\201910191847277_ChangeOrderIdToOnlineOrderId.Designer.cs">
+      <DependentUpon>201910191847277_ChangeOrderIdToOnlineOrderId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910191930127_TryChangeOrderIdToOnlineOrderId.cs" />
+    <Compile Include="Migrations\201910191930127_TryChangeOrderIdToOnlineOrderId.Designer.cs">
+      <DependentUpon>201910191930127_TryChangeOrderIdToOnlineOrderId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910191939322_TryChangeOrderIdToOnlineOrderId-2.cs" />
+    <Compile Include="Migrations\201910191939322_TryChangeOrderIdToOnlineOrderId-2.Designer.cs">
+      <DependentUpon>201910191939322_TryChangeOrderIdToOnlineOrderId-2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910191947014_DeleteOnlineOderItem.cs" />
+    <Compile Include="Migrations\201910191947014_DeleteOnlineOderItem.Designer.cs">
+      <DependentUpon>201910191947014_DeleteOnlineOderItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910191951093_RestoreOnlineOrderItem.cs" />
+    <Compile Include="Migrations\201910191951093_RestoreOnlineOrderItem.Designer.cs">
+      <DependentUpon>201910191951093_RestoreOnlineOrderItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -558,6 +578,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910172128196_AddFieldsToBasketItem.resx">
       <DependentUpon>201910172128196_AddFieldsToBasketItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910191847277_ChangeOrderIdToOnlineOrderId.resx">
+      <DependentUpon>201910191847277_ChangeOrderIdToOnlineOrderId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910191930127_TryChangeOrderIdToOnlineOrderId.resx">
+      <DependentUpon>201910191930127_TryChangeOrderIdToOnlineOrderId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910191939322_TryChangeOrderIdToOnlineOrderId-2.resx">
+      <DependentUpon>201910191939322_TryChangeOrderIdToOnlineOrderId-2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910191947014_DeleteOnlineOderItem.resx">
+      <DependentUpon>201910191947014_DeleteOnlineOderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910191951093_RestoreOnlineOrderItem.resx">
+      <DependentUpon>201910191951093_RestoreOnlineOrderItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

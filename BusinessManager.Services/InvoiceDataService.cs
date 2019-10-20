@@ -57,6 +57,10 @@ namespace BusinessManager.Services
 
                 ICustomerService customerService = new CustomerService();
                 Customer customer = customerService.GetCustomer(customerId);
+                if (customer == null)
+                {
+                    throw new Exception("Customer not found.");
+                }
 
                 Invoice invoice = new Invoice()
                 {
