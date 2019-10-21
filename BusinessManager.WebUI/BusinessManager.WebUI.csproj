@@ -316,6 +316,7 @@
     <Content Include="Views\CustomerManager\PaymentList.cshtml" />
     <Content Include="Views\CustomerManager\POSSales.cshtml" />
     <Content Include="Views\CustomerManager\OnlineOrders.cshtml" />
+    <Content Include="Views\POSTransaction\PaymentForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

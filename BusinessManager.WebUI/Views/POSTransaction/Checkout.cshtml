@@ -2,138 +2,159 @@
 
 @{
     ViewBag.Title = "POS Transaction Checkout";
+    string customGray = "#ced8e4";
+    string primaryBlue = "#337ab7";
 }
 
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()    
+    @Html.AntiForgeryToken()
 
+    <style>
+        .POSTransactionCheckout-fixed-header tbody {
+            display: block;
+            overflow: auto;
+            height: 685px;
+            width: 100%;
+        }
+
+        .CustomerManagerInvoices-fixed_header thead tr {
+            display: block;
+        }
+    </style>
     <h4 style="padding: 15px 10px 0px 10px"><span class="fas fa-cash-register" style="font-size: x-large">&nbsp;&nbsp;</span><span class="fas fa-check" style="font-size: x-large">&nbsp;&nbsp;</span>POS Transaction Checkout</h4>
-    <hr />
+    <hr style="margin-bottom: 5px" />
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         @{
-            string labelWidth = "col-md-3";
+            string labelWidth = "col-md-4";
             string fieldWidth = "col-md-8";
             string maxfieldWidth = "100%";
-            string inputGroupStyle = "margin: 5px 0 5px 0; padding: 0 0 0 0";
+            string fieldStyle = "padding-left: 0; padding-right: 0";
+            string inputGroupStyle = "margin: 3px 0 3px 0; padding: 0 0 0 0";
             string inputStyle1 = "margin-left: 0; margin-right: 0";
         }
 
-        <div class="col-md-6">
+        <div class="col-md-6" style="background-color: @primaryBlue; margin: 0 15px 0 0; padding: 15px 15px 5px 15px; max-width: 45%; height: 730px; border-radius: 5px">
+            <div class="col-md-12" style="padding-top: 12px; border-radius: 5px; background-color: @customGray">
 
-            <div class="form-group d-none" style="display: none">
-                <div>
-                    @Html.Hidden("CustomerId")
+                <div class="form-group" style="display: none">
+                    <div>
+                        @Html.Hidden("CustomerId")
+                    </div>
                 </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                @* *********************************************************************************************************** *@
+                <div class="form-group">
+                    <label class="control-label @labelWidth">Sale Summary</label>
+                    <div class="@fieldWidth" style="margin-top: 5px">
+                        <div class="bg-info" style="height: 1px; margin: 0 0 0 0; max-width: 100%"></div> @* used to draw line *@
+                        <strong style="padding-top: 0; margin-top: 3px">
+                            Items: @Model.TotalItemCount   <br />
+                            Amount: @string.Format("{0:c}", Model.TotalAmount)
+                        </strong>
+                        <div class="bg-info" style="height: 1px; margin: 0 0 0 0; max-width: 100%"></div> @* used to draw line *@
+                    </div>
+                </div>
+                @* *********************************************************************************************************** *@
+
+                @{
+                    var itemCount = Model.TotalItemCount;
+                    ViewBag.TotalCharges = Model.TotalAmount;
+                }
             </div>
 
-            <div class="form-group" style="@inputGroupStyle">
-                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
-                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-                </div>
+            <div class="col-md-12" style="padding: 0">
+                @Html.Partial("PaymentForm")
             </div>
 
-            <div class="form-group" style="@inputGroupStyle">
-                @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
-                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group" style="@inputGroupStyle">
-                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
-                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group" style="@inputGroupStyle">
-                @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
-                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group" style="@inputGroupStyle">
-                @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
-                    @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group" style="@inputGroupStyle">
-                @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
-                    @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group" style="@inputGroupStyle">
-                @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
-                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group" style="@inputGroupStyle">
-                @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
-                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group" style="@inputGroupStyle">
-                @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
-                    @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            @* *********************************************************************************************************** *@
-            <div class="form-group">
-                <label class="control-label @labelWidth">Sale Summary</label>
-                <div class="@fieldWidth text-primary" style="margin-top: 5px">
-                    <div class="bg-primary" style="height: 1px; margin: 0"></div>
-                    <h4 style="padding-top: 0; margin-top: 3px">
-                        Items: @Model.TotalItemCount   <br />
-                        Amount: @string.Format("{0:c}", Model.TotalAmount)
-                    </h4>
-                    <div class="bg-primary" style="height: 1px; margin-top: -3px"></div>
-                </div>
-            </div>
-            @* *********************************************************************************************************** *@
-
-            @{
-                var itemCount = Model.TotalItemCount;
-            }
-            <div class="form-group">
-                <div class="col-md-offset-3 col-md-9">
-                    <input onclick="processPayment(event, @itemCount)" type="submit" value="Proceed to Payment" class="btn btn-default" />
-                    <div id="submitted" style="display: none; "></div>
-                </div>
+            <div class="form-group col-md-12">
+                <input onclick="processPayment(event, @itemCount)" type="submit" value="Accept Payment" class="btn btn-default btn-sm pull-right" style="margin-right: 70px" />
+                <div id="submitted" style="display: none; "></div>
             </div>
         </div>
 
         @* Customer list div *@
-        <div class="col-md-6" style="margin-left: -30px">
+        <div class="col-md-6 POSTransactionCheckout-fixed-header" style="flex: 1; padding-left: 0; padding-right: 0">
             @Html.Partial("CustomerList", Model.Customers)
         </div>
     </div>
 }
 
-<div class="col-md-12">
+<div class="col-md-12" style="margin: 0; padding: 0">
     @Html.ActionLink("Back to POS Transaction", "Index")
 </div>
 
@@ -152,7 +173,7 @@
                     //
                     var responseText = this.responseText;
                     let customer = JSON.parse(responseText);
-                    mapCustomerDataToView(customer);
+                    fillCustomerForm(customer);
                 }
             };
             xhttp.send();
@@ -160,7 +181,7 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function mapCustomerDataToView(customer) {
+        function fillCustomerForm(customer) {
             document.getElementById("FirstName").value = customer.FirstName;
             document.getElementById("LastName").value = customer.LastName;
             document.getElementById("Email").value = customer.Email;
@@ -192,5 +213,40 @@
             //
         }
 
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function setPaymentMode(event) {
+            var btn = event.target;
+            var optSelected = btn.title;
+
+            var paymentModeInput = document.querySelector("[name='PaymentMode']");
+            paymentModeInput.value = optSelected;
+
+            var creditcardGrp = document.querySelector("[id='creditcard-group']");
+            var checkGrp = document.querySelector("[id='check-group']");
+            var cashGrp = document.querySelector("[id='cash-group']");
+            var amount = document.querySelector("[name='Amount']");
+
+            switch (optSelected) {
+                case "credit card":
+                    amount.removeAttribute("readonly");
+                    cashGrp.classList.add("hidden");
+                    creditcardGrp.classList.remove("hidden");
+                    checkGrp.classList.add("hidden");
+                    break;
+                case "check":
+                    amount.removeAttribute("readonly");
+                    cashGrp.classList.add("hidden");
+                    creditcardGrp.classList.add("hidden");
+                    checkGrp.classList.remove("hidden");
+                    break;
+                default:
+                    cashGrp.classList.remove("hidden");
+                    creditcardGrp.classList.add("hidden");
+                    checkGrp.classList.add("hidden");
+                    amount.setAttribute("readonly", "");
+                    return;
+            }
+        }
     </script>
 }
