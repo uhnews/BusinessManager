@@ -10,7 +10,7 @@ namespace BusinessManager.Core.Contracts
     public interface IProductRetrieveService
     {
         List<Product> GetProducts();
-        Product GetProduct(string upc);
+        Product GetProduct(string Id);
         Product GetProductByUPC(string upc);
     }
 }

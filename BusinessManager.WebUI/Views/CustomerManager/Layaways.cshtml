@@ -443,6 +443,7 @@
                          style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding-left: 0">
                         @{
                             ViewBag.CurrReceivableSourceId = layaway.Id;
+                            ViewBag.PaymentTableHeading = "Layaway Payments";
                         }
                         @Html.Partial("PaymentList", layaway.LayawayPayments)
                     </div>

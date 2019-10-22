@@ -473,6 +473,7 @@
                             style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding-left: 0">
                         @{
                             ViewBag.CurrReceivableSourceId = possale.Id;
+                            ViewBag.PaymentTableHeading = "Sale (POS) Payments";
                         }
                         @Html.Partial("PaymentList", possale.POSSalePayments)
                     </div>

@@ -8,7 +8,7 @@
     var paymentIndex = 0;
     var rowElementId = "";
 
-    <h4 style="margin-left: 5px">Invoice Payments</h4>
+    <h4 style="margin-left: 5px">@ViewBag.PaymentTableHeading</h4>
     <table id="payment-list-table-@ViewBag.CurrReceivableSourceId" class="table" style="background-color: @ViewBag.ItemDetailBackgroundColor">
         @* #fffcf0 = yellow 3 *@
         <thead>

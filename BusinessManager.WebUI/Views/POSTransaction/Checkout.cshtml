@@ -11,15 +11,32 @@
     @Html.AntiForgeryToken()
 
     <style>
-        .POSTransactionCheckout-fixed-header tbody {
+        .POSTransactionCheckout-fixed-header-customers tbody {
             display: block;
             overflow: auto;
-            height: 685px;
+            height: 603px;
+            width: 100%;
+        }
+
+        .POSTransactionCheckout-fixed-header-items tbody {
+            display: block;
+            overflow: auto;
+            height: 573px;
             width: 100%;
         }
 
         .CustomerManagerInvoices-fixed_header thead tr {
             display: block;
+        }
+
+        .transaction-edit-container {
+            background-color: @primaryBlue;
+            margin: 0 15px 0 0;
+            position: relative;
+            padding: 15px 15px 5px 15px;
+            max-width: 45%;
+            border-radius: 5px 0 0 5px;
+            height: 700px;
         }
     </style>
     <h4 style="padding: 15px 10px 0px 10px"><span class="fas fa-cash-register" style="font-size: x-large">&nbsp;&nbsp;</span><span class="fas fa-check" style="font-size: x-large">&nbsp;&nbsp;</span>POS Transaction Checkout</h4>
@@ -32,16 +49,15 @@
             string fieldWidth = "col-md-8";
             string maxfieldWidth = "100%";
             string fieldStyle = "padding-left: 0; padding-right: 0";
-            string inputGroupStyle = "margin: 3px 0 3px 0; padding: 0 0 0 0";
+            string inputGroupStyle = "margin: 0px 0 1px 0; padding: 0 0 0 0";
             string inputStyle1 = "margin-left: 0; margin-right: 0";
         }
 
-        <div class="col-md-6" style="background-color: @primaryBlue; margin: 0 15px 0 0; padding: 15px 15px 5px 15px; max-width: 45%; height: 730px; border-radius: 5px">
-            <div class="col-md-12" style="padding-top: 12px; border-radius: 5px; background-color: @customGray">
-
+        <div class="col-md-6 transaction-edit-container">
+            <div class="col-md-12" style="padding-top: 12px; background-color: @customGray">
                 <div class="form-group" style="display: none">
                     <div>
-                        @Html.Hidden("CustomerId")
+                        @Html.EditorFor(model => model.CustomerId, new { htmlAttributes = new { @class = "form-control input-sm hidden" } })
                     </div>
                 </div>
 
@@ -123,8 +139,8 @@
                     <div class="@fieldWidth" style="margin-top: 5px">
                         <div class="bg-info" style="height: 1px; margin: 0 0 0 0; max-width: 100%"></div> @* used to draw line *@
                         <strong style="padding-top: 0; margin-top: 3px">
-                            Items: @Model.TotalItemCount   <br />
-                            Amount: @string.Format("{0:c}", Model.TotalAmount)
+                            Total Items: <span id="TotalItemCount">@Model.TotalItemCount</span>   <br />
+                            Amount Due: <span id="TotalAmount">@string.Format("{0:c}", Model.TotalAmount)</span>
                         </strong>
                         <div class="bg-info" style="height: 1px; margin: 0 0 0 0; max-width: 100%"></div> @* used to draw line *@
                     </div>
@@ -141,15 +157,66 @@
                 @Html.Partial("PaymentForm")
             </div>
 
-            <div class="form-group col-md-12">
-                <input onclick="processPayment(event, @itemCount)" type="submit" value="Accept Payment" class="btn btn-default btn-sm pull-right" style="margin-right: 70px" />
+            <div class="form-group col-md-12" style="margin: 0 0 0 0; padding: 0 40px 0 0; position: absolute; bottom: 20px">
+                <input onclick="processPayment(event, @itemCount)"
+                       value="Accept Payment"
+                       type="submit"
+                       class="btn btn-default pull-right" />
                 <div id="submitted" style="display: none; "></div>
             </div>
         </div>
 
         @* Customer list div *@
-        <div class="col-md-6 POSTransactionCheckout-fixed-header" style="flex: 1; padding-left: 0; padding-right: 0">
+        <div id="customer-list-container"
+             class="col-md-6 POSTransactionCheckout-fixed-header-customers"
+             style="flex: 1; padding-left: 0; padding-right: 0; background-color: @customGray; border-radius: 0 5px 5px 0">
             @Html.Partial("CustomerList", Model.Customers)
+        </div>
+
+        @* POSSale Items list div *@
+        <div id="items-container"
+             class="col-md-6 POSTransactionCheckout-fixed-header-items hidden"
+             style="flex: 1; padding: 20px 20px 20px 60px; margin: 0; background-color: @customGray; border-radius: 0 5px 5px 0">
+            <h3 style="display: inline">Purchase Items</h3>
+            <button type="button"
+                    class="btn btn-default btn-xs pull-right"
+                    style="padding: 5px 10px; margin-top: 3px"
+                    onclick="showCustomerLookup()">
+                Show Customer Lookup List
+            </button>
+            <hr />
+            <table id="possale-items" class="table table-striped">
+                <tr style="padding-bottom: 0">
+                    <th></th>
+                    <th style="padding: 2px 8px 0 8px"><label>Product</label></th>
+                    <th style="padding: 2px 8px 0 8px"><label>Quantity</label></th>
+                    <th style="padding: 2px 8px 0 8px"><label>Price</label></th>
+                    <th style="padding: 2px 8px 0 8px"><label>Line Total</label></th>
+                </tr>
+                @{
+                    int rowIndex = 0;
+                    decimal total = 0;
+                    foreach (var item in Model.POSSaleItems)
+                    {
+                        ++rowIndex;
+                        <tr>
+                            <td class="text-danger">@rowIndex</td>
+                            <td>@item.ProductName</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Price</td>
+                            <td>@(item.Quantity * item.Price)</td>
+                        </tr>
+                        total += (item.Quantity * item.Price);
+                    }
+                }
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>Total:</strong></td>
+                    <td><strong>@total</strong></td>
+                </tr>
+            </table>
         </div>
     </div>
 }
@@ -160,6 +227,20 @@
 
 @section Scripts {
     <script type="text/javascript">
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showCustomerLookup() {
+            document.getElementById("items-container").classList.add("hidden");
+            document.getElementById("customer-list-container").classList.remove("hidden");
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showPurchaseItems() {
+            document.getElementById("items-container").classList.remove("hidden");
+            document.getElementById("customer-list-container").classList.add("hidden");
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function getCustomer(event) {
@@ -182,6 +263,7 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function fillCustomerForm(customer) {
+            document.getElementById("CustomerId").value = customer.Id;
             document.getElementById("FirstName").value = customer.FirstName;
             document.getElementById("LastName").value = customer.LastName;
             document.getElementById("Email").value = customer.Email;
@@ -191,6 +273,39 @@
             document.getElementById("City").value = customer.City;
             document.getElementById("State").value = customer.State;
             document.getElementById("ZipCode").value = customer.ZipCode;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function getUIPaymentData() {
+            var payment = {
+                PaymentDate: document.querySelector("[name='PaymentDate']").innerText,
+                Amount: document.querySelector("[name='Amount']").value,
+                PaymentMode: document.querySelector("[name='PaymentMode']").value,
+                CheckNo: document.querySelector("[name='CheckNo']").value,
+                CheckWriter: document.querySelector("[name='CheckWriter']").value,
+                CheckImage: document.querySelector("[name='CheckImage']").value,
+                CreditCardHolder: document.querySelector("[name='CreditCardHolder']").value,                
+                CreditCardExpMonth: document.querySelector("[name='CreditCardExpMonth']").value,
+                CreditCardExpYear: document.querySelector("[name='CreditCardExpYear']").value,
+                CreditCardCVV: document.querySelector("[name='CreditCardCVV']").value,
+                CreditCardNo: document.querySelector("[name='CreditCardNo']").value,
+                CreditCardName: document.querySelector("[name='CreditCardName']").value,
+                ReceivableSource: "possales",
+                ReceivableSourceId: "_filler_text_",
+            };
+            var message = validatePaymentInput(payment);
+            if (!message) {
+                if (payment.PaymentMode !== "credit card") {
+                    payment.CreditCardExpMonth = 0;
+                    payment.CreditCardExpYear = 0;
+                }
+                return payment;
+            }
+            else {
+                ShowMessage("<div class='text-danger' style='margin-left: 50px'>" + message + "</div>", "<span class='text-warning'>Warning</span>");
+                return null;
+            }
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -206,11 +321,22 @@
                 event.preventDefault();
                 alert("There are no items to process.")
             }
-            document.getElementById("submitted").innerText = "yes";
 
             //
             // code to execute payment goes here
             //
+            var payment = getUIPaymentData();
+            if (!payment) {
+                event.preventDefault();
+                return;
+            }
+            var paymentData = JSON.stringify(payment);
+            setCookie("POSPayment", paymentData);
+
+            return;
+
+            //document.getElementById("submitted").innerText = "yes";
+
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -248,5 +374,240 @@
                     return;
             }
         }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function updateCashPaymentFields(event) {
+            var amountDue = document.getElementById("TotalAmount").innerText.replace("$", "");
+            var cashReceivedInput = document.getElementById("CashReceived");
+            var cashReceived = cashReceivedInput.value;
+            var amountPaidInput = document.getElementById("Amount");
+            var changeAmountInput = document.getElementById("ChangeAmount");
+
+            if (isNaN(cashReceived)) {
+                ShowMessage("<h3>Invalid input. Input must be a number.</h3>", "Warning");
+                cashReceivedInput.value = amountDue;
+                return;
+            }
+            cashReceivedInput.value = parseFloat(cashReceived).toFixed(2);
+
+            if (parseFloat(cashReceived) <= parseFloat(amountDue)) {
+                amountPaidInput.value = cashReceived;
+                changeAmountInput.value = 0;
+            }
+            else {
+                amountPaidInput.value = amountDue;
+                changeAmountInput.value = (parseFloat(cashReceived) - parseFloat(amountDue)).toFixed(2);
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function validatePaymentInput(payment) {
+            var message = "";
+            if (!payment.PaymentDate)
+                message = "<p>'Payment Date' cannot be empty.</p>";
+
+            if (isNaN(payment.Amount) || payment.Amount === "" || parseFloat(payment.Amount) <= 0) {
+                message += "<p>'Amount' must be a number and greater than zero.</p>";
+            }
+
+            if (payment.PaymentMode === "credit card") {
+                if (!(payment.CreditCardHolder.trim())) {
+                    message += "<p>'Card Holder' cannot be empty.</p>";
+                }
+                if (!(payment.CreditCardNo.trim())) {
+                    message += "<p>'Card Number' cannot be empty.</p>";
+                }
+
+                if (isNaN(payment.CreditCardExpMonth) || payment.CreditCardExpMonth === "" || parseInt(payment.CreditCardExpMonth) <= 0) {
+                    message += "<p>'Exp Month' must be greater than zero.</p>";
+                }
+
+                if (isNaN(payment.CreditCardExpYear) || payment.CreditCardExpYear === "" || parseInt(payment.CreditCardExpYear) <= 0) {
+                    message += "<p>'Exp Year' must be greater than zero.</p>";
+                }
+
+                if (!(payment.CreditCardCVV.trim())) {
+                    message += "<p>'Verification Code' cannot be empty.</p>";
+                }
+
+                if (!(payment.CreditCardName.trim())) {
+                    message += "<p>'Card Name' cannot be empty.</p>";
+                }
+            }
+            else if (payment.PaymentMode === "check") {
+                if (!(payment.CheckNo.trim())) {
+                    message += "<p>'Check Number' cannot be empty.</p>";
+                }
+                if (!(payment.CheckWriter.trim())) {
+                    message += "<p>'Issued By' cannot be empty.</p>";
+                }
+            }
+            return message;
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        // SEARCH BOX FUNCTIONS
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        const SHOW_ALL = true;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        var firstCall = true;
+        function hideSearchMenu() {
+            if (!firstCall)
+                toggleColSeltMenu();
+
+            firstCall = false;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function filterCustomers(event, showAll = false) {
+            //event.preventDefault(event);
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            iconClose.classList.add("hidden");
+            iconOpen.classList.remove("hidden");
+            menu.classList.add("hidden");
+            firstCall = true;
+
+            var searchText = document.getElementById("product-lookup-search-string").value.toLowerCase();
+            if (searchText === "" && !showAll) {
+                let titleMessage = "<span class='text-warning'>Search text missing!</span>"
+                ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", titleMessage);
+                return;
+            }
+
+            var table = document.getElementById("customer-lookup-table");
+
+            var searchInFirstName = document.getElementById("search-box-menu").querySelector("input[name='FirstNameCheck']").checked;
+            var searchInLastName = document.getElementById("search-box-menu").querySelector("input[name='LastNameCheck']").checked;
+            var searchInEmail = document.getElementById("search-box-menu").querySelector("input[name='EmailCheck']").checked;
+            var searchInCompanyName = document.getElementById("search-box-menu").querySelector("input[name='CompanyNameCheck']").checked;
+
+            var columsWereSelected = searchInFirstName || searchInLastName || searchInEmail || searchInCompanyName;
+
+            if (!columsWereSelected && !showAll) {
+                let titleMessage = "<span class='text-warning'>Missing search input!</span>"
+                ShowMessage("To execute a search you must select at least one of the fields listed in the search box menu.", titleMessage);
+                return;
+            }
+
+            var itemsFound = 0;
+            var rows = table.getElementsByTagName("tr");
+            for (i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var nameData = row.querySelector("[name='FirstName']").innerHTML.toLowerCase();
+                var descriptionData = row.querySelector("[name='LastName']").innerHTML.toLowerCase();
+                var categoryData = row.querySelector("[name='Email']").innerHTML.toLowerCase();
+                var productCodeData = row.querySelector("[name='CompanyName']").innerHTML.toLowerCase();
+
+                if ((nameData.indexOf(searchText) > -1 && searchInFirstName) || showAll) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (descriptionData.indexOf(searchText) > -1 && searchInLastName) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (categoryData.indexOf(searchText) > -1 && searchInEmail) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (productCodeData.indexOf(searchText) > -1 && searchInCompanyName) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else {
+                    row.style.display = "none";
+                }
+            }
+            if (itemsFound === 0) {
+                filterCustomers(event, SHOW_ALL);
+                ShowMessage("<h4 class='text-primary'>No matches were found &ndash; all customers in list returned.</h4>");
+            }
+            document.removeEventListener("click", hideSearchMenu);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function toggleColSeltMenu(event) {
+            //event.preventDefault(event);
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            var menuContainer = document.getElementById("search-objects-container");
+
+            var btn = null;
+            if (event) {
+                btn = event.target;
+            }
+            else {
+                btn = document.getElementById("search-box-menu-btn");
+            }
+            if (btn.nodeName.toLowerCase() !== "button") {
+                btn = btn.parentNode;
+            }
+            var mainContainerRect = menuContainer.getBoundingClientRect();
+            var btnRect = btn.getBoundingClientRect();
+
+            xShift = (btnRect.left - mainContainerRect.left);
+            yShift = (btnRect.top + btnRect.height - mainContainerRect.top);
+
+            if (iconClose.classList.contains("hidden")) {
+                iconOpen.classList.add("hidden");
+                iconClose.classList.remove("hidden");
+                menu.classList.remove("hidden");
+                menu.style.transform = "translate(" + xShift + "px," + yShift + "px)";
+                firstCall = true;
+                document.addEventListener("click", hideSearchMenu);
+            }
+            else if (iconOpen.classList.contains("hidden")) {
+                iconClose.classList.add("hidden");
+                iconOpen.classList.remove("hidden");
+                menu.classList.add("hidden");
+                document.removeEventListener("click", hideSearchMenu);
+            }
+            else {
+                // ignore if no match
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function selectColGroup(event) {
+            //event.preventDefault();
+            var colNames = ["FirstName", "LastName", "Email", "CompanyName"];
+            var allAreChecked = true;
+
+            colNames.forEach(function (name) {
+                allAreChecked = allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked;
+            });
+
+            if (allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked) {
+                return;
+            }
+
+            colNames.forEach(function (name) {
+                document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked = !allAreChecked;
+            });
+            document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function setAllCheck(event) {
+            //event.preventDefault();
+            if (!event.target.checked) {
+                document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
+            }
+        }
+
+                /////////////////////////////////////////////////////////////////////////////////////////////
     </script>
 }

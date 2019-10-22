@@ -1,10 +1,97 @@
 ﻿@model IEnumerable<BusinessManager.Core.ViewModels.CustomerViewModel>
 
-<h4>
-    Select an Existing Customer:
-</h4>
-<table class="table table-striped table-condensed">
+<style>
+    .search-box-menu {
+        width: 350px;
+        padding: 0px 20px 10px 20px;
+        margin: 0px 0px 0px 0px;
+        border: solid 1px #c3d9ef;
+        border-radius: 5px;
+        background-color: aliceblue;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+    }
+</style>
+<div id="search-objects-container" class="col-md-12" style="margin: 0 0 0px 0; padding: 0; position: relative">
+    <div style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; background-color: #ced8e4; border-radius: 0 5px 0 0">
+        <h5 style="display: inline-block; margin: 5px 5px 5px 10px">Search and Copy Information From Existing Customer (Optional)</h5>
+        <div class="form-group" style="width: 100%; margin: 0; padding: 3px 0px 3px 3px ">
+            <input id="product-lookup-search-string"
+                   placeholder="Enter text to find ..."
+                   type="text"
+                   class="form-control"
+                   style="display: inline; margin: 0 0 0 0" />
+            <div style="display: inline-block">
+                <button id="search-box-btn-find" class="btn btn-default btn-primary-text" type="button"
+                        onclick="filterCustomers(event)"
+                        style="display: inline-block; margin-top:-4px; margin-right: 0">
+                    <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+                </button>
+                <button id="search-box-menu-btn" class="btn btn-default btn-primary-text" type="button"
+                        onclick="toggleColSeltMenu(event)"
+                        style="display: inline-block; margin-top:-4px; margin-left: -2px">
+                    <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0"></span>
+                    <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
+                </button>
+            </div>
+            <button type="button"
+                    class="btn btn-default btn-xs pull-right"
+                    style="margin: -5px 20px 0 0; padding: 5px 10px"
+                    onclick="showPurchaseItems()">
+                Show Purchase Items
+            </button>
+            <hr style="margin: 3px 3px 3px 3px" />
+        </div>
+    </div>
+    <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
+        <div>
+            <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px; margin-left: 10px">
+                <span>Search In:</span>
+                <input name="AllCheck"
+                       type="checkbox"
+                       onchange="selectColGroup(event)">
+                <span class="checkmark"></span>
+            </label>
+            <hr style="margin: 0 0 5px 0; padding: 0" />
+            <div style="margin-left: 25px">
+                <label class="checkbox-container">
+                    First Name
+                    <input name="FirstNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Last Name
+                    <input name="LastNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    E-Mail
+                    <input name="EmailCheck" t type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Company
+                    <input name="CompanyNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            <hr style="margin: 10px 0 10px 0; padding: 0" />
+            <button class="btn btn-primary"
+                    type="button"
+                    onclick="filterCustomers(event, SHOW_ALL)"
+                    style="width: 100%">
+                Load All Customers
+            </button>
+        </div>
+    </div>
+</div>
+
+<table id="customer-lookup-table" class="table table-striped table-condensed">
     <tr>
+        <th>
+        </th>
         <th>
             First
         </th>
@@ -20,20 +107,25 @@
         <th></th>
     </tr>
     @{
+        int rowIndex = 0;
         foreach (var item in Model)
         {
+            ++rowIndex;
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
+                    <span class="text-danger">@rowIndex</span>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
+                    <span name="FirstName">@Html.DisplayFor(modelItem => item.FirstName)</span>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    <span name="LastName">@Html.DisplayFor(modelItem => item.LastName)</span>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CompanyName)
+                    <span name="Email">@Html.DisplayFor(modelItem => item.Email)</span>
+                </td>
+                <td>
+                    <span name="CompanyName">@Html.DisplayFor(modelItem => item.CompanyName)</span>
                 </td>
                 <td>
                     <button onclick="getCustomer(event)" class="btn-pill"><span style="display: none">@item.Id</span>Copy</button>

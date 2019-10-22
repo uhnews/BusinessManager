@@ -524,6 +524,7 @@
                             style="flex: 1; background-color: @colorBGReceivableSourceDetail; padding-left: 0">
                         @{
                             ViewBag.CurrReceivableSourceId = invoice.Id;
+                            ViewBag.PaymentTableHeading = "Invoice Payments";
                         }
                         @Html.Partial("PaymentList", invoice.InvoicePayments)
                     </div>

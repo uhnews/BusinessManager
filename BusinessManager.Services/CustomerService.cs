@@ -55,7 +55,7 @@ namespace BusinessManager.Services
                         select m;
             customer = query.ToList().Where(m => m.Id == customerId).Select(c => new Customer
             {
-                Id = "",
+                Id = c.Id,
                 FirstName = c.FirstName,
                 LastName = c.LastName,
                 Email = c.Email,

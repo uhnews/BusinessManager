@@ -1,10 +1,10 @@
-﻿using System;
+﻿using BusinessManager.Core.Contracts;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BusinessManager.Core.Models
 {
-    public class POSTransactionItem : BaseEntity
+    public class POSTransactionItem : BaseEntity, IChargeItem
     {
         [StringLength(128)]
         public string POSTransactionId { get; set; }
@@ -15,6 +15,11 @@ namespace BusinessManager.Core.Models
         [StringLength(60)]
         [DisplayName("Product Name")]
         public string ProductName { get; set; }
+
+        [StringLength(70)]
+        [DisplayName("Description")]
+        [Required]
+        public string ProductDescription { get; set; }
 
         public decimal Price { get; set; }
 

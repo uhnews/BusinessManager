@@ -181,6 +181,7 @@
                 filterItems(event, SHOW_ALL);
                 ShowMessage("<h4 class='text-primary'>No matches were found &ndash; all products in catalog returned.</h4>");
             }
+            document.removeEventListener("click", hideSearchMenu);
         }
         
         /////////////////////////////////////////////////////////////////////////////////////////////

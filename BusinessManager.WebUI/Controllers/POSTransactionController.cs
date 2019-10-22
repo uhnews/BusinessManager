@@ -2,7 +2,9 @@
 using BusinessManager.Core.Models;
 using BusinessManager.Core.ViewModels;
 using BusinessManager.Services;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
 
 namespace BusinessManager.WebUI.Controllers
@@ -12,14 +14,21 @@ namespace BusinessManager.WebUI.Controllers
         readonly List<CustomerViewModel> customers;
         readonly IPOSTransactionService posTransactionService;
         readonly IPOSSaleService posSaleService;
-        readonly CustomerService customerService = new CustomerService();
-        readonly ProductRetrieveService productRetrieveService = new ProductRetrieveService();
+        readonly ICustomerService customerService = new CustomerService();
+        readonly IProductRetrieveService productRetrieveService = new ProductRetrieveService();
+        readonly IRepository<Payment> paymentContext;
 
-        public POSTransactionController(IPOSTransactionService posTransactionService, IPOSSaleService posSaleService, List<CustomerViewModel> customers)
+        public POSTransactionController(
+                                            IPOSTransactionService posTransactionService, 
+                                            IPOSSaleService posSaleService, 
+                                            List<CustomerViewModel> customers, 
+                                            IRepository<Payment> paymentContext
+                                       )
         {
             this.posTransactionService = posTransactionService;
             this.posSaleService = posSaleService;
             this.customers = customers;
+            this.paymentContext = paymentContext;
         }
 
         // GET: POSTransaction
@@ -48,7 +57,7 @@ namespace BusinessManager.WebUI.Controllers
             return PartialView(posTransactionSummary);
         }
 
-        // GET: Transaction Checkout Data
+        // GET: Transaction Checkout
         [Authorize(Roles = "Admin, POSAttendant")]
         public ActionResult Checkout()
         {
@@ -56,6 +65,7 @@ namespace BusinessManager.WebUI.Controllers
             POSSale sale = new POSSale();
             sale.TotalAmount = summaryModel.TransactionTotal;
             sale.TotalItemCount = summaryModel.TransactionCount;
+            sale.POSSaleItems = summaryModel.POSSaleItems;
 
             // request customer list
             sale.Customers = customerService.GetCustomers();
@@ -63,7 +73,7 @@ namespace BusinessManager.WebUI.Controllers
             return View(sale);
         }
 
-        // POST: Transaction Checkout Data
+        // POST: Transaction Checkout
         [HttpPost]
         [Authorize(Roles = "Admin, POSAttendant")]
         public ActionResult Checkout(POSSale sale)
@@ -71,8 +81,13 @@ namespace BusinessManager.WebUI.Controllers
             var transactionItems = posTransactionService.GetPOSTransactionItems(this.HttpContext);
 
             // process payment here
-
-
+            HttpCookie cookie = this.HttpContext.Request.Cookies.Get("POSPayment");
+            string paymentData = cookie.Value;
+            paymentData = paymentData.Replace("_filler_text_", sale.Id);
+            IPaymentService paymentDataService = new PaymentService();
+            paymentDataService.AddPayment(paymentContext, paymentData);
+            //Payment payment = JsonConvert.DeserializeObject<Payment>(paymentData);
+            
 
             //
             posSaleService.CreatePOSSale(sale, transactionItems);

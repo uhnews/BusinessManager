@@ -69,6 +69,13 @@ namespace BusinessManager.Services
 
         public void AddToPOSTransaction(HttpContextBase httpContext, string productId)
         {
+            IProductRetrieveService productDataService = new ProductRetrieveService();
+            Product product = productDataService.GetProduct(productId);
+            if (product == null)
+            {
+                throw new Exception("Product not found.");
+            }
+
             POSTransaction posTransaction = GetPOSTransaction(httpContext, true);
             POSTransactionItem item = posTransaction.POSTransactionItems.FirstOrDefault(p => p.ProductId == productId);
             if (item == null)
@@ -77,7 +84,10 @@ namespace BusinessManager.Services
                 {
                     POSTransactionId = posTransaction.Id,
                     ProductId = productId,
+                    ProductName = product.Name,
+                    ProductDescription = product.Description,
                     Quantity = 1,
+                    Price = product.Price,
                     ModifiedAt = DateTime.Now
                 };
 
@@ -148,11 +158,25 @@ namespace BusinessManager.Services
             {
                 int? transactionCount = (from item in posTransaction.POSTransactionItems
                                     select item.Quantity).Sum();
-                decimal? transactionTotal = (from bi in posTransaction.POSTransactionItems
-                                        join p in productContext.Collection() on bi.ProductId equals p.Id
-                                        select bi.Quantity * p.Price).Sum();
+                decimal? transactionTotal = (from pi in posTransaction.POSTransactionItems
+                                        join p in productContext.Collection() on pi.ProductId equals p.Id
+                                        select pi.Quantity * p.Price).Sum();
                 model.TransactionCount = transactionCount ?? 0;
                 model.TransactionTotal = transactionTotal ?? decimal.Zero;
+
+                foreach (var item in posTransaction.POSTransactionItems)
+                {
+                    POSSaleItem possaleItem = new POSSaleItem()
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        ProductDescription = item.ProductDescription,
+                        Image = item.Image,
+                        Price = item.Price,
+                        Quantity = item.Quantity
+                    };
+                    model.POSSaleItems.Add(possaleItem);
+                }
             }
             return model;
         }

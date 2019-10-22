@@ -47,16 +47,9 @@ uhnews@yahoo.com
 uhnews123@gmail.com
 uhnews@outlook.com
 
-https://localhost:44394/CustomerManager
-https://localhost:44394/CustomerManager/Edit/0aaa2de7-a32c-4389-91da-37e28139963c
-https://localhost:44394/CustomerManager/Create
-https://localhost:44394/POSTransaction
-https://localhost:44394/POSTransaction/Checkout
-
 >  is  &#8249
 
-string prevURL = Request.UrlReferrer.ToString();
-string baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+
 
 
 C:\pagefile.sys
@@ -72,23 +65,18 @@ orderby p.CreatedAt descending
 
 
 
-<div>Click Delete to remove item</div><div>Woody</div><td style='position: relative'><div><img class='img-thumbnail'style='width: 100px; cursor: pointer'src='https://localhost:44394Content//ProductImages//e1ada533-c617-46ba-b007-4a4a3236237d.jpg'alt='Image' /></div></td>
-
 The  onkeydown event occurs when the user is pressing a key (on the keyboard).
 The onkeypress event occurs when the user presses a key (on the keyboard).
 
 
 
-        [DisplayName("Modified At")]
-        public DateTimeOffset ModifiedAt { get; set; }
-
-POSTransactionItems
-BasketItems
-LayawayItems
-basketId = "70a9eaa6-3320-46d3-94d4-05e2fe843f93"
-BasketService
-LayawayService
-POSTransactionService
-CustomerManagerController
-ve.PropertyName = "BasketId"
-BasketId
+0 48
+1 49
+2 50
+3 51
+4 52
+5 53
+6 54
+7 55
+8 56
+9 57

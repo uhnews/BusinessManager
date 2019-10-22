@@ -9,7 +9,7 @@
     var rowElementId = "";
     string rowClass = "";
 
-    <h4 style="margin-left: 5px">Invoice Payments</h4>
+    <h4 name="payment-table-heading" style="margin-left: 5px">@ViewBag.PaymentTableHeading</h4>
     <table id="payments-table-@ViewBag.CurrReceivableSourceId" class="table" style="background-color: @ViewBag.ItemDetailBackgroundColor"> @* #fffcf0 = yellow 3 *@
         @foreach (var payment in Model)
         {

@@ -28,23 +28,15 @@
             </div>
         </div>
 
-        <div class="form-group form-group-payment" style="margin: 0 0 5px 0">
-            <label for="Amount" class="payment-label col-md-3" style="margin: 0 10px 0 0; padding: 5px 0 0 0; color: white">Amount Paid</label>
-            <input id="Amount" name="Amount"
-                   value="@ViewBag.TotalCharges" readonly
-                   type="text"
-                   class="form-control input-sm new-payment-input col-md-6"
-                   style="display: inline" />
-        </div>
-
         <div id="cash-group">
             <div class="form-group form-group-payment" style="margin: 0 0 5px 0">
-                <label for="TenderedAmount" class="payment-label col-md-3" style="margin: 0 10px 0 0; padding: 5px 0 0 0; color: white">Amount Tendered</label>
-                <input id="TenderedAmount"
+                <label for="CashReceived" class="payment-label col-md-3" style="margin: 0 10px 0 0; padding: 5px 0 0 0; color: white">Cash Received</label>
+                <input id="CashReceived"
                        value="@ViewBag.TotalCharges"
                        type="text"
                        class="form-control input-sm new-payment-input"
-                       style="display: inline" />
+                       style="display: inline"
+                       onchange="updateCashPaymentFields(event)" />
             </div>
 
             <div class="form-group form-group-payment" style="margin: 0 0 5px 0">
@@ -57,10 +49,21 @@
             </div>
         </div>
 
+        <div class="form-group form-group-payment" style="margin: 0 0 5px 0">
+            <label for="Amount" class="payment-label col-md-3" style="margin: 0 10px 0 0; padding: 5px 0 0 0; color: white">Amount Paid</label>
+            <input id="Amount"
+                   name="Amount"
+                   value="@ViewBag.TotalCharges" readonly
+                   type="text"
+                   class="form-control input-sm new-payment-input col-md-6"
+                   style="display: inline" />
+        </div>
+
         <div id="check-group" class="hidden">
             <div class="form-group form-group-payment" style="margin: 0 0 5px 0">
                 <label for="CheckNo" class="payment-label col-md-3" style="margin: 0 10px 0 0; padding: 5px 0 0 0; color: white">Check Number</label>
-                <input id="CheckNo" name="CheckNo"
+                <input id="CheckNo"
+                       name="CheckNo"
                        type="text"
                        class="form-control input-sm new-payment-input"
                        style="display: inline" />
@@ -68,7 +71,8 @@
 
             <div class="form-group form-group-payment" style="margin: 0 0 5px 0">
                 <label for="CheckWriter" class="payment-label col-md-3" style="margin: 0 10px 0 0; padding: 5px 0 0 0; color: white">Issued By</label>
-                <input id="CheckWriter" name="CheckWriter"
+                <input id="CheckWriter"
+                       name="CheckWriter"
                        type="text"
                        class="form-control input-sm new-payment-input"
                        style="display: inline" />
@@ -86,7 +90,8 @@
         <div id="creditcard-group" class="hidden">
             <div class="form-group form-group-payment" style="margin: 0 0 5px 0">
                 <label for="CreditCardHolder" class="payment-label col-md-3" style="margin: 0 10px 0 0; padding: 5px 0 0 0; color: white">Card Holder</label>
-                <input id="CreditCardHolder" name="CreditCardHolder"
+                <input id="CreditCardHolder"
+                       name="CreditCardHolder"
                        type="text"
                        class="form-control input-sm new-payment-input"
                        style="display: inline" />
@@ -102,7 +107,8 @@
 
             <div class="form-group form-group-payment" style="margin: 0 0 5px 0">
                 <label for="CreditCardNo" class="payment-label col-md-3" style="margin: 0 10px 0 0; padding: 5px 0 0 0; color: white">Card Number</label>
-                <input id="CreditCardNo" name="CreditCardNo"
+                <input id="CreditCardNo"
+                       name="CreditCardNo"
                        type="text"
                        class="form-control input-sm new-payment-input"
                        style="display: inline" />
@@ -111,21 +117,24 @@
                 <div class="form-group form-group-payment col-md-12" style="padding: 0; margin: 0 0 5px 0">
                     <div class="pull-left" style="width: 25%; display: inline-block; margin: 5px">
                         <label for="CreditCardExpMonth" class="payment-label" style="margin-left: 0; color: white">Exp Month</label>
-                        <input id="CreditCardExpMonth" name="CreditCardExpMonth"
+                        <input id="CreditCardExpMonth"
+                               name="CreditCardExpMonth"
                                type="number"
                                class="form-control input-sm new-payment-input"
                                style="padding-right: 5px; padding-left: 5px; margin: 0; display: inline" />
                     </div>
                     <div class="pull-left" style="width: 30%; display: inline-block; margin: 5px">
                         <label for="CreditCardExpYear" class="payment-label" style="margin-left: 0; color: white">Exp Year</label>
-                        <input id="CreditCardExpYear" name="CreditCardExpYear"
+                        <input id="CreditCardExpYear"
+                               name="CreditCardExpYear"
                                type="number"
                                class="form-control input-sm new-payment-input"
                                style="padding-right: 5px; padding-left: 5px; margin: 0; display: inline" />
                     </div>
                     <div class="pull-left" style="width: 30%; display: inline-block; margin: 5px; display: inline">
                         <label for="CreditCardCVV" class="payment-label" style="margin-left: 0; color: white">Sec Code</label>
-                        <input id="CreditCardCVV" name="CreditCardCVV"
+                        <input id="CreditCardCVV"
+                               name="CreditCardCVV"
                                type="text"
                                class="form-control input-sm new-payment-input"
                                style="margin: 0" />
