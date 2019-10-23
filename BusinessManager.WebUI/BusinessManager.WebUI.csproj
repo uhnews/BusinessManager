@@ -191,6 +191,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BasketController.cs" />
     <Compile Include="Controllers\CustomerManagerController.cs" />
+    <Compile Include="Controllers\CustomerNoteManagerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LayawayManagerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -318,6 +319,10 @@
     <Content Include="Views\CustomerManager\OnlineOrders.cshtml" />
     <Content Include="Views\POSTransaction\PaymentForm.cshtml" />
     <Content Include="Views\Basket\PaymentForm.cshtml" />
+    <Content Include="Views\CustomerNoteManager\Index.cshtml" />
+    <Content Include="Views\CustomerNoteManager\Create.cshtml" />
+    <Content Include="Views\CustomerNoteManager\Edit.cshtml" />
+    <Content Include="Views\CustomerNoteManager\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

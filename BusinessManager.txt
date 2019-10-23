@@ -70,13 +70,16 @@ The onkeypress event occurs when the user presses a key (on the keyboard).
 
 
 
-0 48
-1 49
-2 50
-3 51
-4 52
-5 53
-6 54
-7 55
-8 56
-9 57
+        [DisplayName("Modified At")]
+        public DateTimeOffset ModifiedAt { get; set; }
+
+POSTransactionItems
+BasketItems
+LayawayItems
+basketId = "70a9eaa6-3320-46d3-94d4-05e2fe843f93"
+BasketService
+LayawayService
+POSTransactionService
+CustomerManagerController
+ve.PropertyName = "BasketId"
+BasketId

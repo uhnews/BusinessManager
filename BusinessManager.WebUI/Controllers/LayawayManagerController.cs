@@ -127,17 +127,5 @@ namespace BusinessManager.WebUI.Controllers
                 return RedirectToAction("Index");
             }
         }
-
-        //public ActionResult RemoveFromLayaway(string Id)
-        //{
-        //    layawayService.RemoveFromLayaway(this.HttpContext, Id);
-        //    return RedirectToAction("Index");
-        //}
-
-        //public PartialViewResult LayawaySummary()
-        //{
-        //    var layawaySummary = layawayService.GetLayawaySummary(this.HttpContext);
-        //    return PartialView(layawaySummary);
-        //}
     }
 }
