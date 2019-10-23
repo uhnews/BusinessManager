@@ -2,124 +2,208 @@
 
 @{
     ViewBag.Title = "Order Checkout";
+    string customGray = "#ced8e4";
+    string primaryBlue = "#337ab7";
 }
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
+    <style>
+        .BasketCheckout-fixed-header-customers tbody {
+            display: block;
+            overflow: auto;
+            height: 603px;
+            width: 100%;
+        }
+
+        .BasketCheckout-fixed-header-items tbody {
+            display: block;
+            overflow: auto;
+            height: 573px;
+            width: 100%;
+        }
+
+        .CustomerManagerInvoices-fixed_header thead tr {
+            display: block;
+        }
+
+        .transaction-edit-container {
+            background-color: @primaryBlue;
+            margin: 0 15px 0 0;
+            position: relative;
+            padding: 15px 15px 5px 15px;
+            max-width: 45%;
+            border-radius: 5px 0 0 5px;
+            height: 700px;
+        }
+    </style>
+    <h4 style="padding: 15px 10px 0px 10px"><span class="fa fa-shopping-cart" style="font-size: x-large">&nbsp;&nbsp;</span><span class="fas fa-check" style="font-size: x-large">&nbsp;&nbsp;</span>Order Checkout</h4>
+    <hr style="margin-bottom: 5px" />
     <div class="form-horizontal">
-        <h4 style="padding: 15px 10px 0px 10px"><span class="fa fa-shopping-cart" style="font-size: x-large">&nbsp;&nbsp;</span><span class="fas fa-check" style="font-size: x-large">&nbsp;&nbsp;</span>Order Checkout</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         @{
-            string labelWidth = "col-md-3";
+            string labelWidth = "col-md-4";
             string fieldWidth = "col-md-8";
             string maxfieldWidth = "100%";
+            string fieldStyle = "padding-left: 0; padding-right: 0";
+            string inputGroupStyle = "margin: 0px 0 1px 0; padding: 0 0 0 0";
+            string inputStyle1 = "margin-left: 0; margin-right: 0";
         }
-        <div class="col-md-6">
-            <div class="form-group">
-                <div class="d-none">
-                    @Html.Hidden("CustomerId")
+
+        <div class="col-md-6 transaction-edit-container">
+            <div class="col-md-12" style="padding-top: 12px; background-color: @customGray">
+                <div class="form-group" style="display: none">
+                    <div>
+                        @Html.EditorFor(model => model.CustomerId, new { htmlAttributes = new { @class = "form-control input-sm hidden" } })
+                    </div>
                 </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="@inputGroupStyle">
+                    @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label " + @labelWidth })
+                    <div class=@fieldWidth style="@fieldStyle">
+                        @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control input-sm", @style = "max-width: " + @maxfieldWidth + ";" + @inputStyle1 } })
+                        @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                @* *********************************************************************************************************** *@
+                <div class="form-group" style="@inputGroupStyle">
+                    <label class="control-label @labelWidth">Sale Summary</label>
+                    <div class="@fieldWidth text-primary" style="margin-top: 5px">
+                        <div class="bg-primary" style="height: 1px; margin: 0"></div>
+                        <h4 style="padding-top: 0; margin-top: 3px">
+                            Items: @Model.TotalItemCount   <br />
+                            Amount: @string.Format("{0:c}", Model.TotalAmount)
+                        </h4>
+                        <div class="bg-primary" style="height: 1px; margin-top: -3px"></div>
+                    </div>
+                </div>
+                @* *********************************************************************************************************** *@
+
+                @{
+                    var itemCount = Model.TotalItemCount;
+                    ViewBag.TotalCharges = Model.TotalAmount;
+                }
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-                </div>
+            <div class="col-md-12" style="padding: 0">
+                @Html.Partial("PaymentForm")
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-                </div>
+            <div class="form-group col-md-12" style="margin: 0 0 0 0; padding: 0 40px 0 0; position: absolute; bottom: 20px">
+                <input onclick="processPayment(event, @itemCount)"
+                       value="Complete Purchase"
+                       type="submit"
+                       class="btn btn-default pull-right" />
+                <div id="submitted" style="display: none; "></div>
             </div>
+        </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                    @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                    @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label " + @labelWidth })
-                <div class=@fieldWidth>
-                    @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control", @style = "max-width: " + @maxfieldWidth } })
-                    @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            @* *********************************************************************************************************** *@
-            <div class="form-group">
-                <label class="control-label @labelWidth">Sale Summary</label>
-                <div class="@fieldWidth text-primary" style="margin-top: 5px">
-                    <div class="bg-primary" style="height: 1px; margin: 0"></div>
-                    <h4 style="padding-top: 0; margin-top: 3px">
-                        Items: @Model.TotalItemCount   <br />
-                        Amount: @string.Format("{0:c}", Model.TotalAmount)
-                    </h4>
-                    <div class="bg-primary" style="height: 1px; margin-top: -3px"></div>
-                </div>
-            </div>
-            @* *********************************************************************************************************** *@
-
-            @{
-                var itemCount = Model.TotalItemCount;
-            }
-            <div class="form-group">
-                <div class="col-md-offset-3 col-md-9">
-                    <input onclick="processPayment(event, @itemCount)" type="submit" value="Proceed to Payment" class="btn btn-default" />
-                    <div id="submitted" style="display: none; "></div>
-                </div>
-            </div>
+        @* OnlineOrder Items list div *@
+        <div id="items-container"
+             class="col-md-6 BasketCheckout-fixed-header-items"
+             style="flex: 1; padding: 20px 20px 20px 20px; margin: 0; background-color: @customGray; border-radius: 0 5px 5px 0">
+            <h3 style="display: inline">Purchase Items</h3>
+            <hr />
+            <table id="possale-items" class="table table-striped" style="margin-left: 30px">
+                <tr style="padding-bottom: 0">
+                    <th></th>
+                    <th style="padding: 2px 8px 0 8px"><label>Product</label></th>
+                    <th style="padding: 2px 8px 0 8px"><label>Quantity</label></th>
+                    <th style="padding: 2px 8px 0 8px"><label>Price</label></th>
+                    <th style="padding: 2px 8px 0 8px"><label>Line Total</label></th>
+                </tr>
+                @{
+                    int rowIndex = 0;
+                    decimal total = 0;
+                    foreach (var item in Model.OnlineOrderItems)
+                    {
+                        ++rowIndex;
+                        <tr>
+                            <td class="text-danger">@rowIndex</td>
+                            <td>@item.ProductName</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Price</td>
+                            <td>@(item.Quantity * item.Price)</td>
+                        </tr>
+                        total += (item.Quantity * item.Price);
+                    }
+                }
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>Total:</strong></td>
+                    <td><strong>@total</strong></td>
+                </tr>
+            </table>
         </div>
     </div>
 }
@@ -130,24 +214,115 @@
 
 @section Scripts {
     <script type="text/javascript">
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function validatePaymentInput(payment) {
+            var message = "";
+            if (!payment.PaymentDate)
+                message = "<p>'Payment Date' cannot be empty.</p>";
+
+            if (isNaN(payment.Amount) || payment.Amount === "" || parseFloat(payment.Amount) <= 0) {
+                message += "<p>'Amount' must be a number and greater than zero.</p>";
+            }
+
+            if (payment.PaymentMode === "credit card") {
+                if (!(payment.CreditCardHolder.trim())) {
+                    message += "<p>'Card Holder' cannot be empty.</p>";
+                }
+                if (!(payment.CreditCardNo.trim())) {
+                    message += "<p>'Card Number' cannot be empty.</p>";
+                }
+
+                if (isNaN(payment.CreditCardExpMonth) || payment.CreditCardExpMonth === "" || parseInt(payment.CreditCardExpMonth) <= 0) {
+                    message += "<p>'Exp Month' must be greater than zero.</p>";
+                }
+
+                if (isNaN(payment.CreditCardExpYear) || payment.CreditCardExpYear === "" || parseInt(payment.CreditCardExpYear) <= 0) {
+                    message += "<p>'Exp Year' must be greater than zero.</p>";
+                }
+
+                if (!(payment.CreditCardCVV.trim())) {
+                    message += "<p>'Verification Code' cannot be empty.</p>";
+                }
+
+                if (!(payment.CreditCardName.trim())) {
+                    message += "<p>'Card Name' cannot be empty.</p>";
+                }
+            }
+            else if (payment.PaymentMode === "check") {
+                if (!(payment.CheckNo.trim())) {
+                    message += "<p>'Check Number' cannot be empty.</p>";
+                }
+                if (!(payment.CheckWriter.trim())) {
+                    message += "<p>'Issued By' cannot be empty.</p>";
+                }
+            }
+            return message;
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function getUIPaymentData() {
+            var payment = {
+                PaymentDate: document.querySelector("[name='PaymentDate']").innerText,
+                Amount: document.querySelector("[name='Amount']").value,
+                PaymentMode: document.querySelector("[name='PaymentMode']").value,
+                CheckNo: "",
+                CheckWriter: "",
+                CheckImage: "",
+                CreditCardHolder: document.querySelector("[name='CreditCardHolder']").value,                
+                CreditCardExpMonth: document.querySelector("[name='CreditCardExpMonth']").value,
+                CreditCardExpYear: document.querySelector("[name='CreditCardExpYear']").value,
+                CreditCardCVV: document.querySelector("[name='CreditCardCVV']").value,
+                CreditCardNo: document.querySelector("[name='CreditCardNo']").value,
+                CreditCardName: document.querySelector("[name='CreditCardName']").value,
+                ReceivableSource: "onlineorders",
+                ReceivableSourceId: "_filler_text_",
+            };
+            var message = validatePaymentInput(payment);
+            if (!message) {
+                if (payment.PaymentMode !== "credit card") {
+                    payment.CreditCardExpMonth = 0;
+                    payment.CreditCardExpYear = 0;
+                }
+                return payment;
+            }
+            else {
+                ShowMessage("<div class='text-danger' style='margin-left: 50px'>" + message + "</div>", "<span class='text-warning'>Warning</span>");
+                return null;
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
         function processPayment(event, itemCount) {
             var test = document.getElementById("submitted").innerText
             if (test) {
+                event.preventDefault();
                 location.assign("/Basket");
                 document.getElementById("submitted").innerText = "yes";
-                event.preventDefault();
+                return;
             }
             if (!itemCount) {
                 event.preventDefault();
-                alert("There are no items to process.")
+                ShowMessage("There are no items to process.");
+                return;
             }
-            document.getElementById("submitted").innerText = "yes";
-
+            
             //
             // code to execute payment goes here
             //
-        }
+            var payment = getUIPaymentData();
+            if (!payment) {
+                event.preventDefault();
+                return;
+            }
+            var paymentData = JSON.stringify(payment);
+            setCookie("OnlineOrderPayment", paymentData);
 
+            document.getElementById("submitted").innerText = "yes";
+            return;
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
     </script>
 }

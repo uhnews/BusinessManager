@@ -77,7 +77,7 @@ namespace BusinessManager.Services
             }
 
             POSTransaction posTransaction = GetPOSTransaction(httpContext, true);
-            POSTransactionItem item = posTransaction.POSTransactionItems.FirstOrDefault(p => p.ProductId == productId);
+            POSTransactionItem item = posTransaction.POSTransactionItems.FirstOrDefault(t => t.ProductId == productId);
             if (item == null)
             {
                 item = new POSTransactionItem()
@@ -135,6 +135,7 @@ namespace BusinessManager.Services
                                   Id = b.Id,
                                   Quantity = b.Quantity,
                                   ModifiedAt = b.ModifiedAt,
+                                  ProductId = b.ProductId,
                                   ProductName = p.Name,
                                   ProductDescription = p.Description,
                                   UPC = p.UPC,

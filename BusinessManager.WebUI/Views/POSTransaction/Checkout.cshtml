@@ -176,7 +176,7 @@
         @* POSSale Items list div *@
         <div id="items-container"
              class="col-md-6 POSTransactionCheckout-fixed-header-items hidden"
-             style="flex: 1; padding: 20px 20px 20px 60px; margin: 0; background-color: @customGray; border-radius: 0 5px 5px 0">
+             style="flex: 1; padding: 20px 20px 20px 20px; margin: 0; background-color: @customGray; border-radius: 0 5px 5px 0">
             <h3 style="display: inline">Purchase Items</h3>
             <button type="button"
                     class="btn btn-default btn-xs pull-right"
@@ -185,7 +185,7 @@
                 Show Customer Lookup List
             </button>
             <hr />
-            <table id="possale-items" class="table table-striped">
+            <table id="possale-items" class="table table-striped" style="margin-left: 30px">
                 <tr style="padding-bottom: 0">
                     <th></th>
                     <th style="padding: 2px 8px 0 8px"><label>Product</label></th>
@@ -313,13 +313,15 @@
         function processPayment(event, itemCount) {
             var test = document.getElementById("submitted").innerText
             if (test) {
+                event.preventDefault();
                 location.assign("/POSTransaction");
                 document.getElementById("submitted").innerText = "yes";
-                event.preventDefault();
+                return;
             }
             if (!itemCount) {
                 event.preventDefault();
-                alert("There are no items to process.")
+                SowMessage("There are no items to process.");
+                return;
             }
 
             //
@@ -333,9 +335,9 @@
             var paymentData = JSON.stringify(payment);
             setCookie("POSPayment", paymentData);
 
+            document.getElementById("submitted").innerText = "yes";
             return;
 
-            //document.getElementById("submitted").innerText = "yes";
 
         }
 
@@ -608,6 +610,6 @@
             }
         }
 
-                /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
     </script>
 }

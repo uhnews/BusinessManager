@@ -86,13 +86,9 @@ namespace BusinessManager.WebUI.Controllers
             paymentData = paymentData.Replace("_filler_text_", sale.Id);
             IPaymentService paymentDataService = new PaymentService();
             paymentDataService.AddPayment(paymentContext, paymentData);
-            //Payment payment = JsonConvert.DeserializeObject<Payment>(paymentData);
-            
-
             //
             posSaleService.CreatePOSSale(sale, transactionItems);
             posTransactionService.ClearPOSTransaction(this.HttpContext);
-
             //
             return RedirectToAction("Index");
         }

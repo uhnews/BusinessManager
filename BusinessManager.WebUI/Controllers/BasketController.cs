@@ -1,22 +1,31 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
 using BusinessManager.Core.ViewModels;
+using BusinessManager.Services;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace BusinessManager.WebUI.Controllers
 {
     public class BasketController : Controller
     {
-        IRepository<Customer> customers;
-        IBasketService basketService;
-        IOnlineOrderService orderService;
+        readonly IRepository<Customer> customers;
+        readonly IBasketService basketService;
+        readonly IOnlineOrderService orderService;
+        readonly IRepository<Payment> paymentContext;
 
-        public BasketController(IBasketService basketService, IOnlineOrderService orderService, IRepository<Customer> customers)
+        public BasketController(
+                                    IBasketService basketService, 
+                                    IOnlineOrderService orderService, 
+                                    IRepository<Customer> customers,
+                                    IRepository<Payment> paymentContext
+                               )
         {
             this.basketService = basketService;
             this.orderService = orderService;
             this.customers = customers;
+            this.paymentContext = paymentContext;
         }
 
         // GET: Basket
@@ -69,7 +78,8 @@ namespace BusinessManager.WebUI.Controllers
                     Email = customer.Email,
                     Phone = customer.Phone,
                     TotalItemCount = summaryModel.BasketCount,
-                    TotalAmount = summaryModel.BasketTotal
+                    TotalAmount = summaryModel.BasketTotal,
+                    OnlineOrderItems = summaryModel.OnlineOrderItems
                 };
                 return View(order);
             }
@@ -93,16 +103,16 @@ namespace BusinessManager.WebUI.Controllers
                 return RedirectToAction("Error");
             }
 
-
             // process payment here
-
-
-
+            HttpCookie cookie = this.HttpContext.Request.Cookies.Get("OnlineOrderPayment");
+            string paymentData = cookie.Value;
+            paymentData = paymentData.Replace("_filler_text_", order.Id);
+            IPaymentService paymentDataService = new PaymentService();
+            paymentDataService.AddPayment(paymentContext, paymentData);
             //
             order.OrderStatus = "Payment Processed";
             orderService.CreateOnlineOrder(order, basketItems);
             basketService.ClearBasket(this.HttpContext);
-
             //
             return RedirectToAction("Thankyou", new { orderId = order.Id });
         }

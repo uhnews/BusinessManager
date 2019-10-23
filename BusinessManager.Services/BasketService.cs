@@ -134,6 +134,7 @@ namespace BusinessManager.Services
                                   BasketId = item.BasketId,
                                   Quantity = item.Quantity,
                                   ModifiedAt = item.ModifiedAt,
+                                  ProductId = product.Id,
                                   ProductName = product.Name,
                                   ProductDescription = product.Description,
                                   Image = product.Image,
@@ -161,6 +162,20 @@ namespace BusinessManager.Services
                                         select bi.Quantity * p.Price).Sum();
                 model.BasketCount = basketCount ?? 0;
                 model.BasketTotal = basketTotal ?? decimal.Zero;
+
+                foreach (var item in basket.BasketItems)
+                {
+                    OnlineOrderItem onlineorderItem = new OnlineOrderItem()
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        ProductDescription = item.ProductDescription,
+                        Image = item.Image,
+                        Price = item.Price,
+                        Quantity = item.Quantity
+                    };
+                    model.OnlineOrderItems.Add(onlineorderItem);
+                }
             }
             return model;
         }

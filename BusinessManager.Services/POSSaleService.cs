@@ -18,13 +18,14 @@ namespace BusinessManager.Services
             this.possaleItemContext = possaleItemContext;
         }
 
-        public void CreatePOSSale(POSSale basePOSSale, List<POSTransactionItemViewModel> POSTransactionItems)
+        public void CreatePOSSale(POSSale basePOSSale, List<POSTransactionItemViewModel> posTransactionItems)
         {
-            foreach (var item in POSTransactionItems)
+            foreach (POSTransactionItemViewModel item in posTransactionItems)
             {
                 basePOSSale.POSSaleItems.Add(new POSSaleItem()
                 {
-                    ProductId = item.Id,
+                    POSSaleId = basePOSSale.Id,
+                    ProductId = item.ProductId,
                     Image = item.Image,
                     Price = item.Price,
                     ProductName = item.ProductName,

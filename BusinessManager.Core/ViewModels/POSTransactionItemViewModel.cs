@@ -9,6 +9,8 @@ namespace BusinessManager.Core.ViewModels
 
         public int Quantity { get; set; }
 
+        public string ProductId { get; set; }
+
         [DisplayName("Product Name")]
         public string ProductName { get; set; }
 

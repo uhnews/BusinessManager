@@ -21,12 +21,12 @@ namespace BusinessManager.Services
 
         public void CreateOnlineOrder(OnlineOrder baseOrder, List<BasketItemViewModel> basketItems)
         {
-            foreach (var item in basketItems)
+            foreach (BasketItemViewModel item in basketItems)
             {
                 baseOrder.OnlineOrderItems.Add(new OnlineOrderItem()
                 {
                     OnlineOrderId = baseOrder.Id,
-                    ProductId = item.Id,
+                    ProductId = item.ProductId,
                     Image = item.Image,
                     Price = item.Price,
                     ProductName = item.ProductName,
