@@ -469,7 +469,6 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function filterCustomers(event, showAll = false) {
-            //event.preventDefault(event);
             var iconOpen = document.getElementById("search-box-menu-open");
             var iconClose = document.getElementById("search-box-menu-close");
             var menu = document.getElementById("search-box-menu");
@@ -478,7 +477,7 @@
             menu.classList.add("hidden");
             firstCall = true;
 
-            var searchText = document.getElementById("product-lookup-search-string").value.toLowerCase();
+            var searchText = document.getElementById("search-string").value.toLowerCase();
             if (searchText === "" && !showAll) {
                 let titleMessage = "<span class='text-warning'>Search text missing!</span>"
                 ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", titleMessage);
@@ -539,7 +538,6 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function toggleColSeltMenu(event) {
-            //event.preventDefault(event);
             var iconOpen = document.getElementById("search-box-menu-open");
             var iconClose = document.getElementById("search-box-menu-close");
             var menu = document.getElementById("search-box-menu");
@@ -555,6 +553,7 @@
             if (btn.nodeName.toLowerCase() !== "button") {
                 btn = btn.parentNode;
             }
+
             var mainContainerRect = menuContainer.getBoundingClientRect();
             var btnRect = btn.getBoundingClientRect();
 
@@ -604,7 +603,6 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function setAllCheck(event) {
-            //event.preventDefault();
             if (!event.target.checked) {
                 document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
             }

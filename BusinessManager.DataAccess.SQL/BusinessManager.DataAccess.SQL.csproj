@@ -390,6 +390,10 @@
     <Compile Include="Migrations\201910230814275_AddCustomerNoteModel1.Designer.cs">
       <DependentUpon>201910230814275_AddCustomerNoteModel1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910240134377_AddCustomerNotesToCustomer.cs" />
+    <Compile Include="Migrations\201910240134377_AddCustomerNotesToCustomer.Designer.cs">
+      <DependentUpon>201910240134377_AddCustomerNotesToCustomer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -614,6 +618,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910230814275_AddCustomerNoteModel1.resx">
       <DependentUpon>201910230814275_AddCustomerNoteModel1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910240134377_AddCustomerNotesToCustomer.resx">
+      <DependentUpon>201910240134377_AddCustomerNotesToCustomer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

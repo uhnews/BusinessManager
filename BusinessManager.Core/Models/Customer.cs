@@ -58,6 +58,8 @@ namespace BusinessManager.Core.Models
 
         public virtual ICollection<OnlineOrder> OnlineOrders { get; set; }
 
+        public virtual ICollection<CustomerNote> CustomerNotes { get; set; }
+
         [NotMapped]
         public virtual ICollection<POSSale> POSSales { get; set; }
 

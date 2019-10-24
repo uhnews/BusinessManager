@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<BusinessManager.Core.Models.Product>
 
 @{
-    ViewBag.Title = "Products";
+    ViewBag.Title = "Product Inventory";
 }
 <style>
     /*.fixed-header tbody {
@@ -16,224 +16,106 @@
     }*/
 
     .search-box-menu {
-        width: 30%;
+        width: 250px;
         padding: 0px 20px 10px 20px;
-        margin: 1px 0px 0px 4%;
+        margin: 0px 0px 0px 0px;
         border: solid 1px #c3d9ef;
         border-radius: 5px;
-        /*z-index: 5;*/
-        display: none;
+        background-color: aliceblue;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
     }
 </style>
 
-<script type="text/javascript">
-    const SHOW_ALL = true;
-    function toggleColSeltMenu(event) {
-        //event.preventDefault();
-        var iconOpen = document.getElementById("search-box-menu-open");
-        var iconClose = document.getElementById("search-box-menu-close");
-        var menu = document.getElementById("search-box-menu");
+<h2 style="display: inline-block"><span class="fas fa-tags text-primary">&nbsp;&nbsp;</span>Product Inventory</h2>
 
-        if (iconClose.style.display === "none") {
-            iconOpen.style.display = "none";
-            iconClose.style.display = "inline";
-            menu.style.display = "block";
-        }
-        else if (iconOpen.style.display === "none") {
-            iconClose.style.display = "none";
-            iconOpen.style.display = "inline";
-            menu.style.display = "none";
-        }
-        else {
-            // ignore if no match
-        }
-    }
-
-    function filterItems(event, showAll = false) {
-        //event.preventDefault();
-        var iconOpen = document.getElementById("search-box-menu-open");
-        var iconClose = document.getElementById("search-box-menu-close");
-        var menu = document.getElementById("search-box-menu");
-
-        // hide the menu before starting search
-        iconClose.style.display = "none";
-        iconOpen.style.display = "inline";
-        menu.style.display = "none";
-        
-        var searchText = document.getElementById("product-lookup-search-string").value.toLowerCase();
-        if (searchText === "" && !showAll) {
-            var titleMessage = "<span class='text-warning'>Search text missing!</span>"
-            ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", titleMessage);
-            return;
-        }
-
-        var table = document.getElementById("product-lookup-table");
-        var searchInName = document.getElementById("search-box-menu").querySelector("input[name='NameCheck']").checked;
-        var searchInDescription = document.getElementById("search-box-menu").querySelector("input[name='DescriptionCheck']").checked;
-        var searchInCategory = document.getElementById("search-box-menu").querySelector("input[name='CategoryCheck']").checked;
-        var searchInProductCode = document.getElementById("search-box-menu").querySelector("input[name='ProductCodeCheck']").checked;
-        var searchInUPC = document.getElementById("search-box-menu").querySelector("input[name='UPCCheck']").checked;
-        var searchInQuantity = document.getElementById("search-box-menu").querySelector("input[name='QuantityCheck']").checked;
-        var searchInPrice = document.getElementById("search-box-menu").querySelector("input[name='PriceCheck']").checked;
-
-        var columsWereSelected = searchInName || searchInDescription ||
-                                    searchInCategory || searchInProductCode ||
-                                    searchInUPC || searchInQuantity || searchInPrice;
-        
-        if (!columsWereSelected && !showAll) {
-            let titleMessage = "<span class='text-warning'>Missing search input!</span>"
-            ShowMessage("To execute a search you must select at least one of the fields listed in the search box menu.", titleMessage);
-            return;
-        }
-
-        var rows = table.getElementsByTagName("tr");
-        //alert(rows.length - 1);
-        for (i = 1; i < rows.length; i++) {
-            var row = rows[i];
-            var nameData = row.querySelector("tr span[name='Name']").innerHTML.toLowerCase();
-            var descriptionData = row.querySelector("tr span[name='Description']").innerHTML.toLowerCase();
-            var categoryData = row.querySelector("tr span[name='Category']").innerHTML.toLowerCase();
-            var productCodeData = row.querySelector("tr span[name='ProductCode']").innerHTML.toLowerCase();
-            var upcData = row.querySelector("tr span[name='UPC']").innerHTML.toLowerCase();
-            var quantityData = row.querySelector("tr span[name='Quantity']").innerHTML.toLowerCase();
-            var pricecData = row.querySelector("tr span[name='Price']").innerHTML.toLowerCase();
-
-            if ((nameData.indexOf(searchText) > -1 && searchInName) || showAll) {
-                row.style.display = "table-row";
-            }
-            else if (descriptionData.indexOf(searchText) > -1 && searchInDescription) {
-                row.style.display = "table-row";
-            }
-            else if (categoryData.indexOf(searchText) > -1 && searchInCategory) {
-                row.style.display = "table-row";
-            }
-            else if (productCodeData.indexOf(searchText) > -1 && searchInProductCode) {
-                row.style.display = "table-row";
-            }
-            else if (upcData.indexOf(searchText) > -1 && searchInUPC) {
-                row.style.display = "table-row";
-            }
-            else if (quantityData.indexOf(searchText) > -1 && searchInQuantity) {
-                row.style.display = "table-row";
-            }
-            else if (pricecData.indexOf(searchText) > -1 && searchInPrice) {
-                row.style.display = "table-row";
-            }
-            else {
-                row.style.display = "none";
-            }
-        }
-    }
-
-    function selectColGroup(event) {
-        //event.preventDefault();
-        var colNames = ["Name", "Description", "Category", "ProductCode", "UPC", "Quantity", "Price"];
-        var allAreChecked = true;
-
-        colNames.forEach(function (name) {
-            allAreChecked = allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked;
-        });
-
-        if (allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked) {
-            return;
-        }
-
-        colNames.forEach(function (name) {
-            var menu = document.getElementById("search-box-menu");
-            document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked = !allAreChecked;
-        });
-        document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
-    }
-
-    function setAllCheck(event) {
-        //event.preventDefault(event);
-        if (!event.target.checked) {
-            document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
-        }
-    }
-
-</script>
-<h2>Product Inventory</h2>
+<div id="search-objects-container" class="col-md-4 pull-right" style="display: inline-block; margin: 30px 0 0 0; padding: 0 0 0 0">
+    <div style="padding-bottom: 0; margin-bottom: 0; width: 100%">
+        <div class="form-group" style="margin: 0 -60px 0 0">
+            <input id="search-string"
+                   placeholder="Enter text to find ..."
+                   type="text" class="form-control"
+                   style="display: inline-block; margin: 0; max-width: 65%" />
+            <button id="search-box-btn-find" 
+                    type="button"
+                    class="btn btn-default btn-primary-text"
+                    onclick="filterItems(event)"
+                    style="display: inline-block; margin-top:-3px;">
+                <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+            </button>
+            <button id="search-box-menu-btn" 
+                    type="button"
+                    class="btn btn-default btn-primary-text"
+                    onclick="toggleColSeltMenu(event)"
+                    style="display: inline-block; margin-top:-3px">
+                <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
+                <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
+            </button>
+        </div>
+    </div>
+    <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
+        <div>
+            <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
+                <span>Search In:</span>
+                <input name="AllCheck"
+                       type="checkbox"
+                       onchange="selectColGroup(event)">
+                <span class="checkmark"></span>
+            </label>
+            <hr style="margin: 0 0 5px 0; padding: 0" />
+            <div>
+                <label class="checkbox-container">
+                    Name
+                    <input name="NameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Description
+                    <input name="DescriptionCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Category
+                    <input name="CategoryCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Product Code
+                    <input name="ProductCodeCheck" type="checkbox" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    UPC
+                    <input name="UPCCheck" type="checkbox" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Quantity
+                    <input name="QuantityCheck" type="checkbox" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">
+                    Price
+                    <input name="PriceCheck" type="checkbox" onclick="setAllCheck(event)">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            <hr style="margin: 10px 0 10px 0; padding: 0" />
+            <button class="btn btn-primary"
+                    type="button"
+                    onclick="filterItems(event, SHOW_ALL)"
+                    style="width: 100%">
+                Load All Products
+            </button>
+        </div>
+    </div>
+</div>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-
-<div style="padding-bottom: 0; margin-bottom: 0">
-    <div class="form-group" style="width: 100%; margin-bottom: 0">
-        <input id="product-lookup-search-string"
-               placeholder="Enter text to find ..."
-               type="text" class="form-control"
-               style="display: inline-block; margin: 0; max-width: 25%" />
-        <button id="search-box-btn-find" class="btn btn-default btn-primary-text"
-                onclick="filterItems(event)"
-                style="display: inline-block; margin-top:-4px;">
-            <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
-        </button>
-        <button class="btn btn-default btn-primary-text"
-                onclick="toggleColSeltMenu(event)"
-                style="display: inline-block; margin-top:-4px; padding">
-            <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
-            <span id="search-box-menu-close" class="glyphicon glyphicon-remove" style="margin: 0; display: none"></span>
-        </button>
-    </div>
-</div>
-<div id="search-box-menu" class="search-box-menu">
-    <div>
-        <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
-            <span>Search In:</span>
-            <input name="AllCheck"
-                   type="checkbox"
-                   onchange="selectColGroup(event)">
-            <span class="checkmark"></span>
-        </label>
-        <hr style="margin: 0 0 5px 0; padding: 0" />
-        <div>
-            <label class="checkbox-container">
-                Name
-                <input name="NameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                <span class="checkmark"></span>
-            </label>
-            <label class="checkbox-container">
-                Description
-                <input name="DescriptionCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                <span class="checkmark"></span>
-            </label>
-            <label class="checkbox-container">
-                Category
-                <input name="CategoryCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                <span class="checkmark"></span>
-            </label>
-            <label class="checkbox-container">
-                Product Code
-                <input name="ProductCodeCheck" type="checkbox" onclick="setAllCheck(event)">
-                <span class="checkmark"></span>
-            </label>
-            <label class="checkbox-container">
-                UPC
-                <input name="UPCCheck" type="checkbox" onclick="setAllCheck(event)">
-                <span class="checkmark"></span>
-            </label>
-            <label class="checkbox-container">
-                Quantity
-                <input name="QuantityCheck" type="checkbox" onclick="setAllCheck(event)">
-                <span class="checkmark"></span>
-            </label>
-            <label class="checkbox-container">
-                Price
-                <input name="PriceCheck" type="checkbox" onclick="setAllCheck(event)">
-                <span class="checkmark"></span>
-            </label>
-        </div>
-        <hr style="margin: 10px 0 10px 0; padding: 0" />
-        <button class="btn btn-primary"
-                onclick="filterItems(SHOW_ALL)"
-                style="width: 100%">
-            Load All Products
-        </button>
-    </div>
-</div>
-
 <table id="product-lookup-table" class="table" style="margin-top: 2px">
     <tr>
         <th>
@@ -331,3 +213,185 @@
     }
 
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        const SHOW_ALL = true;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        var firstCall = true;
+        function hideSearchMenu() {
+            if (!firstCall)
+                toggleColSeltMenu();
+
+            firstCall = false;
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function filterItems(event, showAll = false) {
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            iconClose.classList.add("hidden");
+            iconOpen.classList.remove("hidden");
+            menu.classList.add("hidden");
+            firstCall = true;
+
+            var searchText = document.getElementById("search-string").value.toLowerCase();
+            if (searchText === "" && !showAll) {
+                let titleMessage = "<span class='text-warning'>Search text missing!</span>"
+                ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", titleMessage);
+                return;
+            }
+
+            var table = document.getElementById("product-lookup-table");
+
+            var searchInName = document.getElementById("search-box-menu").querySelector("input[name='NameCheck']").checked;
+            var searchInDescription = document.getElementById("search-box-menu").querySelector("input[name='DescriptionCheck']").checked;
+            var searchInCategory = document.getElementById("search-box-menu").querySelector("input[name='CategoryCheck']").checked;
+            var searchInProductCode = document.getElementById("search-box-menu").querySelector("input[name='ProductCodeCheck']").checked;
+            var searchInUPC = document.getElementById("search-box-menu").querySelector("input[name='UPCCheck']").checked;
+            var searchInQuantity = document.getElementById("search-box-menu").querySelector("input[name='QuantityCheck']").checked;
+            var searchInPrice = document.getElementById("search-box-menu").querySelector("input[name='PriceCheck']").checked;
+
+            var columsWereSelected = searchInName || searchInDescription ||
+                searchInCategory || searchInProductCode ||
+                searchInUPC || searchInQuantity || searchInPrice;
+
+            if (!columsWereSelected && !showAll) {
+                let titleMessage = "<span class='text-warning'>Missing search input!</span>"
+                ShowMessage("To execute a search you must select at least one of the fields listed in the search box menu.", titleMessage);
+                return;
+            }
+            
+            var itemsFound = 0;
+            var rows = table.getElementsByTagName("tr");
+            for (i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var nameData = row.querySelector("tr span[name='Name']").innerHTML.toLowerCase();
+                var descriptionData = row.querySelector("tr span[name='Description']").innerHTML.toLowerCase();
+                var categoryData = row.querySelector("tr span[name='Category']").innerHTML.toLowerCase();
+                var productCodeData = row.querySelector("tr span[name='ProductCode']").innerHTML.toLowerCase();
+                var upcData = row.querySelector("tr span[name='UPC']").innerHTML.toLowerCase();
+                var quantityData = row.querySelector("tr span[name='Quantity']").innerHTML.toLowerCase();
+                var pricecData = row.querySelector("tr span[name='Price']").innerHTML.toLowerCase();
+
+                if ((nameData.indexOf(searchText) > -1 && searchInName) || showAll) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (descriptionData.indexOf(searchText) > -1 && searchInDescription) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (categoryData.indexOf(searchText) > -1 && searchInCategory) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (productCodeData.indexOf(searchText) > -1 && searchInProductCode) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (upcData.indexOf(searchText) > -1 && searchInUPC) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (quantityData.indexOf(searchText) > -1 && searchInQuantity) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (pricecData.indexOf(searchText) > -1 && searchInPrice) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else {
+                    row.style.display = "none";
+                }
+            }
+            if (itemsFound === 0) {
+                filterItems(event, SHOW_ALL);
+                ShowMessage("<h4 class='text-primary'>No matches were found &ndash; all products in list returned.</h4>");
+            }
+            document.removeEventListener("click", hideSearchMenu);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function toggleColSeltMenu(event) {
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            var menuContainer = document.getElementById("search-objects-container");
+
+            var btn = null;
+            if (event) {
+                btn = event.target;
+            }
+            else {
+                btn = document.getElementById("search-box-menu-btn");
+            }
+            if (btn.nodeName.toLowerCase() !== "button") {
+                btn = btn.parentNode;
+            }
+            
+            var mainContainerRect = menuContainer.getBoundingClientRect();
+            var btnRect = btn.getBoundingClientRect();
+
+            xShift = (btnRect.left - mainContainerRect.left);
+            yShift = (btnRect.top + btnRect.height - mainContainerRect.top);
+
+            if (iconClose.classList.contains("hidden")) {
+                iconOpen.classList.add("hidden");
+                iconClose.classList.remove("hidden");
+                menu.classList.remove("hidden");
+                var menuRect = menu.getBoundingClientRect();
+                menu.style.transform = "translate(" + (xShift - (menuRect.width - btnRect.width)) + "px," + yShift + "px)";
+                firstCall = true;
+                document.addEventListener("click", hideSearchMenu);
+            }
+            else if (iconOpen.classList.contains("hidden")) {
+                iconClose.classList.add("hidden");
+                iconOpen.classList.remove("hidden");
+                menu.classList.add("hidden");
+                document.removeEventListener("click", hideSearchMenu);
+            }
+            else {
+                // ignore if no match
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function selectColGroup(event) {
+            var colNames = ["Name", "Description", "Category", "ProductCode", "UPC", "Quantity", "Price"];
+            var allAreChecked = true;
+
+            colNames.forEach(function (name) {
+                allAreChecked = allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked;
+            });
+
+            if (allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked) {
+                return;
+            }
+
+            colNames.forEach(function (name) {
+                document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked = !allAreChecked;
+            });
+            document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function setAllCheck(event) {
+            if (!event.target.checked) {
+                document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+    </script>
+}
