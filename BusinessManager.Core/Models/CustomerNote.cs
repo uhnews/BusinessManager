@@ -17,6 +17,7 @@ namespace BusinessManager.Core.Models
         [StringLength(50)]
         public string Category { get; set; }
 
+        [DisplayName("Note")]
         public string NoteBody { get; set; }
     }
 }

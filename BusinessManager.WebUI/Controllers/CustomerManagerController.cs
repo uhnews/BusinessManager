@@ -23,6 +23,7 @@ namespace BusinessManager.WebUI.Controllers
         IRepository<POSSaleItem> possaleItemContext;
         IRepository<OnlineOrder> onlineorderContext;
         IRepository<OnlineOrderItem> onlineorderItemContext;
+        IRepository<CustomerNote> customernoteContext;
 
         // dependency injection
         public CustomerManagerController(
@@ -36,7 +37,8 @@ namespace BusinessManager.WebUI.Controllers
                                             IRepository<POSSale> possaleContext,
                                             IRepository<POSSaleItem> possaleItemContext,
                                             IRepository<OnlineOrder> onlineorderContext,
-                                            IRepository<OnlineOrderItem> onlineorderItemContext
+                                            IRepository<OnlineOrderItem> onlineorderItemContext,
+                                            IRepository<CustomerNote> customernoteContext
                                         )
         {
             this.customerContext = customerContext;
@@ -50,6 +52,7 @@ namespace BusinessManager.WebUI.Controllers
             this.possaleItemContext = possaleItemContext;
             this.onlineorderContext = onlineorderContext;
             this.onlineorderItemContext = onlineorderItemContext;
+            this.customernoteContext = customernoteContext;
         }
 
         // GET: Customers
@@ -144,6 +147,10 @@ namespace BusinessManager.WebUI.Controllers
                 // sort and load Invoice Payments
                 IPaymentService paymentService = new PaymentService();
                 paymentService.GetPayments(customer);
+
+                // sort CustomerNotes
+                customer.CustomerNotes = customer.CustomerNotes.OrderBy(n => n.CreatedAt).ToList();
+                //customer.CustomerNotes.ToList().ForEach(n => { n.NoteBody = n.NoteBody.Replace("\n", "<br>"); });
 
                 return View(customer);
             }
@@ -434,10 +441,23 @@ namespace BusinessManager.WebUI.Controllers
         }
 
         //
-        //       *********************** OnlineOrder Methods ***********************
+        //       *********************** CustomerNote Methods ***********************
         //
+        public JsonResult AddCustomerNote(string data)
+        {
+            ICustomerNoteService dataService = new CustomerNoteService();
+            var addResult = dataService.AddCustomerNote(customernoteContext, data);
 
+            return Json(addResult, JsonRequestBehavior.AllowGet);
+        }
 
+        public JsonResult DeleteCustomerNote(string Id)
+        {
+            ICustomerNoteService dataService = new CustomerNoteService();
+            object deleteResult = dataService.DeleteCustomerNote(customernoteContext, Id);
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
+
+        }
 
         //
         //       *********************** Product Methods ***********************

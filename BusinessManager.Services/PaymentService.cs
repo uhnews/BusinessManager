@@ -37,6 +37,27 @@ namespace BusinessManager.Services
                 }
             }
         }
+
+        public object DeletePayment(IRepository<Payment> paymentContext, string Id)
+        {
+            try
+            {
+                paymentContext.Delete(Id);
+                paymentContext.Commit();
+
+                // send response object
+                return new { Successful = true, Message = "Payment deleted." };
+            }
+            catch (Exception ex)
+            {
+                // log error;
+                Console.WriteLine(ex);
+
+                // send response object error
+                return new { Successful = false, Message = "Payment failed to delete." };
+            }
+        }
+
         public object UpdatePayment(IRepository<Payment> paymentContext, string data)
         {
             {

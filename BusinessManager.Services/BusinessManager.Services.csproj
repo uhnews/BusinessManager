@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasketService.cs" />
+    <Compile Include="CustomerNoteService.cs" />
     <Compile Include="CustomerService.cs" />
     <Compile Include="InvoiceDataService.cs" />
     <Compile Include="InvoiceService.cs" />

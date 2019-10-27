@@ -323,6 +323,7 @@
     <Content Include="Views\CustomerNoteManager\Create.cshtml" />
     <Content Include="Views\CustomerNoteManager\Edit.cshtml" />
     <Content Include="Views\CustomerNoteManager\Delete.cshtml" />
+    <Content Include="Views\CustomerManager\CustomerNotes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

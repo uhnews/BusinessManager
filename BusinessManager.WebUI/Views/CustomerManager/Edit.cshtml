@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Edit Customer";
+    ViewBag.CustomerId = Model.Id;
     ViewBag.Prducts = Model.ProductList;
     //string customGray = "#adbfd2";
     string customGray = "#ced8e4";
@@ -137,6 +138,12 @@
                                 Save
                                 <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
                             </button>
+                            <button onclick="showCustomerNotes(event)"
+                                    id="show-customernotes-btn"
+                                    type="button"
+                                    class="btn btn-default btn-sm">
+                                Notes
+                            </button>
                             <button onclick="showInvoices(event)"
                                     id="show-invoices-btn"
                                     type="button"
@@ -160,6 +167,12 @@
                                     type="button"
                                     class="btn btn-default btn-sm">
                                 Online Orders
+                            </button>
+                            <button onclick="addCustomerNote(event)"
+                                    id="add-customernote-btn"
+                                    type="button"
+                                    class="btn btn-default btn-sm btn-danger-text">
+                                Add Note
                             </button>
                             <button onclick="addPOSSale(event)"
                                     id="add-possale-btn"
@@ -205,6 +218,25 @@
 
         </div>
 
+        <div id="customernotes-container" class="col-md-8 hidden" style="padding: 0; margin: 0; border-radius: 0 5px 5px 0; background-color: @customGray">
+            @{
+                var customernoteCount = Model.CustomerNotes.Count;
+                var customernoteFullName = Model.FirstName + ' ' + Model.LastName;
+                var customernoteCompanyName = Model.CompanyName == "" ? "" : " (" + Model.CompanyName + ")";
+                var customernoteCombinedName = customernoteFullName + customernoteCompanyName;
+            }
+            <span id="curr-customernote-id" style="display: none"></span>
+            <div style="margin: 0px 0px 5px 25px">
+                <h4>Notes</h4>
+                <strong>
+                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@customernoteCombinedName</span>
+                    <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                </strong>
+                <span style="margin: 3px 13px 3px 3px">Notes: @customernoteCount</span>
+            </div>
+            @Html.Partial("CustomerNotes", Model.CustomerNotes)
+        </div>
+
         <div id="possales-container" class="col-md-8 hidden" style="padding: 0; margin: 0; border-radius: 0 5px 5px 0; background-color: @customGray">
             @{
                 var possaleItemCount = 0;
@@ -219,9 +251,9 @@
             }
             <span id="curr-possale-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
-                <h4>Customer POS Sales</h4>
+                <h4>POS Sales</h4>
                 <strong>
-                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@possaleCombinedName </span>
+                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@possaleCombinedName</span>
                     <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
                 </strong>
                 <span style="margin: 3px 13px 3px 3px">Sales: @possaleCount</span>Total Items:
@@ -244,7 +276,7 @@
             }
             <span id="curr-layaway-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
-                <h4>Customer Layaways</h4>
+                <h4>Layaways</h4>
                 <strong>
                     <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@layawayCombinedName</span>
                     <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
@@ -269,9 +301,9 @@
             }
             <span id="curr-invoice-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
-                <h4>Customer Invoices</h4>
+                <h4>Invoices</h4>
                 <strong>
-                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@invoicecombinedName </span>
+                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@invoicecombinedName</span>
                     <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
                 </strong>
                 <span style="margin: 3px 13px 3px 3px">Invoices: @Model.Invoices.Count</span>Total Items:
@@ -294,9 +326,9 @@
             }
             <span id="curr-onlineorder-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
-                <h4>Customer Online Orders</h4>
+                <h4>Online Orders</h4>
                 <strong>
-                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@onlineordercombinedName </span>
+                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@onlineordercombinedName</span>
                     <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
                 </strong>
                 <span style="margin: 3px 13px 3px 3px">Orders: @Model.OnlineOrders.Count</span>Total Items:
@@ -316,7 +348,7 @@
             restorePgState();
             savePgState();
         };
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         setInvoicesDatePickers(event);
@@ -327,16 +359,21 @@
 
         document.onkeypress = function (event) {
             if (event.keyCode === 13) {
-                event.preventDefault();
+                var textInputs = document.getElementById("customer-info").querySelectorAll("input[type='text']");
+                textInputs.forEach(input => {
+                    if (input === event.target) {
+                        event.preventDefault();
+                    }
+                });
             }
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////
-                
+
         function focusMatchingInput(input_id) {
             var parentElement1 = event.target.parentNode;
             var parentElement2 = parentElement1.parentNode;
-            if (parentElement2.querySelector("#" + input_id).type === "date") 
+            if (parentElement2.querySelector("#" + input_id).type === "date")
                 parentElement2.querySelector("#" + input_id).focus();
             else
                 parentElement2.querySelector("#" + input_id).select();
@@ -372,6 +409,8 @@
 
             var btnElementIdList = [
                [ "save-customer-btn", "SaveCustomerButton" ],
+               [ "add-customernote-btn", "AddCustomerNoteButton" ],
+               [ "show-customernotes-btn", "ShowCustomerNotesButton" ],
                [ "add-invoice-btn", "AddInvoiceButton" ],
                [ "show-invoices-btn", "ShowInvoicesButton" ],
                [ "add-layaway-btn", "AddLayawayButton" ],
@@ -407,14 +446,14 @@
                 return;
             }
             var state = JSON.parse(cookie);
-            
+
             if (state.CustomerId !== getCurrCustomerId()) {
                 return;
             }
 
             // current Item Types
             var ItemTypes = [ "POSSale", "Invoice", "Layaway", "OnlineOrder" ];
-            
+
             // gen subform names from Item Types
             var subforms = [];
             ItemTypes.forEach(itemType => { subforms.push(itemType.toLowerCase() + "s"); });
@@ -441,7 +480,14 @@
             });
 
             // restore Alt form's View state
-            var subformElementIds = [ "alt-subform-container", "layaways-container", "invoices-container", "possales-container", "onlineorders-container" ];
+            var subformElementIds = [
+                "alt-subform-container",
+                "customernotes-container",
+                "layaways-container",
+                "invoices-container",
+                "possales-container",
+                "onlineorders-container"
+            ];
             subformElementIds.forEach(elementId => {
                 var subform = document.getElementById(elementId);
                 if (elementId === state.CurrSubForm) {
@@ -455,6 +501,8 @@
             // restore Customer Buttons view state
             var btnsState = {
                 "save-customer-btn": state.SaveCustomerButton,
+                "add-customernote-btn": state.AddCustomerNoteButton,
+                "show-customernotes-btn": state.ShowCustomerNotesButton,
                 "add-invoice-btn": state.AddInvoiceButton,
                 "show-invoices-btn": state.ShowInvoicesButton,
                 "add-layaway-btn": state.AddLayawayButton,
@@ -478,24 +526,31 @@
 
             expireCookie("PageState");
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function getCurrCustomerId() {
             return document.getElementById("Id").value;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function getCustomerEditBorderState() {
             return document.getElementById("customer-form").className;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function getActiveSubForm() {
             var result = "";
-            var subformElementIds = [ "alt-subform-container", "layaways-container", "invoices-container", "possales-container", "onlineorders-container" ];
+            var subformElementIds = [
+                "alt-subform-container",
+                "customernotes-container",
+                "layaways-container",
+                "invoices-container",
+                "possales-container",
+                "onlineorders-container"
+            ];
             subformElementIds.forEach(function (elementId, index) {
                 var subform = document.getElementById(elementId);
                 if (!subform.classList.contains("hidden")) {
@@ -504,29 +559,29 @@
             });
             return result;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         function getCurrLayawayPgIndex() {
             return getCurrSubformPgIndex("Layaway");
-        }        
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         function getCurrInvoicePgIndex() {
             return getCurrSubformPgIndex("Invoice");
-        }        
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         function getCurrPOSSalePgIndex() {
             return getCurrSubformPgIndex("POSSale");
-        }        
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         function getCurrOnlineOrderPgIndex() {
             return getCurrSubformPgIndex("OnlineOrder");
         }
         /////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         function getCurrSubformPgIndex(recordType) {
             recordType = recordType.toLowerCase();
             var table = document.getElementById(recordType + "s-table");
@@ -543,27 +598,30 @@
             }
             return null;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function hideAllSubForms() {
             document.getElementById("alt-subform-container").classList.add("hidden");
+            document.getElementById("customernotes-container").classList.add("hidden");
             document.getElementById("possales-container").classList.add("hidden");
             document.getElementById("layaways-container").classList.add("hidden");
             document.getElementById("invoices-container").classList.add("hidden");
             document.getElementById("onlineorders-container").classList.add("hidden");
             // also hide all the Add buttons
+            document.getElementById("add-customernote-btn").classList.add("hidden");
             document.getElementById("add-possale-btn").classList.add("hidden");
             document.getElementById("add-invoice-btn").classList.add("hidden");
             document.getElementById("add-layaway-btn").classList.add("hidden");
             document.getElementById("add-onlineorder-btn").classList.add("hidden");
             // also show all the Show buttons
+            document.getElementById("show-customernotes-btn").classList.remove("hidden");
             document.getElementById("show-possales-btn").classList.remove("hidden");
             document.getElementById("show-invoices-btn").classList.remove("hidden");
             document.getElementById("show-layaways-btn").classList.remove("hidden");
             document.getElementById("show-onlineorders-btn").classList.remove("hidden");
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function addCustomerSectionBorder(subform) {
@@ -580,7 +638,11 @@
             ].forEach(item => { customerSection.classList.remove(item); });
 
             // now select specified border
-            if (subform.toLowerCase().indexOf("invoice") > -1) {
+            if (subform.toLowerCase().indexOf("customernote") > -1) {
+                customerSection.classList.add("border");
+                customerSection.classList.add("border-blue");
+            }
+            else if (subform.toLowerCase().indexOf("invoice") > -1) {
                 customerSection.classList.add("border");
                 customerSection.classList.add("border-golden");
             }
@@ -600,7 +662,18 @@
                 customerSection.classList.add("border");
             }
         }
-        
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showCustomerNotes(event) {
+            hideAllSubForms();
+            document.getElementById("show-customernotes-btn").classList.add("hidden");
+            document.getElementById("customernotes-container").classList.remove("hidden");
+            document.getElementById("add-customernote-btn").classList.remove("hidden");
+            addCustomerSectionBorder("CustomerNote");
+            savePgState();
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showPOSSales(event) {
@@ -611,7 +684,7 @@
             addCustomerSectionBorder("POSSale");
             savePgState();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showInvoices(event) {
@@ -622,7 +695,7 @@
             addCustomerSectionBorder("Invoice");
             savePgState();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showLayaways(event) {
@@ -633,7 +706,7 @@
             addCustomerSectionBorder("Layaway");
             savePgState();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showOnlineOrders(event) {
@@ -644,13 +717,13 @@
             addCustomerSectionBorder("OnlineOrder");
             savePgState();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function saveCustomer(event) {
             document.getElementById('customer-edit-form').submit();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function setInvoicesDatePickers(event) {
@@ -663,10 +736,10 @@
                 var invoiceDate = invoiceDateEl.getAttribute("value");
                 var date1 = new Date(invoiceDate);
                 var newInvoiceDate = date1.getFullYear() + "-" + (date1.getMonth() + 1).toString().padStart(2, '0') + "-" + date1.getDate().toString().padStart(2, '0');
-                invoiceDateEl.value = newInvoiceDate; 
+                invoiceDateEl.value = newInvoiceDate;
             }
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function setLayawaysDatePickers(event) {
@@ -679,13 +752,13 @@
                 var agreementDate = agreementDateEl.getAttribute("value");
                 var date1 = new Date(agreementDate);
                 var newAgreementDate = date1.getFullYear() + "-" + (date1.getMonth() + 1).toString().padStart(2, '0') + "-" + date1.getDate().toString().padStart(2, '0');
-                agreementDateEl.value = newAgreementDate; 
-                
+                agreementDateEl.value = newAgreementDate;
+
                 var dueDateEl = row.querySelector("[id='layaway_DueDate']");
                 var dueDate = dueDateEl.getAttribute("value");
                 var date2 = new Date(dueDate);
                 var newDueDate = date2.getFullYear() + "-" + (date2.getMonth() + 1).toString().padStart(2, '0') + "-" + date2.getDate().toString().padStart(2, '0');
-                dueDateEl.value = newDueDate; 
+                dueDateEl.value = newDueDate;
             }
         }
 
@@ -696,12 +769,12 @@
             tableList.forEach(tableName => {
                 var table = document.getElementById(tableName);
                 var rows = table.rows;
-                let row = rows[rows.length - 1]; 
+                let row = rows[rows.length - 1];
                 var balance = row.querySelector("[name='customer-balance']").innerHTML;
                 for (let i = 0; i < rows.length; i++) {
                     let row = rows[i];
                     row.querySelector("[name='all-pending-transaction-charges']").innerHTML = balance;
-                } 
+                }
             });
         }
 
@@ -805,7 +878,140 @@
                 row.querySelector("[name='all-pending-transaction-charges']").innerHTML = "$ " + addCommasToNumber(parseFloat(newAllTransactionCharges).toFixed(2));
             }
         }
-        
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function hideNewCustomerNote() {
+            document.getElementById("new-note-container").classList.add("hidden");
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function addCustomerNote(event) {
+            document.getElementById("new-note-container").classList.remove("hidden");
+            document.getElementById("new-note-body").focus();
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function saveNewCustomerNote(event) {
+            var customerId = document.getElementById("new-customernote-customer-id").innerText;
+            var currUser = document.getElementById("UserName").innerText;
+            var category = document.getElementById("new-customernote-category").value;
+            var noteBody = document.getElementById("new-note-body").value;
+            var colorBlueText = "#1a53ff";
+
+            var customerNote = {
+                CustomerId: customerId,
+                UserName: currUser,
+                Category: category,
+                NoteBody: noteBody
+            }
+
+            if (!customerNote.NoteBody) {
+                return;
+            }
+
+            var noteBody = noteBody.replace(/\n/g, "<br>");
+            var d = new Date();
+            var hours = d.getHours();
+            var ampm = (hours < 12) ? "AM" : "PM";
+            hours = ((hours > 12) ? hours - 12 : hours).toString().padStart(2, "0");
+            var time = hours + ":";
+            time += d.getMinutes().toString().padStart(2, "0") + ":";
+            time += d.getSeconds().toString().padStart(2, "0") + " ";
+            time += ampm;
+            var createdAt = (d.getMonth() + 1).toString().padStart(2, "0") + "/" + d.getDate().toString().padStart(2, "0") + "/" + d.getFullYear() + " " + time;
+
+            var notesTable = document.getElementById("customernotes-table");
+            var rowCount = notesTable.rows.length;
+
+            var newTD = `
+                        <td style="background-color: #fcfdfd">
+                            <span name="customernote-id"></span>
+                            <span name="row-index" style="margin-right: 5px; font-weight: 600">${(rowCount + 1)}</span>
+                            <span>${createdAt}</span>
+                            <span class="hidden">${customerId}</span>
+                            <span id="curr-user">${currUser}</span>
+                            <span style="opacity: 0">FILLER-TEXT-FILLER-TEXT-FILLER-TEXT-FILLER-TEXT-</span>
+                            <div>Category: <span>${category}</span></div>
+                            <div id="new-customernote-note-body" style="color: ${colorBlueText}; margin-right: 60px">${noteBody}</div>
+                            <button onclick="deleteCustomerNote(event)"
+                                    type="button"
+                                    class="btn btn-default btn-xs pull-right"
+                                    style="margin: -30px 0 0 0; display: block">
+                                <span class="text-danger">Delete</span>
+                            </button>
+                        </td>
+                    `
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var responseText = this.responseText;
+                    var responseObject = JSON.parse(responseText);
+                    if (responseObject.Successful === true) {
+                        var newNoteId = responseObject.CustomerNoteId;
+                        var tableBody = notesTable.querySelector("tbody");
+                        if (!tableBody) {
+                            tableBody = document.createElement("tbody");
+                            notesTable.appendChild(tableBody);
+                        }
+                        var newRow = tableBody.insertRow()
+                        newRow.innerHTML = newTD;
+                        newRow.querySelector("[name='customernote-id']").innerText = newNoteId;
+                        document.getElementById("hide-new-customernote-btn").click();
+                        newRow.scrollIntoView();
+                        document.getElementById("new-note-body").value = "";
+                    }
+                    else if (responseObject.Message) {
+                        ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                    }
+                }
+            };
+            xhttp.open("GET", "/CustomerManager/AddCustomerNote/?data=" + JSON.stringify(customerNote), true);
+            xhttp.send();
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function deleteCustomerNote(event) {
+            var notesTable = getParent(event.target, "table");
+            var tableRow = getParent(event.target, "tr");
+            var currRowIndex = tableRow.querySelector("[name='row-index']").innerText;
+            var noteId = tableRow.querySelector("[name='customernote-id']").innerText;
+            var mesgHtml = "Click Delete to remove note permanently or Cancel to abort.";
+            var titleHtml = "Warning - Please Confirm Note Deletion";
+            ShowMessage(mesgHtml, titleHtml, "delete, cancel").then(
+                function (response) {
+                    if (response === "Delete") {
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState === 4 && this.status === 200) {
+                                var responseText = this.responseText;
+                                var responseObject = JSON.parse(responseText);
+                                if (responseObject.Successful === true) {
+                                    tableRow.parentNode.removeChild(tableRow);
+                                    for (let i = currRowIndex - 1; i < notesTable.rows.length; i++) {
+                                        var row = notesTable.rows[i];
+                                        var rowIndexSpan = row.querySelector("[name='row-index']");
+                                        rowIndexSpan.innerText = parseInt(rowIndexSpan.innerText) - 1;
+                                    }
+                                }
+                                else if (responseObject.Message) {
+                                    ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                                }
+                            }
+                        };
+                        xhttp.open("GET", "/CustomerManager/DeleteCustomerNote/?Id=" + noteId, true);
+                        xhttp.send();
+                    }
+                },
+                function (error) {
+                    alert("Something went wrong!");
+                }
+            );
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function addLayaway(event) {
@@ -815,17 +1021,17 @@
 
         function addInvoice(event) {
             addCustomerSubformRecord("Invoice");
-        }        
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function addPOSSale() {
+        function addPOSSale(event) {
             addCustomerSubformRecord("POSSale");
-        }        
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function addOnlineOrder(event) {
             addCustomerSubformRecord("OnlineOrder");
-        }        
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function addCustomerSubformRecord(recordType) {
@@ -859,7 +1065,7 @@
                     return;
             }
             savePgState(state);
-            
+
             var customerId = document.getElementById("Id").value;
 
             //upload data
@@ -884,22 +1090,22 @@
 
         function deleteLayaway(event) {
             deleteSubformRecord(event, "Layaway");
-        }        
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function deleteInvoice(event) {
             deleteSubformRecord(event, "Invoice");
-        }        
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function deletePOSSale(event) {
             deleteSubformRecord(event, "POSSale");
-        }        
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function deleteOnlineOrder(event) {
             deleteSubformRecord(event, "OnlineOrder");
-        }        
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function deleteSubformRecord(event, recordType) {
@@ -962,7 +1168,7 @@
             xhttp.open("GET", "/CustomerManager/Delete" + RecordType + "/?Id=" + recordId, true);
             xhttp.send();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function saveSubformData(event, route, getData, finalProcess = null) {
@@ -1097,7 +1303,7 @@
                 CheckNo: tableRow.querySelector("[name='CheckNo']").value,
                 CheckWriter: tableRow.querySelector("[name='CheckWriter']").value,
                 CheckImage: tableRow.querySelector("[name='CheckImage']").value,
-                CreditCardHolder: tableRow.querySelector("[name='CreditCardHolder']").value,                
+                CreditCardHolder: tableRow.querySelector("[name='CreditCardHolder']").value,
                 CreditCardExpMonth: tableRow.querySelector("[name='CreditCardExpMonth']").value,
                 CreditCardExpYear: tableRow.querySelector("[name='CreditCardExpYear']").value,
                 CreditCardCVV: tableRow.querySelector("[name='CreditCardCVV']").value,
@@ -1140,7 +1346,7 @@
                 default:
                     return "";
             }
-            let mesgHtml = 
+            let mesgHtml =
                 "<div>" +
                     "<div " +
                             "style='display: inline-block; " +
@@ -1201,7 +1407,7 @@
             var rowNumberElementName = itemType + "items-row-number";
             var rowCountElementName = itemType + "items-row-count";
             var tableName = itemType + "s-table";
-            
+
             var getPrentTablePgIndex_Function = null;
             switch (ItemType) {
                 case "POSSale":
@@ -1286,7 +1492,7 @@
             var currCount = parseInt(currCountSpan.innerText);
             currCountSpan.innerText = currCount + quantityAdded;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function popUpProductDetail(productId) {
@@ -1317,8 +1523,8 @@
                     <div>
                          <div style="width: 35%; display: inline-block">
                              <img class="img-rounded img-thumbnail"
-                                  src="${imageUrl}" 
-                                  style="width: 27%; position: absolute; top: 7%; left: 5%" 
+                                  src="${imageUrl}"
+                                  style="width: 27%; position: absolute; top: 7%; left: 5%"
                                   alt="Image" />
                          </div>
                          <div style="width: 50%; display: inline-block">
@@ -1341,7 +1547,7 @@
                 ShowMessage(html, "<strong>Product Detail</strong>");
             }
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function openProductLookup(event, currTargetRecordId, targetform) {
@@ -1351,7 +1557,7 @@
                 case "Invoices":
                     document.getElementById("curr-invoice-id").innerHtml = currTargetRecordId;
                     recordType = "Invoice"
-                    break;                
+                    break;
                 case "Layaways":
                     document.getElementById("curr-layaway-id").innerHtml = currTargetRecordId;
                     recordType = "Layaway"
@@ -1374,14 +1580,14 @@
             document.getElementById("customer-info").style.opacity = 0;
             document.getElementById("product-lookup").style.display = "block";
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function closeProductLookup(event) {
             document.getElementById("customer-info").style.opacity = 1;
             document.getElementById("product-lookup").style.display = "none";
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function copyProductData(event, productId, productTableRow = null, currTargetRecordId = "") {
@@ -1406,7 +1612,7 @@
                     return;
             }
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function addProductToSubform(event, productId, productTableRow = null, currSubformRecordId = "", recordType) {
@@ -1415,7 +1621,7 @@
 
             // save page state
             savePgState();
-        
+
             currSubformRecordId = currSubformRecordId || document.getElementById("curr-" + recordType + "-id").innerHtml;
             var tableRow;
             if (!productTableRow) {
@@ -1428,7 +1634,7 @@
             var productCopyFoundInItemsTable = false;
             var itemId = "";
             var subformTable = document.getElementById(recordType + "s-container").querySelector("table");
-            
+
             // loop over Subform Records
             for (let subformTableRow of subformTable.rows) {
                 var subformIdElement = subformTableRow.querySelector("[name='" + recordType + "-id']");
@@ -1514,7 +1720,7 @@
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
-                
+
         function getParent(element, tagName) {
             var parent = element.parentNode;
             if (parent.nodeName.toLowerCase() === tagName.toLowerCase()) {
@@ -1561,7 +1767,7 @@
             }
             savePgState();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function navPrev(event, siblingTable = "") {
@@ -1599,7 +1805,7 @@
             }
             savePgState();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function navNext(event, siblingTable = "") {
@@ -1618,7 +1824,7 @@
                 tableName = table.id;
             }
             //
-            var rows = table.rows; 
+            var rows = table.rows;
             if (currRowIndex === rows.length) return;
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i];
@@ -1638,7 +1844,7 @@
             }
             savePgState();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function navLast(event, siblingTable = "") {
@@ -1669,7 +1875,7 @@
             }
             savePgState();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function toggleBarcodeInput(event) {
@@ -1684,12 +1890,12 @@
                 event.target.parentNode.querySelector("[name='scan-upc']").classList.remove("active");
             }
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function getProductByUPC(event, requestorId, requestingForm) {
             if (event.keyCode !== 13) return;
-            
+
             var currIdElement = "";
             switch (requestingForm) {
                 case "Invoice":
@@ -1718,13 +1924,13 @@
             }
 
             var table = document.getElementById("product-lookup-table");
-            
+
             var rows = table.getElementsByTagName("tr");
             for (i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 var upc = row.querySelector("span[name='UPC']").innerHTML;
                 if (upc === searchUPC) {
-                    // add product to current subform record                    
+                    // add product to current subform record
                     var productId = row.querySelector("span[name='Id']").innerHTML;
                     copyProductData(event, productId, row, requestorId);
                     return;
@@ -1732,33 +1938,33 @@
             }
             ShowMessage("<h3 class='text-primary'>Product <span class='text-danger'>'" + searchUPC + "'</span> not found.</h3>")
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showLayawayItemSaveBtn(event) {
             var btn = getParent(event.target, "tr").querySelector("input[name='layaway-item-save'], button[name='layaway-item-save']");
             btn.classList.remove("hidden");
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showInvoiceItemSaveBtn(event) {
             var btn = getParent(event.target, "tr").querySelector("input[name='invoice-item-save'], button[name='invoice-item-save']");
             btn.classList.remove("hidden");
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateInvoiceItem(event, itemId) {
             updateChargeItem(event, itemId, "invoice", getCurrInvoicePgIndex);
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateLayawayItem(event, itemId) {
             updateChargeItem(event, itemId, "layaway", getCurrLayawayPgIndex);
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateChargeItem(event, itemId, itemType, getCurrPgIndexFunction) {
@@ -1772,8 +1978,8 @@
 
             var quantityOldValueSpan = parent.querySelector("[name='QuantityOldValue']");
             var quantityOldValue = parseFloat(quantityOldValueSpan.innerText);
-            
-            var descriptionInput = parent.querySelector("input[id='item_ProductDescription'");            
+
+            var descriptionInput = parent.querySelector("input[id='item_ProductDescription'");
             var description = descriptionInput.value;
             if (!description || !description.trim()) {
                 ShowMessage("Description cannot be blank.");
@@ -1786,7 +1992,7 @@
                 ShowMessage("Quantity must be a number greater than zero.");
                 return;
             }
-            
+
             var priceInput = parent.querySelector("[id='item_Price']");
             var price = priceInput.value;
             if (isNaN(price) || price === "" || parseFloat(price) < 0) {
@@ -1820,11 +2026,11 @@
             xhttp.open("GET", "/CustomerManager/Update" + ItemType + "Item/?Id=" + itemId + "&productDescription=" + description + "&quantity=" + quantity + "&price=" + price, true);
             xhttp.send();
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showSubformSaveBtn(event) {
-            var tableRow = getParent(event.target, "tr");            
+            var tableRow = getParent(event.target, "tr");
 
             var btn = tableRow.querySelector("input[name='subform-save'], button[name='subform-save']");
             btn.classList.remove("hidden");
@@ -1832,7 +2038,7 @@
             var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
             scanUpcBtn.classList.add("hidden");
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function updateLayaway(event, itemId) {
@@ -1865,7 +2071,7 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function setSubformElementVars(event) {
-            // helper method initializes and returns object variables--representing various elements 
+            // helper method initializes and returns object variables--representing various elements
             // on Customer UI--for use as required by the calling functions
             var clickedBtn = event.target;
             var tableRow = getParent(clickedBtn, "tr");
@@ -1954,7 +2160,7 @@
             e.productLookupBtn.classList.remove("hidden");
             e.subItemsTable.classList.remove("hidden");
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function goToPaymentEdit(event) {
@@ -1983,7 +2189,7 @@
                 }
             }
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function setPaymentMode(event) {
