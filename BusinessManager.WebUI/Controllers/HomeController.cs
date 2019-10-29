@@ -33,9 +33,11 @@ namespace BusinessManager.WebUI.Controllers
                 products = context.Collection().Where(p => p.Category == category).ToList();
             }
 
-            ProductListViewModel model = new ProductListViewModel();
-            model.Products = products;
-            model.ProductCategories = categories;
+            ProductListViewModel model = new ProductListViewModel()
+            {
+                Products = products,
+                ProductCategories = categories
+            };
 
             return View(model);
         }

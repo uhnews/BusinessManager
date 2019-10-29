@@ -3,15 +3,35 @@
     ViewBag.Title = "Home";
 }
 
-<h1>Products</h1>
+<style>
+    #form-header {
+        position: sticky;
+        top: 51px;
+        margin: 0 0 0 0;
+        padding: 10px 0 0 0;
+        background-color: white;
+        z-index: 2;
+    }
+    div.sticky {
+        position: sticky;
+        top: 125px;
+    }
+</style>
 
-<div class="col-md-2">
+<div id="form-header">
+    <h1 id="page-headline" style="margin: 0 0 0 0">Products</h1>
+    <hr style="margin: 0 0 0 0; padding: 0 0 10px 0" />
+</div>
+
+<div id="category-menu" class="col-md-2 sticky">
     <h4>Filter by Category</h4>
     <div class="col-md-12">
         @Html.ActionLink("All", "Index", null, new { @class = Request["category"] == null ? "list-group-item active" : "list-group-item" })
         @foreach (var cat in Model.ProductCategories)
         {
-            @Html.ActionLink(cat.Category, "Index", new { category = cat.Category }, new { @class = Request["category"] == cat.Category ? "list-group-item active" : "list-group-item" });
+            @Html.ActionLink(
+                    cat.Category, "Index", new { category = cat.Category }, new { @class = Request["category"] == cat.Category ? "list-group-item active" : "list-group-item" }
+                );
         }
     </div>
 </div>
