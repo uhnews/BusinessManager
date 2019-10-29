@@ -1,4 +1,5 @@
-﻿@model IEnumerable<BusinessManager.Core.Models.Customer>
+﻿@using BusinessManager.Core.Models
+@model IEnumerable<Customer>
 
 @{
     ViewBag.Title = "Customer Management";
@@ -166,42 +167,61 @@
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (Customer customer in Model)
     {
         <tr>
             <td>
-                <span name="CreatedAt">@Html.DisplayFor(modelItem => item.CreatedAt).ToString().Replace("-07:00", "")</span>
+                <span name="CreatedAt">@Html.DisplayFor(modelItem => customer.CreatedAt).ToString().Replace("-07:00", "")</span>
             </td>
             <td>
-                <span name="FirstName">@Html.DisplayFor(modelItem => item.FirstName)</span>
+                <span name="FirstName">@Html.DisplayFor(modelItem => customer.FirstName)</span>
             </td>
             <td>
-                <span name="LastName">@Html.DisplayFor(modelItem => item.LastName)</span>
+                <span name="LastName">@Html.DisplayFor(modelItem => customer.LastName)</span>
             </td>
             <td>
-                <span name="Email">@Html.DisplayFor(modelItem => item.Email)</span>
+                <span name="Email">@Html.DisplayFor(modelItem => customer.Email)</span>
             </td>
             <td>
-                <span name="Phone">@Html.DisplayFor(modelItem => item.Phone)</span>
+                <span name="Phone">@Html.DisplayFor(modelItem => customer.Phone)</span>
             </td>
             <td>
-                <span name="CompanyName">@Html.DisplayFor(modelItem => item.CompanyName)</span>
+                <span name="CompanyName">@Html.DisplayFor(modelItem => customer.CompanyName)</span>
             </td>
             <td>
-                <span name="Street">@Html.DisplayFor(modelItem => item.Street)</span>
+                <span name="Street">@Html.DisplayFor(modelItem => customer.Street)</span>
             </td>
             <td>
-                <span name="City">@Html.DisplayFor(modelItem => item.City)</span>
+                <span name="City">@Html.DisplayFor(modelItem => customer.City)</span>
             </td>
             <td>
-                <span name="State">@Html.DisplayFor(modelItem => item.State)</span>
+                <span name="State">@Html.DisplayFor(modelItem => customer.State)</span>
             </td>
             <td>
-                <span name="ZipCode">@Html.DisplayFor(modelItem => item.ZipCode)</span>
+                <span name="ZipCode">@Html.DisplayFor(modelItem => customer.ZipCode)</span>
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @{
+                    bool canDelete = customer.CustomerNotes.Count() == 0
+                                    && customer.Invoices.Count() == 0
+                                    && customer.Layaways.Count() == 0
+                                    && customer.POSSales.Count() == 0
+                                    && customer.OnlineOrders.Count() == 0;
+                    if (canDelete)
+                    {
+                        <div>
+                            @Html.ActionLink("Edit", "Edit", new { id = customer.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = customer.Id })
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            @Html.ActionLink("Edit", "Edit", new { id = customer.Id }) |
+                            <span class="text-muted">Delete</span>
+                        </div>
+                    }
+                }
             </td>
         </tr>
     }

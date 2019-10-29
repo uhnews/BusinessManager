@@ -1,4 +1,5 @@
-﻿@model BusinessManager.Core.Models.Customer
+﻿@using BusinessManager.Core.Models
+@model Customer
 
 @{
     ViewBag.Title = "Edit Customer";
@@ -11,17 +12,56 @@
 
 @using (Html.BeginForm("Edit", "CustomerManager", FormMethod.Post, new { onsubmit = "return false", id = "customer-edit-form" }))
 {
-    @Html.AntiForgeryToken()    
+    @Html.AntiForgeryToken()
 
     <h2>Edit Customer</h2>
     <hr style="margin-top: 0; margin-bottom: 0" />
     <style>
         .product-lookup-popup {
-        position: absolute;
-        left: 0;
-        top: 0;
-    }
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
     </style>
+
+    <div class="col-md-12">
+        @* Subform-Selection Buttons *@
+        <div class="btn-group pull-right" style="margin-top: 3px; margin-bottom: 0px; display: block">
+            <button onclick="showPOSSales(event)"
+                    id="show-possales-btn"
+                    type="button"
+                    style="border-bottom-left-radius: 0 !important";
+                    class="btn btn-default btn-sm">
+                POS Sales
+            </button>
+            <button onclick="showInvoices(event)"
+                    id="show-invoices-btn"
+                    type="button"
+                    class="btn btn-default btn-sm">
+                Invoices
+            </button>
+            <button onclick="showLayaways(event)"
+                    id="show-layaways-btn"
+                    type="button"
+                    class="btn btn-default btn-sm">
+                Layaways
+            </button>
+            <button onclick="showOnlineOrders(event)"
+                    id="show-onlineorders-btn"
+                    type="button"
+                    class="btn btn-default btn-sm">
+                Online Orders
+            </button>
+            <button onclick="showCustomerNotes(event)"
+                    id="show-customernotes-btn"
+                    type="button"
+                    style="border-bottom-right-radius: 0 !important";
+                    class="btn btn-default btn-sm">
+                Notes
+            </button>
+        </div>
+    </div>
+
     <div id="customer-form" style="display: flex; border-radius: 5px" class="border">
         <div id="customer-section" class="form-horizontal col-md-4" style="padding: 10px; border-radius: 5px 0 0 5px; background-color: @customGray">
             <div id="customer-info" style="background-color: @customGrayWhite; opacity: 1; margin: 10px 0 0 10px; padding-right: 10px; width: 100%;">
@@ -128,86 +168,23 @@
                     </div>
                 </div>
 
+
                 <div class="form-group">
-                    <div class="col-md-12" style="text-align: center">
-                        <div class="btn-group">
-                            <button onclick="saveCustomer(event)"
-                                    id="save-customer-btn"
-                                    type="submit"
-                                    class="btn btn-default btn-sm">
-                                Save
-                                <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
-                            </button>
-                            <button onclick="showCustomerNotes(event)"
-                                    id="show-customernotes-btn"
-                                    type="button"
-                                    class="btn btn-default btn-sm">
-                                Notes
-                            </button>
-                            <button onclick="showInvoices(event)"
-                                    id="show-invoices-btn"
-                                    type="button"
-                                    class="btn btn-default btn-sm">
-                                Invoices
-                            </button>
-                            <button onclick="showPOSSales(event)"
-                                    id="show-possales-btn"
-                                    type="button"
-                                    class="btn btn-default btn-sm">
-                                POS Sales
-                            </button>
-                            <button onclick="showLayaways(event)"
-                                    id="show-layaways-btn"
-                                    type="button"
-                                    class="btn btn-default btn-sm">
-                                Layaways
-                            </button>
-                            <button onclick="showOnlineOrders(event)"
-                                    id="show-onlineorders-btn"
-                                    type="button"
-                                    class="btn btn-default btn-sm">
-                                Online Orders
-                            </button>
-                            <button onclick="addCustomerNote(event)"
-                                    id="add-customernote-btn"
-                                    type="button"
-                                    class="btn btn-default btn-sm btn-danger-text">
-                                Add Note
-                            </button>
-                            <button onclick="addPOSSale(event)"
-                                    id="add-possale-btn"
-                                    type="button"
-                                    class="btn btn-default btn-sm btn-danger-text hidden">
-                                Add Sale
-                            </button>
-                            <button onclick="addInvoice(event)"
-                                    id="add-invoice-btn"
-                                    type="button"
-                                    class="btn btn-default btn-sm btn-danger-text hidden">
-                                Add Invoice
-                            </button>
-                            <button onclick="addLayaway(event)"
-                                    id="add-layaway-btn"
-                                    type="button"
-                                    class="btn btn-default btn-sm hidden btn-danger-text">
-                                Add Layaway
-                            </button>
-                            <button onclick="addOnlineOrder(event)"
-                                    id="add-onlineorder-btn"
-                                    type="button"
-                                    class="btn btn-default btn-sm hidden btn-danger-text">
-                                Add Online Order
-                            </button>
-                        </div>
-                    </div>
+                    <button onclick="saveCustomer(event)"
+                            id="save-customer-btn"
+                            type="submit"
+                            style="margin-right: 10%"
+                            class="btn btn-default btn-sm pull-right">
+                        Save
+                        <span style="margin-left: 5px" class="glyphicon glyphicon-edit"></span>
+                    </button>
                     <p class="col-md-12" style="margin: 30px 10px 10px 10px">@Html.ActionLink("Back to Customer List", "Index")</p>
                 </div>
             </div>
 
-            <div id="product-lookup" class="product-lookup-popup" style="display: none; background-color: @customGrayWhite">
+            <div id="product-lookup" class="product-lookup-popup hidden" style="background-color: @customGrayWhite">
                 @Html.Partial("ProductLookup", Model.ProductList)
-                <hr />
-                <button onclick="closeProductLookup(event)" class="btn btn-default btn-sm pull-right" style="margin: 6px 20px 3px 5px">
+                <button id="close-productlookup-form-btn"onclick="closeProductLookup(event)" class="btn btn-default btn-sm pull-right" style="margin: 6px 20px 15px 5px">
                     Close List
                 </button>
                 <div style="margin: 0 0 0 25px">@Html.ActionLink("Back to Customer List", "Index")</div>
@@ -227,12 +204,24 @@
             }
             <span id="curr-customernote-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
-                <h4>Notes</h4>
-                <strong>
-                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@customernoteCombinedName</span>
-                    <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
-                </strong>
-                <span style="margin: 3px 13px 3px 3px">Notes: @customernoteCount</span>
+                <div style="margin: 20px 0 10px 0">
+                    <h4 style="display: inline">Notes</h4>
+                    <button onclick="addCustomerNote(event)"
+                            id="add-customernote-btn"
+                            type="button"
+                            style="margin: -3px 30px 0 0; padding: 2px 10px !important"
+                            class="btn btn-default btn-xs btn-danger-text pull-right"
+                            >
+                        Add Note
+                    </button>
+                </div>
+                <div>
+                    <strong>
+                        <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@customernoteCombinedName</span>
+                        <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                    </strong>
+                    <span style="margin: 3px 13px 3px 3px">Notes: @customernoteCount</span>
+                </div>
             </div>
             @Html.Partial("CustomerNotes", Model.CustomerNotes)
         </div>
@@ -251,13 +240,25 @@
             }
             <span id="curr-possale-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
-                <h4>POS Sales</h4>
-                <strong>
-                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@possaleCombinedName</span>
-                    <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
-                </strong>
-                <span style="margin: 3px 13px 3px 3px">Sales: @possaleCount</span>Total Items:
-                <span name="item-count" style="margin:3px">@possaleItemCount</span>
+                <div style="margin: 20px 0 10px 0">
+                    <h4 style="display: inline">POS Sales</h4>
+                    <button onclick="addPOSSale(event)"
+                            id="add-possale-btn"
+                            type="button"
+                            style="margin: -3px 30px 0 0; padding: 2px 10px !important"
+                            class="btn btn-default btn-xs btn-danger-text hidden pull-right"
+                            >
+                        Add Sale
+                    </button>
+                </div>
+                <div>
+                    <strong>
+                        <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@possaleCombinedName</span>
+                        <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                    </strong>
+                    <span style="margin: 3px 13px 3px 3px">Sales: @possaleCount</span>Total Items:
+                    <span name="item-count" style="margin: 3px">@possaleItemCount</span>
+                </div>
             </div>
             @Html.Partial("POSSales", Model.POSSales)
         </div>
@@ -276,13 +277,25 @@
             }
             <span id="curr-layaway-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
-                <h4>Layaways</h4>
-                <strong>
-                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@layawayCombinedName</span>
-                    <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
-                </strong>
-                <span style="margin: 3px 13px 3px 3px">Layaways: @layawayCount</span>Total Items:
-                <span name="item-count" style="margin:3px">@layawayItemCount</span>
+                <div style="margin: 20px 0 10px 0">
+                    <h4 style="display: inline">Layaways</h4>
+                    <button onclick="addLayaway(event)"
+                            id="add-layaway-btn"
+                            type="button"
+                            style="margin: -3px 30px 0 0; padding: 1px 10px !important"
+                            class="btn btn-default btn-xm hidden btn-danger-text pull-right"
+                            >
+                        Add Layaway
+                    </button>
+                </div>
+                <div>
+                    <strong>
+                        <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@layawayCombinedName</span>
+                        <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                    </strong>
+                    <span style="margin: 3px 13px 3px 3px">Layaways: @layawayCount</span>Total Items:
+                    <span name="item-count" style="margin:3px">@layawayItemCount</span>
+                </div>
             </div>
             @Html.Partial("Layaways", Model.Layaways)
         </div>
@@ -301,13 +314,25 @@
             }
             <span id="curr-invoice-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
-                <h4>Invoices</h4>
-                <strong>
-                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@invoicecombinedName</span>
-                    <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
-                </strong>
-                <span style="margin: 3px 13px 3px 3px">Invoices: @Model.Invoices.Count</span>Total Items:
-                <span name="item-count" style="margin:3px">@invoiceItemCount</span>
+                <div style="margin: 20px 0 10px 0">
+                    <h4 style="display: inline">Invoices</h4>
+                    <button onclick="addInvoice(event)"
+                            id="add-invoice-btn"
+                            type="button"
+                            style="margin: -3px 30px 0 0; padding: 1px 10px !important"
+                            class="btn btn-default btn-xm btn-danger-text hidden pull-right"
+                            >
+                        Add Invoice
+                    </button>
+                </div>
+                <div>
+                    <strong>
+                        <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@invoicecombinedName</span>
+                        <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                    </strong>
+                    <span style="margin: 3px 13px 3px 3px">Invoices: @Model.Invoices.Count</span>Total Items:
+                    <span name="item-count" style="margin:3px">@invoiceItemCount</span>
+                </div>
             </div>
             @Html.Partial("Invoices", Model.Invoices)
         </div>
@@ -326,13 +351,25 @@
             }
             <span id="curr-onlineorder-id" style="display: none"></span>
             <div style="margin: 0px 0px 5px 25px">
-                <h4>Online Orders</h4>
-                <strong>
-                    <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@onlineordercombinedName</span>
-                    <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
-                </strong>
-                <span style="margin: 3px 13px 3px 3px">Orders: @Model.OnlineOrders.Count</span>Total Items:
-                <span name="item-count" style="margin:3px">@onlineorderItemCount</span>
+                <div style="margin: 20px 0 10px 0">
+                    <h4 style="display: inline">Online Orders</h4>
+                    <button onclick="addOnlineOrder(event)"
+                            id="add-onlineorder-btn"
+                            type="button"
+                            style="margin: -3px 30px 0 0; padding: 2px 10px !important"
+                            class="btn btn-default btn-xs hidden btn-danger-text pull-right"
+                            >
+                        Add Order
+                    </button>
+                </div>
+                <div>
+                    <strong>
+                        <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@onlineordercombinedName</span>
+                        <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                    </strong>
+                    <span style="margin: 3px 13px 3px 3px">Orders: @Model.OnlineOrders.Count</span>Total Items:
+                    <span name="item-count" style="margin:3px">@onlineorderItemCount</span>
+                </div>
             </div>
             @Html.Partial("OnlineOrders", Model.OnlineOrders)
         </div>
@@ -346,6 +383,9 @@
 
         document.body.onpageshow = function (event) {
             restorePgState();
+            if (getActiveSubForm() === "alt-subform-container") {
+                showCustomerNotes();
+            }
             savePgState();
         };
 
@@ -408,17 +448,17 @@
             var result = {};
 
             var btnElementIdList = [
-               [ "save-customer-btn", "SaveCustomerButton" ],
-               [ "add-customernote-btn", "AddCustomerNoteButton" ],
-               [ "show-customernotes-btn", "ShowCustomerNotesButton" ],
-               [ "add-invoice-btn", "AddInvoiceButton" ],
-               [ "show-invoices-btn", "ShowInvoicesButton" ],
-               [ "add-layaway-btn", "AddLayawayButton" ],
-               [ "show-layaways-btn", "ShowLayawaysButton" ],
-               [ "add-possale-btn", "AddPOSSaleButton" ],
-               [ "show-possales-btn", "ShowPOSSalesButton" ],
-               [ "add-onlineorder-btn", "AddOnlineOrderButton" ],
-               [ "show-onlineorders-btn", "ShowOnlineOrdersButton" ]
+                ["save-customer-btn", "SaveCustomerButton"],
+                ["add-customernote-btn", "AddCustomerNoteButton"],
+                ["show-customernotes-btn", "ShowCustomerNotesButton"],
+                ["add-invoice-btn", "AddInvoiceButton"],
+                ["show-invoices-btn", "ShowInvoicesButton"],
+                ["add-layaway-btn", "AddLayawayButton"],
+                ["show-layaways-btn", "ShowLayawaysButton"],
+                ["add-possale-btn", "AddPOSSaleButton"],
+                ["show-possales-btn", "ShowPOSSalesButton"],
+                ["add-onlineorder-btn", "AddOnlineOrderButton"],
+                ["show-onlineorders-btn", "ShowOnlineOrdersButton"]
             ];
 
             btnElementIdList.forEach(elementDataPair => {
@@ -452,7 +492,7 @@
             }
 
             // current Item Types
-            var ItemTypes = [ "POSSale", "Invoice", "Layaway", "OnlineOrder" ];
+            var ItemTypes = ["POSSale", "Invoice", "Layaway", "OnlineOrder"];
 
             // gen subform names from Item Types
             var subforms = [];
@@ -479,7 +519,7 @@
                 }
             });
 
-            // restore Alt form's View state
+            // restore all forms' View state
             var subformElementIds = [
                 "alt-subform-container",
                 "customernotes-container",
@@ -491,7 +531,9 @@
             subformElementIds.forEach(elementId => {
                 var subform = document.getElementById(elementId);
                 if (elementId === state.CurrSubForm) {
-                    subform.classList.remove("hidden");
+                    // reference button indicating which subform to activate (make visible)
+                    var showSubformBtn_id = "show-" + elementId.replace("-container", "") + "-btn";
+                    document.getElementById(showSubformBtn_id).click();
                 }
                 else {
                     subform.classList.add("hidden");
@@ -602,6 +644,7 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function hideAllSubForms() {
+            // hide all Subforms
             document.getElementById("alt-subform-container").classList.add("hidden");
             document.getElementById("customernotes-container").classList.add("hidden");
             document.getElementById("possales-container").classList.add("hidden");
@@ -634,13 +677,13 @@
                 "border-copper",
                 "border-warning",
                 "border-green",
-                "border-blue"
+                "border-blue",
+                "border-sky-blue"
             ].forEach(item => { customerSection.classList.remove(item); });
-
             // now select specified border
             if (subform.toLowerCase().indexOf("customernote") > -1) {
                 customerSection.classList.add("border");
-                customerSection.classList.add("border-blue");
+                customerSection.classList.add("border-sky-blue");
             }
             else if (subform.toLowerCase().indexOf("invoice") > -1) {
                 customerSection.classList.add("border");
@@ -665,57 +708,81 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function showCustomerNotes(event) {
+        function colorUpperTabButton(clickedBtnId) {
+            var btnBgColorClasses = [
+                ["show-customernotes-btn", "bg-sky-blue"],
+                ["show-possales-btn", "bg-green"],
+                ["show-invoices-btn", "bg-golden"],
+                ["show-layaways-btn", "bg-copper"],
+                ["show-onlineorders-btn", "bg-blue"]
+            ];
+
+            btnBgColorClasses.forEach(btn => {
+                btnId = btn[0];
+                btnClass = btn[1];
+                if (btnId === clickedBtnId) {
+                    document.getElementById(btnId).classList.add(btnClass);
+                    document.activeElement.blur();
+                }
+                else {
+                    document.getElementById(btnId).classList.remove(btnClass);
+                }                
+            });
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function hideProductList() {
+            document.getElementById("product-lookup").classList.add("hidden");  // hide product list
+            document.getElementById("customer-info").style.opacity = 1;         // reveal customer info
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showSubform(recordType) {
+            var RecordType = recordType;            
+            recordType = recordType.toLowerCase();
+            var containerName = recordType + "s-container";
+            var activeForm = getActiveSubForm();
+            if (activeForm === containerName) {
+                return;
+            }
+            hideProductList();
             hideAllSubForms();
-            document.getElementById("show-customernotes-btn").classList.add("hidden");
-            document.getElementById("customernotes-container").classList.remove("hidden");
-            document.getElementById("add-customernote-btn").classList.remove("hidden");
-            addCustomerSectionBorder("CustomerNote");
+            document.getElementById(containerName).classList.remove("hidden");
+            document.getElementById("add-" + recordType + "-btn").classList.remove("hidden");
+            addCustomerSectionBorder(RecordType);
+            colorUpperTabButton("show-" + recordType + "s-btn");
             savePgState();
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        function showCustomerNotes(event) {
+            showSubform("CustomerNote");
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showPOSSales(event) {
-            hideAllSubForms();
-            document.getElementById("show-possales-btn").classList.add("hidden");
-            document.getElementById("possales-container").classList.remove("hidden");
-            document.getElementById("add-possale-btn").classList.remove("hidden");
-            addCustomerSectionBorder("POSSale");
-            savePgState();
+            showSubform("POSSale");
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showInvoices(event) {
-            hideAllSubForms();
-            document.getElementById("show-invoices-btn").classList.add("hidden");
-            document.getElementById("invoices-container").classList.remove("hidden");
-            document.getElementById("add-invoice-btn").classList.remove("hidden");
-            addCustomerSectionBorder("Invoice");
-            savePgState();
+            showSubform("Invoice");
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showLayaways(event) {
-            hideAllSubForms();
-            document.getElementById("show-layaways-btn").classList.add("hidden");
-            document.getElementById("layaways-container").classList.remove("hidden");
-            document.getElementById("add-layaway-btn").classList.remove("hidden");
-            addCustomerSectionBorder("Layaway");
-            savePgState();
+            showSubform("Layaway");
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showOnlineOrders(event) {
-            hideAllSubForms();
-            document.getElementById("show-onlineorders-btn").classList.add("hidden");
-            document.getElementById("onlineorders-container").classList.remove("hidden");
-            document.getElementById("add-onlineorder-btn").classList.remove("hidden");
-            addCustomerSectionBorder("OnlineOrder");
-            savePgState();
+            showSubform("OnlineOrder");
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -765,7 +832,7 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function setCustomerTotals(event) {
-            var tableList = [ "invoices-table", "layaways-table", "possales-table", "onlineorders-table" ];
+            var tableList = ["invoices-table", "layaways-table", "possales-table", "onlineorders-table"];
             tableList.forEach(tableName => {
                 var table = document.getElementById(tableName);
                 var rows = table.rows;
@@ -795,7 +862,7 @@
                 if (i - 1 >= 0) {
                     result = arr[i - 1] + result
                     if (i - 2 >= 0) {
-                        result = arr[i-2] + result;
+                        result = arr[i - 2] + result;
                     }
                 }
             }
@@ -927,23 +994,22 @@
             var rowCount = notesTable.rows.length;
 
             var newTD = `
-                        <td style="background-color: #fcfdfd">
-                            <span name="customernote-id"></span>
-                            <span name="row-index" style="margin-right: 5px; font-weight: 600">${(rowCount + 1)}</span>
-                            <span>${createdAt}</span>
-                            <span class="hidden">${customerId}</span>
-                            <span id="curr-user">${currUser}</span>
-                            <span style="opacity: 0">FILLER-TEXT-FILLER-TEXT-FILLER-TEXT-FILLER-TEXT-</span>
-                            <div>Category: <span>${category}</span></div>
-                            <div id="new-customernote-note-body" style="color: ${colorBlueText}; margin-right: 60px">${noteBody}</div>
-                            <button onclick="deleteCustomerNote(event)"
-                                    type="button"
-                                    class="btn btn-default btn-xs pull-right"
-                                    style="margin: -30px 0 0 0; display: block">
-                                <span class="text-danger">Delete</span>
-                            </button>
-                        </td>
-                    `
+                            <td style="background-color: #fcfdfd">
+                                <span name="customernote-id" class="hidden"></span>
+                                <span name="row-index" style="margin-right: 5px; font-weight: 600">${(rowCount + 1)}</span>
+                                <span>${createdAt}</span>
+                                <span class="hidden">${customerId}</span>
+                                <span id="curr-user">${currUser}</span>
+                                <div>Category: <span>${category}</span></div>
+                                <div id="new-customernote-note-body" style="color: ${colorBlueText}; margin-right: 60px">${noteBody}</div>
+                                <button onclick="deleteCustomerNote(event)"
+                                        type="button"
+                                        class="btn btn-default btn-xs pull-right"
+                                        style="margin: -30px 0 0 0; display: block">
+                                    <span class="text-danger">Delete</span>
+                                </button>
+                            </td>
+                        `
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
@@ -1190,7 +1256,7 @@
 
             // try to reference 'Scan Bardcode' button (will be undefined when saving a Payment)
             var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
-
+            alert(JSON.stringify(data));
             //upload data
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
@@ -1205,7 +1271,18 @@
                         if (finalProcess) {
                             finalProcess(tableRow);
                         }
-                        ShowMessage("<h4 class='text-primary' style='margin-left: 20px'>Payment Saved!</h4>");
+
+                        var routeMessages = {
+                            "UpdateOnlineOrder": "Online Order Saved.",
+                            "UpdatePOSSale": "POS Sale Updated.",
+                            "UpdateInvoice": "Invoice Updated.",
+                            "UpdateLayaway": "Layaway Updated.",
+                            "AddPayment": "Payment Added.",
+                            "UpdatePayment": "Payment Updated."
+                        };
+                        var message = routeMessages[route];
+
+                        ShowMessage("<h4 class='text-primary' style='margin-left: 20px'>" + message + "</h4>");
                     }
                     else if (responseObject.Message) {
                         ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
@@ -1336,7 +1413,7 @@
             let baseUrl = protocol + "//" + host;
             let imageUrl = baseUrl + "//Content//ProductImages//" + image;
 
-            switch(subform) {
+            switch (subform) {
                 case "Invoice":
                 case "Layaway":
                 case "POSSale":
@@ -1348,27 +1425,27 @@
             }
             let mesgHtml =
                 "<div>" +
-                    "<div " +
-                            "style='display: inline-block; " +
-                            "width: 200px; " +
-                            "height: 250px; text-align: center; margin-top: auto; margin-bottom: auto'>" +
-                        "<img " +
-                                "class='img-thumbnail'" +
-                                "style='margin: auto; " +
-                                "height: 100%;" +
-                                "padding: 3px; " +
-                                "border-width: 1px;" +
-                                "border-radius: 50%;" +
-                                "border-color: #f1c2c1'" +
-                                "src='" + imageUrl + "'" +
-                                "alt='Image' " +
-                                "/>" +
-                    "</div>" +
-                    "<div style='display: inline-block; margin-left: 10px'>" +
-                        "<p>Click Delete to remove</p>" +
-                        "<p class='text-danger'><strong>" + productName + "</strong></p>" +
-                        "<P>from " + subform.replace("POSSale", "POS Sale") + ".</P>" +
-                    "</div>" +
+                "<div " +
+                "style='display: inline-block; " +
+                "width: 200px; " +
+                "height: 250px; text-align: center; margin-top: auto; margin-bottom: auto'>" +
+                "<img " +
+                "class='img-thumbnail'" +
+                "style='margin: auto; " +
+                "height: 100%;" +
+                "padding: 3px; " +
+                "border-width: 1px;" +
+                "border-radius: 50%;" +
+                "border-color: #f1c2c1'" +
+                "src='" + imageUrl + "'" +
+                "alt='Image' " +
+                "/>" +
+                "</div>" +
+                "<div style='display: inline-block; margin-left: 10px'>" +
+                "<p>Click Delete to remove</p>" +
+                "<p class='text-danger'><strong>" + productName + "</strong></p>" +
+                "<P>from " + subform.replace("POSSale", "POS Sale") + ".</P>" +
+                "</div>" +
                 "</div>";
 
             return mesgHtml;
@@ -1520,29 +1597,29 @@
                 var baseUrl = protocol + "//" + host
                 var imageUrl = baseUrl + "//Content//ProductImages//" + product.Image;
                 var html = `
-                    <div>
-                         <div style="width: 35%; display: inline-block">
-                             <img class="img-rounded img-thumbnail"
-                                  src="${imageUrl}"
-                                  style="width: 27%; position: absolute; top: 7%; left: 5%"
-                                  alt="Image" />
+                        <div>
+                             <div style="width: 35%; display: inline-block">
+                                 <img class="img-rounded img-thumbnail"
+                                      src="${imageUrl}"
+                                      style="width: 27%; position: absolute; top: 7%; left: 5%"
+                                      alt="Image" />
+                             </div>
+                             <div style="width: 50%; display: inline-block">
+                                <h3>${product.Name}</h3>
+                                <h4 class="text-primary">${product.Description}</h4>
+                                <p style="margin-bottom: 2px"><strong>Vendor Price: </strong><span class="text-primary pull-right">${parseFloat(product.SupplierPrice).toFixed(2)}</span></p>
+                                <p style="margin-bottom: 2px"><strong>Price: </strong><span class="text-primary pull-right">${product.Price}</span></p>
+                                <p style="margin-bottom: 2px"><strong>Wholesale Price: </strong><span class="text-primary pull-right">${product.WholesalePrice}</span></p>
+                                <p style="margin-bottom: 2px"><strong>Category: </strong><span class="text-primary pull-right">${product.Category}</span></span></span></p>
+                                <p style="margin-bottom: 2px"><strong>Quantity In Stock: </strong><span class="text-primary pull-right">${product.Quantity}</span></p>
+                                <p style="margin-bottom: 2px"><strong>Min: </strong><span class="text-primary pull-right">${product.QuantityMin}</p>
+                                <p style="margin-bottom: 2px"><strong>On Layaway: </strong><span class="text-primary pull-right">${product.QuantityOnLayaway}</span></p>
+                                <p style="margin-bottom: 2px"><strong>Is Service: </strong><span class="text-primary pull-right">${product.IsService}</span></p>
+                                <p style="margin-bottom: 2px"><strong>UPC: </strong><span class="text-primary pull-right">${product.UPC}</p>
+                                <p style="margin-bottom: 2px"><strong>Product Code: </strong><span class="text-primary pull-right">${product.ProductCode}</span></p>
+                             </div>
                          </div>
-                         <div style="width: 50%; display: inline-block">
-                            <h3>${product.Name}</h3>
-                            <h4 class="text-primary">${product.Description}</h4>
-                            <p style="margin-bottom: 2px"><strong>Vendor Price: </strong><span class="text-primary pull-right">${parseFloat(product.SupplierPrice).toFixed(2)}</span></p>
-                            <p style="margin-bottom: 2px"><strong>Price: </strong><span class="text-primary pull-right">${product.Price}</span></p>
-                            <p style="margin-bottom: 2px"><strong>Wholesale Price: </strong><span class="text-primary pull-right">${product.WholesalePrice}</span></p>
-                            <p style="margin-bottom: 2px"><strong>Category: </strong><span class="text-primary pull-right">${product.Category}</span></span></span></p>
-                            <p style="margin-bottom: 2px"><strong>Quantity In Stock: </strong><span class="text-primary pull-right">${product.Quantity}</span></p>
-                            <p style="margin-bottom: 2px"><strong>Min: </strong><span class="text-primary pull-right">${product.QuantityMin}</p>
-                            <p style="margin-bottom: 2px"><strong>On Layaway: </strong><span class="text-primary pull-right">${product.QuantityOnLayaway}</span></p>
-                            <p style="margin-bottom: 2px"><strong>Is Service: </strong><span class="text-primary pull-right">${product.IsService}</span></p>
-                            <p style="margin-bottom: 2px"><strong>UPC: </strong><span class="text-primary pull-right">${product.UPC}</p>
-                            <p style="margin-bottom: 2px"><strong>Product Code: </strong><span class="text-primary pull-right">${product.ProductCode}</span></p>
-                         </div>
-                     </div>
-                    `;
+                        `;
 
                 ShowMessage(html, "<strong>Product Detail</strong>");
             }
@@ -1578,14 +1655,14 @@
                 addBtns[i].innerText = "Add To " + recordType.replace("POSSale", "Sale").replace("OnlineOrder", "Order");
             }
             document.getElementById("customer-info").style.opacity = 0;
-            document.getElementById("product-lookup").style.display = "block";
+            document.getElementById("product-lookup").classList.remove("hidden");
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function closeProductLookup(event) {
             document.getElementById("customer-info").style.opacity = 1;
-            document.getElementById("product-lookup").style.display = "none";
+            document.getElementById("product-lookup").classList.add("hidden");
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////

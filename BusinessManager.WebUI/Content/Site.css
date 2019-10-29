@@ -206,6 +206,28 @@ textarea {
         background-color: #668cff;
     }
 
+.btn-pill-sky-blue {
+    background-color: #668cff;
+    border: none;
+    color: white;
+    padding: 0px 6px 3px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    max-height: 16px;
+    border-radius: 16px;
+    font-size: 80%;
+}
+
+    .btn-pill-sky-blue:hover {
+        background-color: #b3c6ff;
+    }
+
+    .btn-pill-sky-blue:active {
+        background-color: #668cff;
+    }
+
 
 /* USE THIS TO CENTER AN <a> OR <img> TAG INSIDE A <div> WITH A CLASS 'CONTAINER-CENTER-VERTICAL' *************************************************************** */
 .container-center-vertical {
@@ -292,12 +314,67 @@ textarea {
     transform: rotate(45deg);
 }
 
+
+/* USE THIS TO STYLE ELEMENT BACKGROUNDS  *************************************************************** */
+
+/*.bg-golden {
+    background-color: #fff5cc !important;
+}*/
+
+.bg-golden {
+    background-color: #fff5cc;
+}
+
+.bg-golden-lighter {
+    background-color: #fffcf0;
+}
+
+.bg-green {
+    background-color: #e4f7e7;
+}
+
+.bg-green-lighter {
+    background-color: #fbfefc;
+}
+
+.bg-blue {
+    background-color: #dbe4ff;
+}
+
+.bg-blue-lighter {
+    background-color: #fafeff;
+}
+
+.bg-sky-blue {
+    background-color: #b3e9ff;
+}
+
+.bg-sky-blue-lighter {
+    background-color: #f5fcff;
+}
+
+.bg-copper {
+    background-color: #ede2de;
+}
+
+.bg-copper-lighter {
+    background-color: #fdfcfc;
+}
+
+.bg-gray {
+    background-color: #ced8e4;
+}
+
+.bg-gray-lighter {
+    background-color: #c5ced3;
+}
+
 /* USE THIS TO STYLE ELEMENT BORDERS  *************************************************************** */
 
 .border {
     border: solid;
     border-width: thin;
-    border-radius: 5px;
+    border-radius: 4px;
     border-color: #7b96b7;
 }
 
@@ -330,6 +407,10 @@ textarea {
     border-color: #99b3ff;
 }
 
+.border-sky-blue {
+    border-color: #b3ebff;
+}
+
 .border-info {
     border-color: #4c5b64 ;
 }
@@ -339,12 +420,16 @@ textarea {
 }
 
 .border-gray {
+    border-color: #ced8e4;
+}
+
+.border-gray-lighter {
     border-color: #c5ced3;
 }
 
-.border-my-gray {
-    border-color: #7f9db9;
-}
+/*.border-my-gray {
+    border-color: #ced9e4;
+}*/
 
 /* remove boder edges here */
 .border-remove-top {

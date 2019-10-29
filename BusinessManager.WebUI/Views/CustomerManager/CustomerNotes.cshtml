@@ -1,15 +1,25 @@
 ﻿@using Microsoft.AspNet.Identity
-@model IEnumerable<BusinessManager.Core.Models.CustomerNote>
+@using BusinessManager.Core.Models
+@model IEnumerable<CustomerNote>
 
 @{
     var colorBlueText = "#1a53ff";
+    //string paymentNavBtnClass = "btn-pill-sky-blue";
+    string colorBGReceivableSourceDetail = "#b3e9ff";
+    string colorBGItemDetail = "#fafeff";
+    ViewBag.ItemDetailBackgroundColor = colorBGItemDetail;
 }
 <style>
     .CustomerManagerCustomerNotes-fixed-header tbody {
         display: block;
         overflow: auto;
-        height: 622px;
+        height: 580px;
         width: 100%;
+    }
+
+    .CustomerManagerCustomerNotes-fixed-header thead tr {
+        display: block;
+        width: 10%;
     }
 
     .new-note-container {
@@ -30,65 +40,73 @@
         max-width: 96%;
         margin: 5px 2% 0px 2%;
     }
+    /*td:last-child {
+        width: 100%;
+        white-space: nowrap;
+    }*/
 </style>
-<div class="CustomerManagerCustomerNotes-fixed-header" style="padding: 20px; position: relative">
-    @* NEW NOTE SECTION *@
-    <div id="new-note-container" class="col-md-11 new-note-container border hidden">
-        <h4 style="margin-left: 20px">New Note</h4>
-        <label style="margin: 0 0 0 20px">Category: </label>
-        <select class="form-control" id="new-customernote-category" style="display: inline; width: 30%">
-            <option>General</option>
-            <option>Invoices</option>
-            <option>Layaways</option>
-            <option>POS Sales</option>
-            <option>Online Orders</option>
-        </select>
-        <span id="UserName" class="pull-right" style="margin: 15px 20px 0px 0">@User.Identity.GetUserName()</span>
-        <textarea id="new-note-body" rows="5" class="new-note-body form-control"></textarea>
-        <div class="btn-group pull-right" style="margin: 10px 40% 20px 20px">
-            <button id="save-new-customernote-btn" class="btn btn-default btn-sm" type="button" onclick="saveNewCustomerNote(event)">Save</button>
-            <button id="hide-new-customernote-btn" class="btn btn-default btn-sm" type="button" onclick="hideNewCustomerNote()">Close</button>
+<div class="col-md-12" style="display: flex; height: 661px; padding: 10px 0px 10px 20px; margin: auto; border-top: 1px solid #ddd">
+    <div style="background-color: @colorBGReceivableSourceDetail; width: 100%; margin: 0 23px 0 3px">
+        <div class="CustomerManagerCustomerNotes-fixed-header" style="width: 100%; padding: 15px 15px 15px 15px">
+            @* NEW NOTE SECTION *@
+            <div id="new-note-container" class="col-md-11 new-note-container border hidden">
+                <h4 style="margin-left: 20px">New Note</h4>
+                <label style="margin: 0 0 0 20px">Category: </label>
+                <select class="form-control" id="new-customernote-category" style="display: inline; width: 30%">
+                    <option>General</option>
+                    <option>Invoices</option>
+                    <option>Layaways</option>
+                    <option>POS Sales</option>
+                    <option>Online Orders</option>
+                </select>
+                <span id="UserName" class="pull-right" style="margin: 15px 20px 0px 0">@User.Identity.GetUserName()</span>
+                <textarea id="new-note-body" rows="5" class="new-note-body form-control"></textarea>
+                <div class="btn-group pull-right" style="margin: 10px 40% 20px 20px">
+                    <button id="save-new-customernote-btn" class="btn btn-default btn-sm" type="button" onclick="saveNewCustomerNote(event)">Save</button>
+                    <button id="hide-new-customernote-btn" class="btn btn-default btn-sm" type="button" onclick="hideNewCustomerNote()">Close</button>
+                </div>
+                <span id="new-customernote-customer-id" class="hidden">@ViewBag.CustomerId</span>
+            </div>
+            @* NOTES TABLE SECTION *@
+            <table id="customernotes-table" class="table" style="width: 100%">
+                @{
+                    int rowIndex = 0;
+                    foreach (var item in Model)
+                    {
+                        ++rowIndex;
+                        <tr style="background-color: @colorBGItemDetail" class="col-md-12">
+                            <td style="width: 40%">
+                                <span name="customernote-id" class="hidden">@item.Id</span>
+                                <span name="row-index" style="margin-right: 5px; font-weight: 600">@rowIndex</span>
+                                <span>@Html.DisplayFor(modelItem => item.CreatedAt).ToString().Replace("-07:00", "")</span>
+                                <span class="hidden">@Html.DisplayFor(modelItem => item.CustomerId)</span>
+                                <span id="curr-user">@Html.DisplayFor(modelItem => item.UserName)</span>
+                                @*<span style="opacity: 0">FILLER-TEXT-FILLER-TEXT-FILLER-TEXT-FILLER-</span>*@
+                                <div>Category: <span>@Html.DisplayFor(modelItem => item.Category)</span></div>
+                                <div id="new-customernote-note-body" style="max-width: 90%; color: @colorBlueText">
+                                    @{
+                                        string[] separator = { "\n" };
+                                        string[] noteLines = item.NoteBody.Split(separator, StringSplitOptions.None);
+
+                                        foreach (string line in noteLines)
+                                        {
+                                            @line<br />
+                                        }
+                                    }
+                                </div>
+                                <button onclick="deleteCustomerNote(event)"
+                                        type="button"
+                                        class="btn btn-default btn-xs pull-right"
+                                        style="margin: -30px 0 0 0; display: block">
+                                    <span class="text-danger">
+                                        Delete
+                                    </span>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
         </div>
-        <span id="new-customernote-customer-id" class="hidden">@ViewBag.CustomerId</span>
     </div>
-    @* NOTES TABLE SECTION *@
-    <table id="customernotes-table" class="table col-md-10">
-        @{
-            int rowIndex = 0;
-            foreach (var item in Model)
-            {
-                ++rowIndex;
-                <tr style="background-color: #fcfdfd">
-                    <td>
-                        <span name="customernote-id">@item.Id</span>
-                        <span name="row-index" style="margin-right: 5px; font-weight: 600">@rowIndex</span>
-                        <span>@Html.DisplayFor(modelItem => item.CreatedAt).ToString().Replace("-07:00", "")</span>
-                        <span class="hidden">@Html.DisplayFor(modelItem => item.CustomerId)</span>
-                        <span id="curr-user">@Html.DisplayFor(modelItem => item.UserName)</span>
-                        <span style="opacity: 0">FILLER-TEXT-FILLER-TEXT-FILLER-TEXT-FILLER-TEXT-</span>
-                        <div>Category: <span>@Html.DisplayFor(modelItem => item.Category)</span></div>
-                        <div id="new-customernote-note-body" style="max-width: 90%; color: @colorBlueText">
-                            @{
-                                string[] separator = { "\n" };
-                                string[] noteLines = item.NoteBody.Split(separator, StringSplitOptions.None);
-                            
-                                foreach(string line in noteLines)
-                                {
-                                    @line<br />
-                                }
-                            }
-                        </div>
-                        <button onclick="deleteCustomerNote(event)"
-                                type="button"
-                                class="btn btn-default btn-xs pull-right"
-                                style="margin: -30px 0 0 0; display: block">
-                            <span class="text-danger">
-                                Delete
-                            </span>
-                        </button>
-                    </td>
-                </tr>
-            }
-        }
-    </table>
 </div>

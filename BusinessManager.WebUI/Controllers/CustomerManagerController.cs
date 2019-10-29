@@ -58,7 +58,12 @@ namespace BusinessManager.WebUI.Controllers
         // GET: Customers
         public ActionResult Index()
         {
+            IPOSSaleService possaleService = new POSSaleService(possaleContext, possaleItemContext);
             List<Customer> customers = customerContext.Collection().ToList();
+            foreach (Customer customer in customers)
+            {
+                possaleService.GetPOSSales(customer);
+            }
             return View(customers);
         }
 
@@ -221,6 +226,18 @@ namespace BusinessManager.WebUI.Controllers
             }
             else
             {
+                IPOSSaleService possaleService = new POSSaleService(possaleContext, possaleItemContext);
+                possaleService.GetPOSSales(customerToDelete);
+                bool canDelete = customerToDelete.CustomerNotes.Count() == 0 
+                                && customerToDelete.Layaways.Count() == 0 
+                                && customerToDelete.Invoices.Count() == 0
+                                && customerToDelete.OnlineOrders.Count() == 00
+                                && customerToDelete.POSSales.Count() == 0;
+                if (!canDelete)
+                {
+                    return RedirectToAction("Error");
+                }
+
                 customerContext.Delete(Id);
                 customerContext.Commit();
                 return RedirectToAction("Index");
@@ -228,7 +245,7 @@ namespace BusinessManager.WebUI.Controllers
         }
 
         // ==================================================================================
-        //                                   AJAX Methods 
+        //                                   AJAX Response Methods 
         // ==================================================================================
 
         //
