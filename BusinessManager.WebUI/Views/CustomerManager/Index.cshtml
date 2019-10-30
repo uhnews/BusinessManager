@@ -28,112 +28,140 @@
         left: 0;
         z-index: 10;
     }
+
+    .search-box-text {
+        display: inline-block; 
+        margin: 0 -5px 0 0; 
+        max-width: 50%; 
+        border-top-right-radius: 0; 
+        border-bottom-right-radius: 0;
+    }
+
+    #form-header {
+        position: sticky;
+        top: 51px;
+        margin: 0 0 0 0;
+        padding: 0 0px 0px 0px;
+        background-color: white;
+        z-index: 2;
+        border-width: 0;
+        width: 101.5%;
+    }
+
+    tr.sticky {
+        position: sticky;
+        top: 145px;
+        background-color: white;
+    }
 </style>
-
-<h2 style="display: inline-block"><span class="fas fa-address-card  text-primary">&nbsp;&nbsp;</span>Customer Management</h2>
-
-<div id="search-objects-container" class="col-md-4 pull-right" style="display: inline-block; margin: 30px 0 0 0; padding: 0 0 0 0">
-    <div style="padding-bottom: 0; margin-bottom: 0; width: 100%">
-        <div class="form-group" style="margin: 0 -60px 0 0">
-            <input id="search-string"
-                   placeholder="Enter text to find ..."
-                   type="text" class="form-control"
-                   style="display: inline-block; margin: 0; max-width: 65%" />
-            <button id="search-box-btn-find"
-                    type="button"
-                    class="btn btn-default btn-primary-text"
-                    onclick="filterItems(event)"
-                    style="display: inline-block; margin-top:-3px;">
-                <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
-            </button>
-            <button id="search-box-menu-btn"
-                    type="button"
-                    class="btn btn-default btn-primary-text"
-                    onclick="toggleColSeltMenu(event)"
-                    style="display: inline-block; margin-top:-3px">
-                <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
-                <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
-            </button>
-        </div>
-    </div>
-    <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
-        <div>
-            <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
-                <span>Search In:</span>
-                <input name="AllCheck"
-                       type="checkbox"
-                       onchange="selectColGroup(event)">
-                <span class="checkmark"></span>
-            </label>
-            <hr style="margin: 0 0 5px 0; padding: 0" />
-            <div>
-                <label class="checkbox-container">
-                    Created At
-                    <input name="CreatedAtCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    First Name
-                    <input name="FirstNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Last Name
-                    <input name="LastNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    E-Mail
-                    <input name="EmailCheck" type="checkbox" checked="checked"" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Telephone
-                    <input name="PhoneCheck" type="checkbox" checked="checked"" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Company Name
-                    <input name="CompanyNameCheck" type="checkbox" checked="checked"" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Street
-                    <input name="StreetCheck" type="checkbox" checked="checked"" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    City
-                    <input name="CityCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    State
-                    <input name="StateCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Zip Code
-                    <input name="ZipCodeCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
+<div id="form-header">
+    <h2 style="display: inline-block"><span class="fas fa-address-card  text-primary">&nbsp;&nbsp;</span>Customer Management</h2>
+    <div id="search-objects-container" class="pull-right" style="display: inline-block; margin: 30px 30px 0 0; padding: 0 0 0 0; width: 50%">
+        <div style="padding-bottom: 0; margin-bottom: 0; width: 100%">
+            <div class="form-group" style="margin: 0 0 0 0; width: 100%; text-align: right">
+                <input id="search-string"
+                       placeholder="Enter text to find ..."
+                       type="text"
+                       class="form-control search-box-text" />
+                <div class="btn-group" style="margin: 0 0 0 0">
+                    <button id="search-box-btn-find"
+                            type="button"
+                            class="btn btn-default btn-primary-text"
+                            onclick="filterItems(event)"
+                            style="display: inline-block; margin-top:-3px; border-top-left-radius: 0; border-bottom-left-radius: 0">
+                        <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+                    </button>
+                    <button id="search-box-menu-btn"
+                            type="button"
+                            class="btn btn-default btn-primary-text"
+                            onclick="toggleColSeltMenu(event)"
+                            style="display: inline-block; margin-top:-3px">
+                        <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
+                        <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
+                    </button>
+                </div>
             </div>
-            <hr style="margin: 10px 0 10px 0; padding: 0" />
-            <button class="btn btn-primary"
-                    type="button"
-                    onclick="filterItems(event, SHOW_ALL)"
-                    style="width: 100%">
-                Load All Customers
-            </button>
+        </div>
+        <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
+            <div>
+                <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
+                    <span>Search In:</span>
+                    <input name="AllCheck"
+                           type="checkbox"
+                           onchange="selectColGroup(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <hr style="margin: 0 0 5px 0; padding: 0" />
+                <div>
+                    <label class="checkbox-container">
+                        Created At
+                        <input name="CreatedAtCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        First Name
+                        <input name="FirstNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Last Name
+                        <input name="LastNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        E-Mail
+                        <input name="EmailCheck" type="checkbox" checked="checked" " onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Telephone
+                        <input name="PhoneCheck" type="checkbox" checked="checked" " onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Company Name
+                        <input name="CompanyNameCheck" type="checkbox" checked="checked" " onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Street
+                        <input name="StreetCheck" type="checkbox" checked="checked" " onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        City
+                        <input name="CityCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        State
+                        <input name="StateCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Zip Code
+                        <input name="ZipCodeCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <hr style="margin: 10px 0 10px 0; padding: 0" />
+                <button class="btn btn-primary"
+                        type="button"
+                        onclick="filterItems(event, SHOW_ALL)"
+                        style="width: 100%">
+                    Load All Customers
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <hr style="margin: 10px 0 0 0" />
+</div>
 <table id="customers-table" class="table">
-    <tr>
+    <tr class="sticky">
         <th>
             @Html.DisplayNameFor(model => model.CreatedAt)
         </th>

@@ -36,10 +36,10 @@ namespace BusinessManager.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdatePOSSale(POSSale updatedPOSSale, string Id)
+        public ActionResult UpdatePOSSale(POSSale updatedPOSSale)
         {
-            POSSale sale = posSaleService.GetPOSSale(Id);
-            posSaleService.UpdatePOSSale(sale);
+            // NOT ALLOWING UPDATES FROM THIS ROUTE AT THIS TIME - WILL POSSIBLY CHANGE IN THE FUTURE
+            //posSaleService.UpdatePOSSale(updatedPOSSale);
 
             return RedirectToAction("Index");
         }
