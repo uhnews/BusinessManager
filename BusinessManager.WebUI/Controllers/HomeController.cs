@@ -22,7 +22,7 @@ namespace BusinessManager.WebUI.Controllers
         public ActionResult Index(string category = null)
         {
             List<Product> products;
-            List<ProductCategory> categories = productCategories.Collection().ToList();
+            List<ProductCategory> categories = productCategories.Collection().OrderBy(c => c.Category).ToList();
 
             if (category == null)
             {

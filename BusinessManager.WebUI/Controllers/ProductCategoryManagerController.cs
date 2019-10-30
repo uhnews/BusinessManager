@@ -21,7 +21,7 @@ namespace BusinessManager.WebUI.Controllers
         // GET: ProductCategoryManager
         public ActionResult Index()
         {
-            List<ProductCategory> productCategories = context.Collection().ToList();
+            List<ProductCategory> productCategories = context.Collection().OrderBy(c => c.Category).ToList();
             return View(productCategories);
         }
 
