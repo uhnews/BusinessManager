@@ -4,6 +4,19 @@
 }
 
 <style>
+    .search-box-menu {
+        width: 250px;
+        padding: 0px 20px 10px 20px;
+        margin: 0px 0px 0px 0px;
+        border: solid 1px #c3d9ef;
+        border-radius: 5px;
+        background-color: aliceblue;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+    }
+
     #form-header {
         position: sticky;
         top: 51px;
@@ -12,6 +25,7 @@
         background-color: white;
         z-index: 2;
     }
+
     div.sticky {
         position: sticky;
         top: 125px;
@@ -19,8 +33,73 @@
 </style>
 
 <div id="form-header">
-    <h1 id="page-headline" style="margin: 0 0 0 0">Products</h1>
-    <hr style="margin: 0 0 0 0; padding: 0 0 10px 0" />
+    <h1 id="page-headline" style="margin: 0 0 0 0; display: inline-block">Products</h1>
+    <div id="search-objects-container" class="col-md-4 pull-right" style="display: inline-block; margin: 10px 0 0 0; padding: 0 0 0 0">
+        <div style="padding-bottom: 0; margin-bottom: 0; width: 100%">
+            <input id="search-string"
+                   placeholder="Enter text to find ..."
+                   type="text" class="form-control"
+                   style="display: inline-block; margin: 0 0 0 0; max-width: 65%; border-top-right-radius: 0; border-bottom-right-radius: 0" />
+            <div class="btn-group" style="margin: -3px 0px 0 -5px">
+                <button id="search-box-btn-find"
+                        type="button"
+                        class="btn btn-default btn-primary-text"
+                        onclick="filterItems(event)"
+                        style="border-top-left-radius: 0; border-bottom-left-radius: 0">
+                    <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+                </button>
+                <button id="search-box-menu-btn"
+                        type="button"
+                        class="btn btn-default btn-primary-text"
+                        onclick="toggleColSeltMenu(event)">
+                    <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0; display: inline"></span>
+                    <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
+                </button>
+            </div>
+        </div>
+        <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
+            <div>
+                <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
+                    <span>Search In:</span>
+                    <input name="AllCheck"
+                           type="checkbox"
+                           onchange="selectColGroup(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <hr style="margin: 0 0 5px 0; padding: 0" />
+                <div>
+                    <label class="checkbox-container">
+                        Category
+                        <input name="CategoryCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Name
+                        <input name="NameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Description
+                        <input name="DescriptionCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Price
+                        <input name="PriceCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <hr style="margin: 10px 0 10px 0; padding: 0" />
+                <button class="btn btn-primary"
+                        type="button"
+                        onclick="filterItems(event, SHOW_ALL)"
+                        style="width: 100%">
+                    Load All Products
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr style="margin: 20px 0 0px 0; padding: 0 0 10px 0" />
 </div>
 
 <div id="category-menu" class="col-md-2 sticky">
@@ -38,12 +117,14 @@
 
 <div class="col-md-10">
     <div class="container-fluid ">
-        @{ 
+        @{
             string rowWidth = "col-md-5";
+            int productIndex = 0;
         }
         @foreach (var item in Model.Products)
         {
-            <div class=@rowWidth style="height: 240px; padding: 10px; margin: 10px; border: solid thin #e6e6e6">
+            string product_id = "product-" + (++productIndex).ToString();
+            <div id="@product_id" class=@rowWidth style="height: 240px; padding: 10px; margin: 10px; border: solid thin #e6e6e6">
                 <div class="col-md-5" style="height: 100%">
                     <div class="container-center-vertical" style="height:90%">
                         <a href="@Url.Action("Details", "Home", new { id = item.Id })">
@@ -53,36 +134,201 @@
                 </div>
                 <div>
                     <div>
-                        <strong>@Html.ActionLink(item.Name, "Details", new { Id = item.Id })</strong>
+                        <strong>@Html.ActionLink(item.Name, "Details", new { Id = item.Id }, new { @name = "Name" })</strong>
                     </div>
 
                     <div>
-                        <p>@item.Description</p>
+                        <p><span name="Description">@item.Description</span></p>
                     </div>
 
                     <div>
-                        <p>@string.Format("{0:c}", item.Price)</p>
+                        <p><span name="Price">@string.Format("{0:c}", item.Price)</span></p>
                     </div>
                     <div class="btn-group-vertical " style="position: absolute; bottom: 15%">
                         @if (!User.IsInRole("POSAttendant") || (User.IsInRole("POSAttendant") && User.IsInRole("Client")))
                         {
                             <div style="margin: 5px">
-                                <a href="@Url.Action("AddToBasket", "Basket", new { Id = item.Id })" class="btn btn-default text-primary-force"><span class="fa fa-shopping-cart">&nbsp;&nbsp;Add to Basket</span></a>
+                                <a href="@Url.Action("AddToBasket", "Basket", new { Id = item.Id })" class="btn btn-default text-primary-force">
+                                    <span class="fa fa-shopping-cart">&nbsp;&nbsp;Add to Basket</span>
+                                </a>
                             </div>
                         }
 
                         @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("POSAttendant")))
                         {
                             <div style="margin: 5px">
-                                <a href="@Url.Action("AddToPOSTransaction", "POSTransaction", new { Id = item.Id })" class="btn btn-default text-primary-force"><span class="fas fa-cash-register">&nbsp;&nbsp;Add to POS Sale</span></a>
+                                <a href="@Url.Action("AddToPOSTransaction", "POSTransaction", new { Id = item.Id })" class="btn btn-default text-primary-force">
+                                    <span class="fas fa-cash-register">&nbsp;&nbsp;Add to POS Sale</span>
+                                </a>
                             </div>
                         }
                     </div>
+                    <span name="Category" class="hidden">@item.Category</span>
                 </div>
-
             </div>
         }
+        <span id="product-index" class="hidden">@productIndex</span>
     </div>
 </div>
-
 <div class="col-md-12 clearfix" />
+
+@section Scripts {
+    <script type="text/javascript">
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        const SHOW_ALL = true;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        var firstCall = true;
+        function hideSearchMenu() {
+            if (!firstCall)
+                toggleColSeltMenu();
+
+            firstCall = false;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function filterItems(event, showAll = false) {
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            iconClose.classList.add("hidden");
+            iconOpen.classList.remove("hidden");
+            menu.classList.add("hidden");
+            firstCall = true;
+
+            var searchText = document.getElementById("search-string").value.toLowerCase();
+            if (searchText === "" && !showAll) {
+                let titleMessage = "<span class='text-warning'>Search text missing!</span>"
+                ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", titleMessage);
+                return;
+            }
+            //
+            var searchInCategory = document.getElementById("search-box-menu").querySelector("input[name='CategoryCheck']").checked;
+            var searchInName = document.getElementById("search-box-menu").querySelector("input[name='NameCheck']").checked;
+            var searchInDescription = document.getElementById("search-box-menu").querySelector("input[name='DescriptionCheck']").checked;
+            var searchInPrice = document.getElementById("search-box-menu").querySelector("input[name='PriceCheck']").checked;
+
+            var columsWereSelected = searchInName || searchInDescription || searchInPrice;
+
+            if (!columsWereSelected && !showAll) {
+                let titleMessage = "<span class='text-warning'>Missing search input!</span>"
+                ShowMessage("You must select at least one of the fields listed in the search box Menu.", titleMessage);
+                return;
+            }
+
+            var productCount = parseInt(document.getElementById("product-index").innerText);
+            var itemsFound = 0;
+            for (i = 1; i <= productCount; i++) {
+                var row = document.getElementById("product-" + i);
+                var categoryData = row.querySelector("span[name='Category']").innerHTML.toLowerCase();
+                var nameData = row.querySelector("a[name='Name']").innerHTML.toLowerCase();
+                var descriptionData = row.querySelector("span[name='Description']").innerHTML.toLowerCase();
+                var priceData = row.querySelector("span[name='Price']").innerHTML.toLowerCase();
+                
+                if ((categoryData.indexOf(searchText) > -1 && searchInCategory) || showAll) {
+                    row.classList.remove("hidden");
+                    itemsFound++;
+                }
+                else if (nameData.indexOf(searchText) > -1 && searchInName) {
+                    row.classList.remove("hidden");
+                    itemsFound++;
+                }
+                else if (descriptionData.indexOf(searchText) > -1 && searchInDescription) {
+                    row.classList.remove("hidden");
+                    itemsFound++;
+                }
+                else if (priceData.indexOf(searchText) > -1 && searchInPrice) {
+                    row.classList.remove("hidden");
+                    itemsFound++;
+                }
+                else {
+                    row.classList.add("hidden");
+                }
+            }
+            if (itemsFound === 0) {
+                filterItems(event, SHOW_ALL);
+                ShowMessage("<h4 class='text-primary'>No matches were found &ndash; all products returned.</h4>");
+            }
+            document.removeEventListener("click", hideSearchMenu);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function toggleColSeltMenu(event) {
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            var menuContainer = document.getElementById("search-objects-container");
+
+            var btn = null;
+            if (event) {
+                btn = event.target;
+            }
+            else {
+                btn = document.getElementById("search-box-menu-btn");
+            }
+            if (btn.nodeName.toLowerCase() !== "button") {
+                btn = btn.parentNode;
+            }
+
+            var mainContainerRect = menuContainer.getBoundingClientRect();
+            var btnRect = btn.getBoundingClientRect();
+
+            xShift = (btnRect.left - mainContainerRect.left);
+            yShift = (btnRect.top + btnRect.height - mainContainerRect.top);
+
+            if (iconClose.classList.contains("hidden")) {
+                iconOpen.classList.add("hidden");
+                iconClose.classList.remove("hidden");
+                menu.classList.remove("hidden");
+                var menuRect = menu.getBoundingClientRect();
+                menu.style.transform = "translate(" + (xShift - (menuRect.width - btnRect.width)) + "px," + yShift + "px)";
+                firstCall = true;
+                document.addEventListener("click", hideSearchMenu);
+            }
+            else if (iconOpen.classList.contains("hidden")) {
+                iconClose.classList.add("hidden");
+                iconOpen.classList.remove("hidden");
+                menu.classList.add("hidden");
+                document.removeEventListener("click", hideSearchMenu);
+            }
+            else {
+                // ignore if no match
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function selectColGroup(event) {
+            //event.preventDefault();
+            var colNames = ["Category", "Name", "Description", "Price"];
+            var allAreChecked = true;
+
+            colNames.forEach(function (name) {
+                allAreChecked = allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked;
+            });
+
+            if (allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked) {
+                return;
+            }
+
+            colNames.forEach(function (name) {
+                document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked = !allAreChecked;
+            });
+            document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function setAllCheck(event) {
+            if (!event.target.checked) {
+                document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
+            }
+        }
+
+                    /////////////////////////////////////////////////////////////////////////////////////////////
+    </script>
+}
