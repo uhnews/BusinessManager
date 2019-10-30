@@ -1,17 +1,119 @@
 ﻿@model IEnumerable<BusinessManager.Core.Models.CustomerNote>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
+<style>
+    .search-box-menu {
+        width: 250px;
+        padding: 0px 20px 10px 20px;
+        margin: 0px 0px 0px 0px;
+        border: solid 1px #c3d9ef;
+        border-radius: 5px;
+        background-color: aliceblue;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+    }
+
+    #form-header {
+        position: sticky;
+        top: 51px;
+        margin: 0 0 0 0;
+        padding: 0 10px 0px 10px;
+        background-color: white;
+        z-index: 2;
+        border-width: 0;
+    }
+
+    tr.sticky {
+        position: sticky;
+        top: 125px;
+        background-color: white;
+    }
+</style>
+<div id="form-header">
+    <h2 style="display: inline-block"><span class="fas fa-sticky-note text-primary">&nbsp;&nbsp;</span>Customer Notes Management</h2>
+    <div id="search-objects-container" class="col-md-4 pull-right" style="display: inline-block; margin: 30px 0 0 0; padding: 0 0 0 0">
+        <div style="padding-bottom: 0; margin-bottom: 0; width: 100%">
+            <input id="search-string"
+                   placeholder="Enter text to find ..."
+                   type="text" class="form-control"
+                   style="display: inline-block; margin: 0 0 0 0; max-width: 65%; border-top-right-radius: 0; border-bottom-right-radius: 0" />
+            <div class="btn-group" style="margin: -3px 0px 0 -5px">
+                <button id="search-box-btn-find"
+                        type="button"
+                        class="btn btn-default btn-primary-text"
+                        onclick="filterItems(event)"
+                        style="border-top-left-radius: 0; border-bottom-left-radius: 0">
+                    <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+                </button>
+                <button id="search-box-menu-btn"
+                        type="button"
+                        class="btn btn-default btn-primary-text"
+                        onclick="toggleColSeltMenu(event)">
+                    <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0; display: inline"></span>
+                    <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
+                </button>
+            </div>
+        </div>
+        <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
+            <div>
+                <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
+                    <span>Search In:</span>
+                    <input name="AllCheck"
+                           type="checkbox"
+                           onchange="selectColGroup(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <hr style="margin: 0 0 5px 0; padding: 0" />
+                <div>
+                    <label class="checkbox-container">
+                        Created At
+                        <input name="CreatedAtCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Modified At
+                        <input name="ModifiedAtCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        User Name
+                        <input name="UserNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Category
+                        <input name="CategoryCheck" type="checkbox" checked="checked" " onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Note
+                        <input name="NoteBodyCheck" type="checkbox" checked="checked" " onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <hr style="margin: 10px 0 10px 0; padding: 0" />
+                <button class="btn btn-primary"
+                        type="button"
+                        onclick="filterItems(event, SHOW_ALL)"
+                        style="width: 100%">
+                    Load All Notes
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr style="margin: 10px 0 0 0" />
+</div>
+
+<table id="customernotes-table" class="table">
+    <tr class="sticky">
         <th>
             @Html.DisplayNameFor(model => model.CreatedAt)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.ModifiedAt)
         </th>
-        <th>
+        <th class="hidden">
             @Html.DisplayNameFor(model => model.CustomerId)
         </th>
         <th>
@@ -23,33 +125,200 @@
         <th>
             @Html.DisplayNameFor(model => model.NoteBody)
         </th>
-        <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ModifiedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CustomerId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Category)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.NoteBody)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <span name="CreatedAt">@Html.DisplayFor(modelItem => item.CreatedAt).ToString().Replace("-07:00", "")</span>
+            </td>
+            <td>
+                <span name="ModifiedAt">@Html.DisplayFor(modelItem => item.ModifiedAt).ToString().Replace("-07:00", "")</span>
+            </td>
+            <td class="hidden">
+                <span name="CustomerId">@Html.DisplayFor(modelItem => item.CustomerId)</span>
+            </td>
+            <td>
+                <span name="UserName">@Html.DisplayFor(modelItem => item.UserName)</span>
+            </td>
+            <td>
+                <span name="Category">@Html.DisplayFor(modelItem => item.Category)</span>
+            </td>
+            <td>
+                <span name="NoteBody">@Html.DisplayFor(modelItem => item.NoteBody)</span>
+            </td>
+        </tr>
+    }
 
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        const SHOW_ALL = true;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        var firstCall = true;
+        function hideSearchMenu() {
+            if (!firstCall)
+                toggleColSeltMenu();
+
+            firstCall = false;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function filterItems(event, showAll = false) {
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            iconClose.classList.add("hidden");
+            iconOpen.classList.remove("hidden");
+            menu.classList.add("hidden");
+            firstCall = true;
+
+            var searchText = document.getElementById("search-string").value.toLowerCase();
+            if (searchText === "" && !showAll) {
+                let titleMessage = "<span class='text-warning'>Search text missing!</span>"
+                ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", titleMessage);
+                return;
+            }
+
+            var table = document.getElementById("customernotes-table");
+            //
+            var searchInCreatedAt = document.getElementById("search-box-menu").querySelector("input[name='CreatedAtCheck']").checked;
+            var searchInModifiedAt = document.getElementById("search-box-menu").querySelector("input[name='ModifiedAtCheck']").checked;
+            var searchInUserName = document.getElementById("search-box-menu").querySelector("input[name='UserNameCheck']").checked;
+            var searchInCategory = document.getElementById("search-box-menu").querySelector("input[name='CategoryCheck']").checked;
+            var searchInNoteBody = document.getElementById("search-box-menu").querySelector("input[name='NoteBodyCheck']").checked;
+
+            var columsWereSelected = searchInCreatedAt || searchInModifiedAt ||
+                                searchInUserName || searchInCategory || searchInNoteBody;
+
+            if (!columsWereSelected && !showAll) {
+                let titleMessage = "<span class='text-warning'>Missing search input!</span>"
+                ShowMessage("To execute a search you must select at least one of the fields listed in the search box menu.", titleMessage);
+                return;
+            }
+
+            var itemsFound = 0;
+            var rows = table.getElementsByTagName("tr");
+            for (i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var createdAtData = row.querySelector("tr span[name='CreatedAt']").innerHTML.toLowerCase();
+                var modifiedAtData = row.querySelector("tr span[name='ModifiedAt']").innerHTML.toLowerCase();
+                var userNameData = row.querySelector("tr span[name='UserName']").innerHTML.toLowerCase();
+                var categoryData = row.querySelector("tr span[name='Category']").innerHTML.toLowerCase();
+                var noteBodyData = row.querySelector("tr span[name='NoteBody']").innerHTML.toLowerCase();
+
+                if ((createdAtData.indexOf(searchText) > -1 && searchInCreatedAt) || showAll) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (modifiedAtData.indexOf(searchText) > -1 && searchInModifiedAt) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (userNameData.indexOf(searchText) > -1 && searchInUserName) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (categoryData.indexOf(searchText) > -1 && searchInCategory) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (noteBodyData.indexOf(searchText) > -1 && searchInNoteBody) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else {
+                    row.style.display = "none";
+                }
+            }
+            if (itemsFound === 0) {
+                filterItems(event, SHOW_ALL);
+                ShowMessage("<h4 class='text-primary'>No matches were found &ndash; all transactions returned.</h4>");
+            }
+            document.removeEventListener("click", hideSearchMenu);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function toggleColSeltMenu(event) {
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            var menuContainer = document.getElementById("search-objects-container");
+
+            var btn = null;
+            if (event) {
+                btn = event.target;
+            }
+            else {
+                btn = document.getElementById("search-box-menu-btn");
+            }
+            if (btn.nodeName.toLowerCase() !== "button") {
+                btn = btn.parentNode;
+            }
+
+            var mainContainerRect = menuContainer.getBoundingClientRect();
+            var btnRect = btn.getBoundingClientRect();
+
+            xShift = (btnRect.left - mainContainerRect.left);
+            yShift = (btnRect.top + btnRect.height - mainContainerRect.top);
+
+            if (iconClose.classList.contains("hidden")) {
+                iconOpen.classList.add("hidden");
+                iconClose.classList.remove("hidden");
+                menu.classList.remove("hidden");
+                var menuRect = menu.getBoundingClientRect();
+                menu.style.transform = "translate(" + (xShift - (menuRect.width - btnRect.width)) + "px," + yShift + "px)";
+                firstCall = true;
+                document.addEventListener("click", hideSearchMenu);
+            }
+            else if (iconOpen.classList.contains("hidden")) {
+                iconClose.classList.add("hidden");
+                iconOpen.classList.remove("hidden");
+                menu.classList.add("hidden");
+                document.removeEventListener("click", hideSearchMenu);
+            }
+            else {
+                // ignore if no match
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function selectColGroup(event) {
+            //event.preventDefault();
+            var colNames = ["CreatedAt", "ModifiedAt", "UserName", "Category", "NoteBody"];
+            var allAreChecked = true;
+
+            colNames.forEach(function (name) {
+                allAreChecked = allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked;
+            });
+
+            if (allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked) {
+                return;
+            }
+
+            colNames.forEach(function (name) {
+                document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked = !allAreChecked;
+            });
+            document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function setAllCheck(event) {
+            if (!event.target.checked) {
+                document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
+            }
+        }
+
+                    /////////////////////////////////////////////////////////////////////////////////////////////
+    </script>
+}

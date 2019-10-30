@@ -1,97 +1,432 @@
 ﻿@model IEnumerable<BusinessManager.Core.Models.Payment>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
+<style>
+    .search-box-menu {
+        width: 250px;
+        padding: 0px 20px 10px 20px;
+        margin: 0px 0px 0px 0px;
+        border: solid 1px #c3d9ef;
+        border-radius: 5px;
+        background-color: aliceblue;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+    }
+
+    #form-header {
+        position: sticky;
+        top: 51px;
+        margin: 0 0 0 0;
+        padding: 0 10px 0px 10px;
+        background-color: white;
+        z-index: 2;
+        border-width: 0;
+    }
+
+    tr.sticky {
+        position: sticky;
+        top: 125px;
+        background-color: white;
+    }
+</style>
+<div id="form-header">
+    <h2 style="display: inline-block"><span class="fas fa-money-check-alt text-primary">&nbsp;&nbsp;</span>Payment Management</h2>
+    <div id="search-objects-container" class="col-md-4 pull-right" style="display: inline-block; margin: 30px 0 0 0; padding: 0 0 0 0">
+        <div style="padding-bottom: 0; margin-bottom: 0; width: 100%">
+            <input id="search-string"
+                   placeholder="Enter text to find ..."
+                   type="text" class="form-control"
+                   style="display: inline-block; margin: 0 0 0 0; max-width: 65%; border-top-right-radius: 0; border-bottom-right-radius: 0" />
+            <div class="btn-group" style="margin: -3px 0px 0 -5px">
+                <button id="search-box-btn-find"
+                        type="button"
+                        class="btn btn-default btn-primary-text"
+                        onclick="filterItems(event)"
+                        style="border-top-left-radius: 0; border-bottom-left-radius: 0">
+                    <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+                </button>
+                <button id="search-box-menu-btn"
+                        type="button"
+                        class="btn btn-default btn-primary-text"
+                        onclick="toggleColSeltMenu(event)">
+                    <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0; display: inline"></span>
+                    <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
+                </button>
+            </div>
+        </div>
+        <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
+            <div>
+                <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
+                    <span>Search In:</span>
+                    <input name="AllCheck"
+                           type="checkbox"
+                           onchange="selectColGroup(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <hr style="margin: 0 0 5px 0; padding: 0" />
+                <div>
+                    <label class="checkbox-container">
+                        Created At
+                        <input name="CreatedAtCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Modified Ad
+                        <input name="ModifiedAtCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Payment Date
+                        <input name="PaymentDateCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Amount
+                        <input name="AmountCheck" type="checkbox" checked="checked" " onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Payment Mode
+                        <input name="PaymentModeCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Check #
+                        <input name="CheckNoCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Check Issuer
+                        <input name="CheckWriterCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Card Holder
+                        <input name="CreditCardHolderCheck" type="checkbox" checked="checked" " onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Card #
+                        <input name="CreditCardNoCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Card Name
+                        <input name="CreditCardNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Payment Source
+                        <input name="ReceivableSourceCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <hr style="margin: 10px 0 10px 0; padding: 0" />
+                <button class="btn btn-primary"
+                        type="button"
+                        onclick="filterItems(event, SHOW_ALL)"
+                        style="width: 100%">
+                    Load All Payments
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr style="margin: 10px 0 0 0" />
+</div>
+
+<table id="payments-table" class="table">
+    <tr class="sticky">
         <th>
-            @Html.DisplayNameFor(model => model.CreatedAt)
+            <span name="CreatedAt">@Html.DisplayNameFor(model => model.CreatedAt)</span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ModifiedAt)
+            <span name="ModifiedAt">@Html.DisplayNameFor(model => model.ModifiedAt)</span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PaymentDate)
+            <span name="PaymentDate">@Html.DisplayNameFor(model => model.PaymentDate)</span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Amount)
+            <span name="Amount">@Html.DisplayNameFor(model => model.Amount)</span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PaymentMode)
+            <span name="PaymentMode">@Html.DisplayNameFor(model => model.PaymentMode)</span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CheckNo)
+            <span name="CheckNo">@Html.DisplayNameFor(model => model.CheckNo)</span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CheckImage)
+            <span name="CheckWriter">@Html.DisplayNameFor(model => model.CheckWriter)</span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CheckWriter)
+            <span name="CreditCardHolder">@Html.DisplayNameFor(model => model.CreditCardHolder)</span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CreditCardHolder)
+            <span name="CreditCardNo">@Html.DisplayNameFor(model => model.CreditCardNo)</span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CreditCardNo)
+            <span name="CreditCardName">@Html.DisplayNameFor(model => model.CreditCardName)</span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CreditCardName)
+            <span name="ReceivableSource">@Html.DisplayNameFor(model => model.ReceivableSource)</span>
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ReceivableSource)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ReceivableSourceId)
+        <th class="hidden">
+            <span name="ReceivableSourceId">@Html.DisplayNameFor(model => model.ReceivableSourceId)</span>
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ModifiedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PaymentDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Amount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PaymentMode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CheckNo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CheckImage)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CheckWriter)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreditCardHolder)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreditCardNo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreditCardName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReceivableSource)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReceivableSourceId)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Edit", new { id = item.Id })
-        </td>
-    </tr>
-}
-
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <span name="CreatedAt">@Html.DisplayFor(modelItem => item.CreatedAt).ToString().Replace("-07:00", "")</span>
+            </td>
+            <td>
+                <span name="ModifiedAt">@Html.DisplayFor(modelItem => item.ModifiedAt).ToString().Replace("-07:00", "")</span>
+            </td>
+            <td>
+                <span name="PaymentDate">@Html.DisplayFor(modelItem => item.PaymentDate).ToString().Replace("-07:00", "").Replace("12:00:00 AM", "")</span>
+            </td>
+            <td>
+                <span name="Amount">@Html.DisplayFor(modelItem => item.Amount)</span>
+            </td>
+            <td>
+                <span name="PaymentMode">@Html.DisplayFor(modelItem => item.PaymentMode)</span>
+            </td>
+            <td>
+                <span name="CheckNo">@Html.DisplayFor(modelItem => item.CheckNo)</span>
+            </td>
+            <td>
+                <span name="CheckWriter">@Html.DisplayFor(modelItem => item.CheckWriter)</span>
+            </td>
+            <td>
+                <span name="CreditCardHolder">@Html.DisplayFor(modelItem => item.CreditCardHolder)</span>
+            </td>
+            <td>
+                <span name="CreditCardNo">@Html.DisplayFor(modelItem => item.CreditCardNo)</span>
+            </td>
+            <td>
+                <span name="CreditCardName">@Html.DisplayFor(modelItem => item.CreditCardName)</span>
+            </td>
+            <td>
+                <span name="ReceivableSource">@Html.DisplayFor(modelItem => item.ReceivableSource)</span>
+            </td>
+            <td class="hidden">
+                <span name="ReceivableSourceId">@Html.DisplayFor(modelItem => item.ReceivableSourceId)</span>
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Edit", new { id = item.Id })
+            </td>
+        </tr>
+    }
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        const SHOW_ALL = true;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        var firstCall = true;
+        function hideSearchMenu() {
+            if (!firstCall)
+                toggleColSeltMenu();
+
+            firstCall = false;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function filterItems(event, showAll = false) {
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            iconClose.classList.add("hidden");
+            iconOpen.classList.remove("hidden");
+            menu.classList.add("hidden");
+            firstCall = true;
+
+            var searchText = document.getElementById("search-string").value.toLowerCase();
+            if (searchText === "" && !showAll) {
+                let titleMessage = "<span class='text-warning'>Search text missing!</span>"
+                ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", titleMessage);
+                return;
+            }
+
+            var table = document.getElementById("payments-table");
+            //
+            var searchInCreatedAt = document.getElementById("search-box-menu").querySelector("input[name='CreatedAtCheck']").checked;
+            var searchInModifiedAt = document.getElementById("search-box-menu").querySelector("input[name='ModifiedAtCheck']").checked;
+            var searchInPaymentDate = document.getElementById("search-box-menu").querySelector("input[name='PaymentDateCheck']").checked;
+            var searchInAmount = document.getElementById("search-box-menu").querySelector("input[name='AmountCheck']").checked;
+            var searchInPaymentMode = document.getElementById("search-box-menu").querySelector("input[name='PaymentModeCheck']").checked;
+            var searchInCheckNo = document.getElementById("search-box-menu").querySelector("input[name='CheckNoCheck']").checked;
+            var searchInCheckWriter = document.getElementById("search-box-menu").querySelector("input[name='CheckWriterCheck']").checked;
+            var searchInCreditCardHolder = document.getElementById("search-box-menu").querySelector("input[name='CreditCardHolderCheck']").checked;
+            var searchInCreditCardNo = document.getElementById("search-box-menu").querySelector("input[name='CreditCardNoCheck']").checked;
+            var searchInCreditCardName = document.getElementById("search-box-menu").querySelector("input[name='CreditCardNameCheck']").checked;
+            var searchInReceivableSource = document.getElementById("search-box-menu").querySelector("input[name='ReceivableSourceCheck']").checked;
+
+            var columsWereSelected = searchInCreatedAt || searchInModifiedAt
+                                    || searchInPaymentDate || searchInAmount || searchInPaymentMode
+                                    || searchInCheckNo || searchInCheckWriter || searchInCreditCardHolder
+                                    || searchInCreditCardNo || searchInCreditCardName || searchInReceivableSource;
+
+            if (!columsWereSelected && !showAll) {
+                let titleMessage = "<span class='text-warning'>Missing search input!</span>"
+                ShowMessage("To execute a search you must select at least one of the fields listed in the search box menu.", titleMessage);
+                return;
+            }
+
+            var itemsFound = 0;
+            var rows = table.getElementsByTagName("tr");
+            for (i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var createdAtData = row.querySelector("tr span[name='CreatedAt']").innerHTML.toLowerCase();
+                var modifiedAtData = row.querySelector("tr span[name='ModifiedAt']").innerHTML.toLowerCase();
+                var paymentDateData = row.querySelector("tr span[name='PaymentDate']").innerHTML.toLowerCase();
+                var amountData = row.querySelector("tr span[name='Amount']").innerHTML.toLowerCase();
+                var paymentModeData = row.querySelector("tr span[name='PaymentMode']").innerHTML.toLowerCase();
+                var checkNoData = row.querySelector("tr span[name='CheckNo']").innerHTML.toLowerCase();
+                var checkWriterData = row.querySelector("tr span[name='CheckWriter']").innerHTML.toLowerCase();
+                var creditCardHolderData = row.querySelector("tr span[name='CreditCardHolder']").innerHTML.toLowerCase();
+                var creditCardNoData = row.querySelector("tr span[name='CreditCardNo']").innerHTML.toLowerCase();
+                var creditCardNameData = row.querySelector("tr span[name='CreditCardName']").innerHTML.toLowerCase();
+                var receivableSourceData = row.querySelector("tr span[name='ReceivableSource']").innerHTML.toLowerCase();
+
+                if ((createdAtData.indexOf(searchText) > -1 && searchInCreatedAt) || showAll) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (modifiedAtData.indexOf(searchText) > -1 && searchInModifiedAt) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (paymentDateData.indexOf(searchText) > -1 && searchInPaymentDate) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (amountData.indexOf(searchText) > -1 && searchInAmount) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (paymentModeData.indexOf(searchText) > -1 && searchInPaymentMode) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (checkNoData.indexOf(searchText) > -1 && searchInCheckNo) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (checkWriterData.indexOf(searchText) > -1 && searchInCheckWriter) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (creditCardHolderData.indexOf(searchText) > -1 && searchInCreditCardHolder) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (creditCardNoData.indexOf(searchText) > -1 && searchInCreditCardNo) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (creditCardNameData.indexOf(searchText) > -1 && searchInCreditCardName) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (receivableSourceData.indexOf(searchText) > -1 && searchInReceivableSource) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else {
+                    row.style.display = "none";
+                }
+            }
+            if (itemsFound === 0) {
+                filterItems(event, SHOW_ALL);
+                ShowMessage("<h4 class='text-primary'>No matches were found &ndash; all transactions returned.</h4>");
+            }
+            document.removeEventListener("click", hideSearchMenu);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function toggleColSeltMenu(event) {
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            var menuContainer = document.getElementById("search-objects-container");
+
+            var btn = null;
+            if (event) {
+                btn = event.target;
+            }
+            else {
+                btn = document.getElementById("search-box-menu-btn");
+            }
+            if (btn.nodeName.toLowerCase() !== "button") {
+                btn = btn.parentNode;
+            }
+
+            var mainContainerRect = menuContainer.getBoundingClientRect();
+            var btnRect = btn.getBoundingClientRect();
+
+            xShift = (btnRect.left - mainContainerRect.left);
+            yShift = (btnRect.top + btnRect.height - mainContainerRect.top);
+
+            if (iconClose.classList.contains("hidden")) {
+                iconOpen.classList.add("hidden");
+                iconClose.classList.remove("hidden");
+                menu.classList.remove("hidden");
+                var menuRect = menu.getBoundingClientRect();
+                menu.style.transform = "translate(" + (xShift - (menuRect.width - btnRect.width)) + "px," + yShift + "px)";
+                firstCall = true;
+                document.addEventListener("click", hideSearchMenu);
+            }
+            else if (iconOpen.classList.contains("hidden")) {
+                iconClose.classList.add("hidden");
+                iconOpen.classList.remove("hidden");
+                menu.classList.add("hidden");
+                document.removeEventListener("click", hideSearchMenu);
+            }
+            else {
+                // ignore if no match
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function selectColGroup(event) {
+            //event.preventDefault();
+            var colNames = ["CreatedAt", "ModifiedAt", "PaymentDate", "Amount", "PaymentMode",
+                "CheckNo", "CheckWriter", "CreditCardHolder", "CreditCardNo", "CreditCardName", "ReceivableSource"];
+            var allAreChecked = true;
+
+            colNames.forEach(function (name) {
+                allAreChecked = allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked;
+            });
+
+            if (allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked) {
+                return;
+            }
+
+            colNames.forEach(function (name) {
+                document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked = !allAreChecked;
+            });
+            document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function setAllCheck(event) {
+            if (!event.target.checked) {
+                document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
+            }
+        }
+
+                    /////////////////////////////////////////////////////////////////////////////////////////////
+    </script>
+}
