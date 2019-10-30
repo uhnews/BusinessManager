@@ -4,13 +4,147 @@
     ViewBag.Title = "Customer Management";
 }
 
-<h2><span class="fas fa-truck text-primary">&nbsp;&nbsp;</span>Supplier Management</h2>
+<style>
+    .search-box-menu {
+        width: 250px;
+        padding: 0px 20px 10px 20px;
+        margin: 0px 0px 0px 0px;
+        border: solid 1px #c3d9ef;
+        border-radius: 5px;
+        background-color: aliceblue;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+    }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
+    #form-header {
+        position: sticky;
+        top: 51px;
+        margin: 0 0 0 0;
+        padding: 0 10px 0px 10px;
+        background-color: white;
+        z-index: 2;
+        border-width: 0;
+    }
+
+    tr.sticky {
+        position: sticky;
+        top: 145px;
+        background-color: white;
+    }
+</style>
+
+<div id="form-header">
+    <h2 style="display: inline-block"><span class="fas fa-truck text-primary">&nbsp;&nbsp;</span>Supplier Management</h2>
+    <div id="search-objects-container" class="col-md-4 pull-right" style="display: inline-block; margin: 30px 0 0 0; padding: 0 0 0 0">
+        <div style="padding-bottom: 0; margin-bottom: 0; width: 100%">
+            <input id="search-string"
+                   placeholder="Enter text to find ..."
+                   type="text" class="form-control"
+                   style="display: inline-block; margin: 0 0 0 0; max-width: 65%; border-top-right-radius: 0; border-bottom-right-radius: 0" />
+            <div class="btn-group" style="margin: -3px 0px 0 -5px">
+                <button id="search-box-btn-find"
+                        type="button"
+                        class="btn btn-default btn-primary-text"
+                        onclick="filterItems(event)"
+                        style="border-top-left-radius: 0; border-bottom-left-radius: 0">
+                    <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+                </button>
+                <button id="search-box-menu-btn"
+                        type="button"
+                        class="btn btn-default btn-primary-text"
+                        onclick="toggleColSeltMenu(event)">
+                    <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0; display: inline"></span>
+                    <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
+                </button>
+            </div>
+        </div>
+        <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
+            <div>
+                <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
+                    <span>Search In:</span>
+                    <input name="AllCheck"
+                           type="checkbox"
+                           onchange="selectColGroup(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <hr style="margin: 0 0 5px 0; padding: 0" />
+                <div>
+                    <label class="checkbox-container">
+                        Created At
+                        <input name="CreatedAtCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Company Name
+                        <input name="CompanyNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        First Name
+                        <input name="FirstNameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Last Name
+                        <input name="LastNameCheck" type="checkbox" checked="checked" " onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        E-Mail
+                        <input name="EmailCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Street
+                        <input name="StreetCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        City
+                        <input name="CityCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        State
+                        <input name="StateCheck" type="checkbox" checked="checked" " onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Zip Code
+                        <input name="ZipCodeCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Telephone
+                        <input name="PhoneCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Website
+                        <input name="WebsiteCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <hr style="margin: 10px 0 10px 0; padding: 0" />
+                <button class="btn btn-primary"
+                        type="button"
+                        onclick="filterItems(event, SHOW_ALL)"
+                        style="width: 100%">
+                    Load All Suppliers
+                </button>
+            </div>
+        </div>
+    </div>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <hr style="margin: 10px 0 0 0" />
+</div>
+
+<table id="suppliers-table" class="table">
+    <tr class="sticky">
         <th>
             @Html.DisplayNameFor(model => model.CreatedAt)
         </th>
@@ -52,37 +186,37 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt).ToString().Replace("-07:00", "")
+                <span name="CreatedAt">@Html.DisplayFor(modelItem => item.CreatedAt).ToString().Replace("-07:00", "")</span>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CompanyName)
+                <span name="CompanyName">@Html.DisplayFor(modelItem => item.CompanyName)</span>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
+                <span name="FirstName">@Html.DisplayFor(modelItem => item.FirstName)</span>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LastName)
+                <span name="LastName">@Html.DisplayFor(modelItem => item.LastName)</span>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                <span name="Email">@Html.DisplayFor(modelItem => item.Email)</span>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Street)
+                <span name="Street">@Html.DisplayFor(modelItem => item.Street)</span>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.City)
+                <span name="City">@Html.DisplayFor(modelItem => item.City)</span>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.State)
+                <span name="State">@Html.DisplayFor(modelItem => item.State)</span>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ZipCode)
+                <span name="ZipCode">@Html.DisplayFor(modelItem => item.ZipCode)</span>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Phone)
+                <span name="Phone">@Html.DisplayFor(modelItem => item.Phone)</span>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Website)
+                <span name="Website">@Html.DisplayFor(modelItem => item.Website)</span>
             </td>
             <td style="margin-right: 0; padding-right: 0">
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id })&nbsp;|&nbsp;
@@ -94,3 +228,212 @@
     }
 
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        const SHOW_ALL = true;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        var firstCall = true;
+        function hideSearchMenu() {
+            if (!firstCall)
+                toggleColSeltMenu();
+
+            firstCall = false;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function filterItems(event, showAll = false) {
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            iconClose.classList.add("hidden");
+            iconOpen.classList.remove("hidden");
+            menu.classList.add("hidden");
+            firstCall = true;
+
+            var searchText = document.getElementById("search-string").value.toLowerCase();
+            if (searchText === "" && !showAll) {
+                let titleMessage = "<span class='text-warning'>Search text missing!</span>"
+                ShowMessage("Type the text you wish to find into the search box, or open the search box menu and select 'Load All Products'", titleMessage);
+                return;
+            }
+
+            var table = document.getElementById("suppliers-table");
+            //
+            var searchInCreatedAt = document.getElementById("search-box-menu").querySelector("input[name='CreatedAtCheck']").checked;
+            var searchInCompanyName = document.getElementById("search-box-menu").querySelector("input[name='CompanyNameCheck']").checked;
+            var searchInFirstName = document.getElementById("search-box-menu").querySelector("input[name='FirstNameCheck']").checked;
+            var searchInLastName = document.getElementById("search-box-menu").querySelector("input[name='LastNameCheck']").checked;
+            var searchInEmail = document.getElementById("search-box-menu").querySelector("input[name='EmailCheck']").checked;
+            var searchInStreet = document.getElementById("search-box-menu").querySelector("input[name='StreetCheck']").checked;
+            var searchInCity = document.getElementById("search-box-menu").querySelector("input[name='CityCheck']").checked;
+            var searchInState = document.getElementById("search-box-menu").querySelector("input[name='StateCheck']").checked;
+            var searchInZipCode = document.getElementById("search-box-menu").querySelector("input[name='ZipCodeCheck']").checked;
+            var searchInPhone = document.getElementById("search-box-menu").querySelector("input[name='PhoneCheck']").checked;
+            var searchInWebsite = document.getElementById("search-box-menu").querySelector("input[name='WebsiteCheck']").checked;
+
+            var columsWereSelected = searchInCreatedAt || searchInCompanyName
+                || searchInFirstName || searchInLastName || searchInEmail
+                || searchInStreet || searchInCity || searchInState
+                || searchInZipCode || searchInPhone || searchInWebsite;
+
+            if (!columsWereSelected && !showAll) {
+                let titleMessage = "<span class='text-warning'>Missing search input!</span>"
+                ShowMessage("To execute a search you must select at least one of the fields listed in the search box menu.", titleMessage);
+                return;
+            }
+
+            var itemsFound = 0;
+            var rows = table.getElementsByTagName("tr");
+            for (i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var createdAtData = row.querySelector("tr span[name='CreatedAt']").innerHTML.toLowerCase();
+                var companyNameData = row.querySelector("tr span[name='CompanyName']").innerHTML.toLowerCase();
+                var firstNameData = row.querySelector("tr span[name='FirstName']").innerHTML.toLowerCase();
+                var lastNameData = row.querySelector("tr span[name='LastName']").innerHTML.toLowerCase();
+                var emailData = row.querySelector("tr span[name='Email']").innerHTML.toLowerCase();
+                var streetData = row.querySelector("tr span[name='Street']").innerHTML.toLowerCase();
+                var cityData = row.querySelector("tr span[name='City']").innerHTML.toLowerCase();
+                var stateData = row.querySelector("tr span[name='State']").innerHTML.toLowerCase();
+                var zipCodeData = row.querySelector("tr span[name='ZipCode']").innerHTML.toLowerCase();
+                var phoneData = row.querySelector("tr span[name='Phone']").innerHTML.toLowerCase();
+                var websiteData = row.querySelector("tr span[name='Website']").innerHTML.toLowerCase();
+
+                if ((createdAtData.indexOf(searchText) > -1 && searchInCreatedAt) || showAll) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (companyNameData.indexOf(searchText) > -1 && searchInCompanyName) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (firstNameData.indexOf(searchText) > -1 && searchInFirstName) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (lastNameData.indexOf(searchText) > -1 && searchInLastName) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (emailData.indexOf(searchText) > -1 && searchInEmail) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (streetData.indexOf(searchText) > -1 && searchInStreet) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (cityData.indexOf(searchText) > -1 && searchInCity) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (stateData.indexOf(searchText) > -1 && searchInState) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (zipCodeData.indexOf(searchText) > -1 && searchInZipCode) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (phoneData.indexOf(searchText) > -1 && searchInPhone) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else if (websiteData.indexOf(searchText) > -1 && searchInWebsite) {
+                    row.style.display = "table-row";
+                    itemsFound++;
+                }
+                else {
+                    row.style.display = "none";
+                }
+            }
+            if (itemsFound === 0) {
+                filterItems(event, SHOW_ALL);
+                ShowMessage("<h4 class='text-primary'>No matches were found &ndash; all transactions returned.</h4>");
+            }
+            document.removeEventListener("click", hideSearchMenu);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function toggleColSeltMenu(event) {
+            var iconOpen = document.getElementById("search-box-menu-open");
+            var iconClose = document.getElementById("search-box-menu-close");
+            var menu = document.getElementById("search-box-menu");
+            var menuContainer = document.getElementById("search-objects-container");
+
+            var btn = null;
+            if (event) {
+                btn = event.target;
+            }
+            else {
+                btn = document.getElementById("search-box-menu-btn");
+            }
+            if (btn.nodeName.toLowerCase() !== "button") {
+                btn = btn.parentNode;
+            }
+
+            var mainContainerRect = menuContainer.getBoundingClientRect();
+            var btnRect = btn.getBoundingClientRect();
+
+            xShift = (btnRect.left - mainContainerRect.left);
+            yShift = (btnRect.top + btnRect.height - mainContainerRect.top);
+
+            if (iconClose.classList.contains("hidden")) {
+                iconOpen.classList.add("hidden");
+                iconClose.classList.remove("hidden");
+                menu.classList.remove("hidden");
+                var menuRect = menu.getBoundingClientRect();
+                menu.style.transform = "translate(" + (xShift - (menuRect.width - btnRect.width)) + "px," + yShift + "px)";
+                firstCall = true;
+                document.addEventListener("click", hideSearchMenu);
+            }
+            else if (iconOpen.classList.contains("hidden")) {
+                iconClose.classList.add("hidden");
+                iconOpen.classList.remove("hidden");
+                menu.classList.add("hidden");
+                document.removeEventListener("click", hideSearchMenu);
+            }
+            else {
+                // ignore if no match
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function selectColGroup(event) {
+            //event.preventDefault();
+            var colNames = ["CreatedAt", "CompanyName", "FirstName", "LastName", "Email",
+                                "Street", "City", "State", "ZipCode", "Phone", "Website"];
+            var allAreChecked = true;
+
+            colNames.forEach(function (name) {
+                allAreChecked = allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked;
+            });
+
+            if (allAreChecked && document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked) {
+                return;
+            }
+
+            colNames.forEach(function (name) {
+                document.getElementById("search-box-menu").querySelector("input[name='" + name + "Check']").checked = !allAreChecked;
+            });
+            document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = !allAreChecked;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function setAllCheck(event) {
+            if (!event.target.checked) {
+                document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+    </script>
+}
