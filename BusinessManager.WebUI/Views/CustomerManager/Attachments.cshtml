@@ -1,0 +1,86 @@
+﻿@using Microsoft.AspNet.Identity
+@using BusinessManager.Core.Models
+@model IEnumerable<Attachment>
+
+@{
+    //var colorBlueText = "#1a53ff";
+    string colorBGAttachmentDetail = "#6699cc";
+    string colorBGItemDetail = "#f8fafc";
+    ViewBag.ItemDetailBackgroundColor = colorBGItemDetail;
+}
+<style>
+    .CustomerManagerAttachments-fixed-header tbody {
+        display: block;
+        overflow: auto;
+        height: 580px;
+        width: 100%;
+    }
+
+    .CustomerManagerAttachments-fixed-header thead tr {
+        display: block;
+        width: 10%;
+    }
+</style>
+<div class="col-md-12" style="display: flex; height: 661px; padding: 10px 0px 10px 20px; margin: auto; border-top: 1px solid #ddd">
+    <div style="background-color: @colorBGAttachmentDetail; width: 100%; margin: 0 23px 0 3px">
+        <div class="CustomerManagerAttachments-fixed-header" style="width: 100%; padding: 15px 15px 15px 15px">
+            <table id="attachments-table" class="table" style="width: 100%">
+                <tr class="col-md-12" style="background-color: @colorBGItemDetail">
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedAt)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModifiedAt)
+                    </th>
+                    <th class="hidden">
+                        @Html.DisplayNameFor(model => model.CustomerId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Type)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Category)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AttachedBy)
+                    </th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr style="background-color: @colorBGItemDetail" class="col-md-12">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedAt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModifiedAt)
+                        </td>
+                        <td class="hidden">
+                            @Html.DisplayFor(modelItem => item.CustomerId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AttachedBy)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+

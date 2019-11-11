@@ -30,7 +30,7 @@
             <button onclick="showPOSSales(event)"
                     id="show-possales-btn"
                     type="button"
-                    style="border-bottom-left-radius: 0 !important";
+                    style="border-bottom-left-radius: 0 !important" ;
                     class="btn btn-default btn-sm">
                 POS Sales
             </button>
@@ -52,10 +52,16 @@
                     class="btn btn-default btn-sm">
                 Online Orders
             </button>
+            <button onclick="showAttachments(event)"
+                    id="show-attachments-btn"
+                    type="button"
+                    class="btn btn-default btn-sm">
+                Attachments
+            </button>
             <button onclick="showCustomerNotes(event)"
                     id="show-customernotes-btn"
                     type="button"
-                    style="border-bottom-right-radius: 0 !important";
+                    style="border-bottom-right-radius: 0 !important" ;
                     class="btn btn-default btn-sm">
                 Notes
             </button>
@@ -184,7 +190,7 @@
 
             <div id="product-lookup" class="product-lookup-popup hidden" style="background-color: @customGrayWhite">
                 @Html.Partial("ProductLookup", Model.ProductList)
-                <button id="close-productlookup-form-btn"onclick="closeProductLookup(event)" class="btn btn-default btn-sm pull-right" style="margin: 6px 20px 15px 5px">
+                <button id="close-productlookup-form-btn" onclick="closeProductLookup(event)" class="btn btn-default btn-sm pull-right" style="margin: 6px 20px 15px 5px">
                     Close List
                 </button>
                 <div style="margin: 0 0 0 25px">@Html.ActionLink("Back to Customer List", "Index")</div>
@@ -193,6 +199,37 @@
 
         <div id="alt-subform-container" class="col-md-8" style="padding: 0; margin: 0; border-radius: 0 5px 5px 0; background-color: @customGray">
 
+        </div>
+
+        <div id="attachments-container" class="col-md-8 hidden" style="padding: 0; margin: 0; border-radius: 0 5px 5px 0; background-color: @customGray">
+            @{
+                var attachmentCount = Model.Attachments.Count;
+                var attachmentFullName = Model.FirstName + ' ' + Model.LastName;
+                var attachmentCompanyName = Model.CompanyName == "" ? "" : " (" + Model.CompanyName + ")";
+                var attachmentCombinedName = attachmentFullName + attachmentCompanyName;
+            }
+            <span id="curr-attachment-id" style="display: none"></span>
+            <div style="margin: 0px 0px 5px 25px">
+                <div style="margin: 20px 0 10px 0">
+                    <h4 style="display: inline">Attachments</h4>
+                    <input type="file" id="file" name="file" class="form-control hidden" />
+                    <button onclick="addAttachment(event)"
+                            id="add-attachment-btn"
+                            type="button"
+                            style="margin: -3px 30px 0 0; padding: 2px 10px !important"
+                            class="btn btn-default btn-xs btn-danger-text pull-right">
+                        Add Attachment
+                    </button>
+                </div>
+                <div>
+                    <strong>
+                        <span class="text-primary" style="float: right; margin:3px 30px 3px 3px">@attachmentCombinedName</span>
+                        <span style="float: right; margin:3px 10px 3px 3px">Customer: </span>
+                    </strong>
+                    <span style="margin: 3px 13px 3px 3px">Attachments: @attachmentCount</span>
+                </div>
+            </div>
+            @Html.Partial("Attachments", Model.Attachments)
         </div>
 
         <div id="customernotes-container" class="col-md-8 hidden" style="padding: 0; margin: 0; border-radius: 0 5px 5px 0; background-color: @customGray">
@@ -210,8 +247,7 @@
                             id="add-customernote-btn"
                             type="button"
                             style="margin: -3px 30px 0 0; padding: 2px 10px !important"
-                            class="btn btn-default btn-xs btn-danger-text pull-right"
-                            >
+                            class="btn btn-default btn-xs btn-danger-text pull-right">
                         Add Note
                     </button>
                 </div>
@@ -246,8 +282,7 @@
                             id="add-possale-btn"
                             type="button"
                             style="margin: -3px 30px 0 0; padding: 2px 10px !important"
-                            class="btn btn-default btn-xs btn-danger-text hidden pull-right"
-                            >
+                            class="btn btn-default btn-xs btn-danger-text hidden pull-right">
                         Add Sale
                     </button>
                 </div>
@@ -283,8 +318,7 @@
                             id="add-layaway-btn"
                             type="button"
                             style="margin: -3px 30px 0 0; padding: 1px 10px !important"
-                            class="btn btn-default btn-xm hidden btn-danger-text pull-right"
-                            >
+                            class="btn btn-default btn-xm hidden btn-danger-text pull-right">
                         Add Layaway
                     </button>
                 </div>
@@ -320,8 +354,7 @@
                             id="add-invoice-btn"
                             type="button"
                             style="margin: -3px 30px 0 0; padding: 1px 10px !important"
-                            class="btn btn-default btn-xm btn-danger-text hidden pull-right"
-                            >
+                            class="btn btn-default btn-xm btn-danger-text hidden pull-right">
                         Add Invoice
                     </button>
                 </div>
@@ -357,8 +390,7 @@
                             id="add-onlineorder-btn"
                             type="button"
                             style="margin: -3px 30px 0 0; padding: 2px 10px !important"
-                            class="btn btn-default btn-xs hidden btn-danger-text pull-right"
-                            >
+                            class="btn btn-default btn-xs hidden btn-danger-text pull-right">
                         Add Order
                     </button>
                 </div>
@@ -394,6 +426,11 @@
         setInvoicesDatePickers(event);
         setLayawaysDatePickers(event);
         setCustomerTotals(event);
+
+        document.getElementById("file").onchange = function () {
+            //let message = ("New file selected: " + this.value).replace("C:\\fakepath\\", "");
+            //document.getElementById('image-message').innerText = message;
+        };
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -451,6 +488,8 @@
                 ["save-customer-btn", "SaveCustomerButton"],
                 ["add-customernote-btn", "AddCustomerNoteButton"],
                 ["show-customernotes-btn", "ShowCustomerNotesButton"],
+                ["add-attachment-btn", "AddAttachmentButton"],
+                ["show-attachments-btn", "ShowAttachmentsButton"],
                 ["add-invoice-btn", "AddInvoiceButton"],
                 ["show-invoices-btn", "ShowInvoicesButton"],
                 ["add-layaway-btn", "AddLayawayButton"],
@@ -491,7 +530,7 @@
                 return;
             }
 
-            // current Item Types
+            // current ChargeItem Types
             var ItemTypes = ["POSSale", "Invoice", "Layaway", "OnlineOrder"];
 
             // gen subform names from Item Types
@@ -522,6 +561,7 @@
             // restore all forms' View state
             var subformElementIds = [
                 "alt-subform-container",
+                "attachments-container",
                 "customernotes-container",
                 "layaways-container",
                 "invoices-container",
@@ -545,6 +585,8 @@
                 "save-customer-btn": state.SaveCustomerButton,
                 "add-customernote-btn": state.AddCustomerNoteButton,
                 "show-customernotes-btn": state.ShowCustomerNotesButton,
+                "add-attachment-btn": state.AddAttachmentButton,
+                "show-attachments-btn": state.ShowAttachmentsButton,
                 "add-invoice-btn": state.AddInvoiceButton,
                 "show-invoices-btn": state.ShowInvoicesButton,
                 "add-layaway-btn": state.AddLayawayButton,
@@ -587,6 +629,7 @@
             var result = "";
             var subformElementIds = [
                 "alt-subform-container",
+                "attachments-container",
                 "customernotes-container",
                 "layaways-container",
                 "invoices-container",
@@ -646,18 +689,21 @@
         function hideAllSubForms() {
             // hide all Subforms
             document.getElementById("alt-subform-container").classList.add("hidden");
+            document.getElementById("attachments-container").classList.add("hidden");
             document.getElementById("customernotes-container").classList.add("hidden");
             document.getElementById("possales-container").classList.add("hidden");
             document.getElementById("layaways-container").classList.add("hidden");
             document.getElementById("invoices-container").classList.add("hidden");
             document.getElementById("onlineorders-container").classList.add("hidden");
             // also hide all the Add buttons
+            document.getElementById("add-attachment-btn").classList.add("hidden");
             document.getElementById("add-customernote-btn").classList.add("hidden");
             document.getElementById("add-possale-btn").classList.add("hidden");
             document.getElementById("add-invoice-btn").classList.add("hidden");
             document.getElementById("add-layaway-btn").classList.add("hidden");
             document.getElementById("add-onlineorder-btn").classList.add("hidden");
             // also show all the Show buttons
+            document.getElementById("show-attachments-btn").classList.remove("hidden");
             document.getElementById("show-customernotes-btn").classList.remove("hidden");
             document.getElementById("show-possales-btn").classList.remove("hidden");
             document.getElementById("show-invoices-btn").classList.remove("hidden");
@@ -678,12 +724,17 @@
                 "border-warning",
                 "border-green",
                 "border-blue",
+                "border-dark-blue",
                 "border-sky-blue"
             ].forEach(item => { customerSection.classList.remove(item); });
             // now select specified border
             if (subform.toLowerCase().indexOf("customernote") > -1) {
                 customerSection.classList.add("border");
                 customerSection.classList.add("border-sky-blue");
+            }
+            else if (subform.toLowerCase().indexOf("attachment") > -1) {
+                customerSection.classList.add("border");
+                customerSection.classList.add("border-dark-blue");
             }
             else if (subform.toLowerCase().indexOf("invoice") > -1) {
                 customerSection.classList.add("border");
@@ -711,6 +762,7 @@
         function colorUpperTabButton(clickedBtnId) {
             var btnBgColorClasses = [
                 ["show-customernotes-btn", "bg-sky-blue"],
+                ["show-attachments-btn", "bg-dark-blue"],
                 ["show-possales-btn", "bg-green"],
                 ["show-invoices-btn", "bg-golden"],
                 ["show-layaways-btn", "bg-copper"],
@@ -757,6 +809,13 @@
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showAttachments(event) {
+            showSubform("Attachment");
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
         function showCustomerNotes(event) {
             showSubform("CustomerNote");
         }
@@ -950,6 +1009,14 @@
 
         function hideNewCustomerNote() {
             document.getElementById("new-note-container").classList.add("hidden");
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function addAttachment(event) {
+            //document.getElementById("new-note-container").classList.remove("hidden");
+            //document.getElementById("new-note-body").focus();
+            alert("test 1");
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1256,7 +1323,6 @@
 
             // try to reference 'Scan Bardcode' button (will be undefined when saving a Payment)
             var scanUpcBtn = tableRow.querySelector("[name='scan-upc']");
-            alert(JSON.stringify(data));
             //upload data
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {

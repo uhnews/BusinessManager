@@ -189,6 +189,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AttachmentManagerController.cs" />
     <Compile Include="Controllers\BasketController.cs" />
     <Compile Include="Controllers\CustomerManagerController.cs" />
     <Compile Include="Controllers\CustomerNoteManagerController.cs" />
@@ -324,10 +325,16 @@
     <Content Include="Views\CustomerNoteManager\Edit.cshtml" />
     <Content Include="Views\CustomerNoteManager\Delete.cshtml" />
     <Content Include="Views\CustomerManager\CustomerNotes.cshtml" />
+    <Content Include="Views\AttachmentManager\Index.cshtml" />
+    <Content Include="Views\AttachmentManager\Create.cshtml" />
+    <Content Include="Views\AttachmentManager\Edit.cshtml" />
+    <Content Include="Views\AttachmentManager\Delete.cshtml" />
+    <Content Include="Views\CustomerManager\Attachments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\ProductImages\" />
+    <Folder Include="Views\Attachment\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

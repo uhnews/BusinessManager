@@ -353,6 +353,14 @@ textarea {
     background-color: #f5fcff;
 }
 
+.bg-dark-blue {
+    background-color: #6699cc;
+}
+
+.bg-dark-blue-lighter {
+    background-color: #f8fafc;
+}
+
 .bg-copper {
     background-color: #ede2de;
 }
@@ -409,6 +417,10 @@ textarea {
 
 .border-sky-blue {
     border-color: #b3ebff;
+}
+
+.border-dark-blue {
+    border-color: #6699cc;
 }
 
 .border-info {

@@ -60,6 +60,8 @@ namespace BusinessManager.Core.Models
 
         public virtual ICollection<CustomerNote> CustomerNotes { get; set; }
 
+        public virtual ICollection<Attachment> Attachments { get; set; }
+
         [NotMapped]
         public virtual ICollection<POSSale> POSSales { get; set; }
 
@@ -72,6 +74,8 @@ namespace BusinessManager.Core.Models
             this.Invoices = new List<Invoice>();
             this.OnlineOrders = new List<OnlineOrder>();
             this.ProductList = new List<Product>();
+            this.CustomerNotes = new List<CustomerNote>();
+            this.Attachments = new List<Attachment>();
         }
     }
 }

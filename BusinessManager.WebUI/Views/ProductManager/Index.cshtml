@@ -3,18 +3,8 @@
 @{
     ViewBag.Title = "Product Inventory";
 }
+
 <style>
-    /*.fixed-header tbody {
-        display: block;
-        overflow: auto;
-        height: 600px;
-        width: 100%;
-    }
-
-    .fixed_header thead tr {
-        display: block;
-    }*/
-
     .search-box-menu {
         width: 250px;
         padding: 0px 20px 10px 20px;
@@ -27,97 +17,116 @@
         left: 0;
         z-index: 10;
     }
+
+    #form-header {
+        position: sticky;
+        top: 51px;
+        margin: 0 0 0 0;
+        padding: 0 10px 0px 10px;
+        background-color: white;
+        z-index: 2;
+        border-width: 0;
+    }
+
+    tr.sticky {
+        position: sticky;
+        top: 145px;
+        background-color: white;
+    }
 </style>
-
-<h2 style="display: inline-block"><span class="fas fa-tags text-primary">&nbsp;&nbsp;</span>Product Inventory</h2>
-
-<div id="search-objects-container" class="col-md-4 pull-right" style="display: inline-block; margin: 30px 0 0 0; padding: 0 0 0 0">
-    <div style="padding-bottom: 0; margin-bottom: 0; width: 100%">
-        <div class="form-group" style="margin: 0 -60px 0 0">
-            <input id="search-string"
-                   placeholder="Enter text to find ..."
-                   type="text" class="form-control"
-                   style="display: inline-block; margin: 0; max-width: 65%" />
-            <button id="search-box-btn-find" 
-                    type="button"
-                    class="btn btn-default btn-primary-text"
-                    onclick="filterItems(event)"
-                    style="display: inline-block; margin-top:-3px;">
-                <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
-            </button>
-            <button id="search-box-menu-btn" 
-                    type="button"
-                    class="btn btn-default btn-primary-text"
-                    onclick="toggleColSeltMenu(event)"
-                    style="display: inline-block; margin-top:-3px">
-                <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
-                <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
-            </button>
-        </div>
-    </div>
-    <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
-        <div>
-            <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
-                <span>Search In:</span>
-                <input name="AllCheck"
-                       type="checkbox"
-                       onchange="selectColGroup(event)">
-                <span class="checkmark"></span>
-            </label>
-            <hr style="margin: 0 0 5px 0; padding: 0" />
-            <div>
-                <label class="checkbox-container">
-                    Name
-                    <input name="NameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Description
-                    <input name="DescriptionCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Category
-                    <input name="CategoryCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Product Code
-                    <input name="ProductCodeCheck" type="checkbox" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    UPC
-                    <input name="UPCCheck" type="checkbox" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Quantity
-                    <input name="QuantityCheck" type="checkbox" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox-container">
-                    Price
-                    <input name="PriceCheck" type="checkbox" onclick="setAllCheck(event)">
-                    <span class="checkmark"></span>
-                </label>
+<div id="form-header">
+    <h2 style="display: inline-block"><span class="fas fa-tags text-primary">&nbsp;&nbsp;</span>Product Inventory</h2>
+    <div id="search-objects-container" class="col-md-4 pull-right" style="display: inline-block; margin: 30px 0 0 0; padding: 0 0 0 0">
+        <div style="padding-bottom: 0; margin-bottom: 0; width: 100%">
+            <div class="form-group" style="margin: 0 -60px 0 0">
+                <input id="search-string"
+                       placeholder="Enter text to find ..."
+                       type="text" class="form-control"
+                       style="display: inline-block; margin: 0; max-width: 65%; border-top-right-radius: 0; border-bottom-right-radius: 0" />
+                <div class="btn-group" style="margin: 0px 0px 0 -5px">
+                    <button id="search-box-btn-find"
+                            type="button"
+                            class="btn btn-default btn-primary-text"
+                            onclick="filterItems(event)"
+                            style="display: inline-block; margin-top:-3px; border-top-left-radius: 0; border-bottom-left-radius: 0">
+                        <span class="glyphicon glyphicon-search" style="margin-left: 0"></span>
+                    </button>
+                    <button id="search-box-menu-btn"
+                            type="button"
+                            class="btn btn-default btn-primary-text"
+                            onclick="toggleColSeltMenu(event)"
+                            style="display: inline-block; margin-top:-3px">
+                        <span id="search-box-menu-open" class="glyphicon glyphicon-menu-hamburger" style="margin: 0;  display: inline"></span>
+                        <span id="search-box-menu-close" class="glyphicon glyphicon-remove hidden" style="margin: 0"></span>
+                    </button>
+                </div>
             </div>
-            <hr style="margin: 10px 0 10px 0; padding: 0" />
-            <button class="btn btn-primary"
-                    type="button"
-                    onclick="filterItems(event, SHOW_ALL)"
-                    style="width: 100%">
-                Load All Products
-            </button>
+        </div>
+        <div id="search-box-menu" class="search-box-menu hidden" onclick="firstCall = true">
+            <div>
+                <label class="checkbox-container" style="font-size: 18px; font-weight: normal; margin-top:5px; margin-bottom: 3px">
+                    <span>Search In:</span>
+                    <input name="AllCheck"
+                           type="checkbox"
+                           onchange="selectColGroup(event)">
+                    <span class="checkmark"></span>
+                </label>
+                <hr style="margin: 0 0 5px 0; padding: 0" />
+                <div>
+                    <label class="checkbox-container">
+                        Name
+                        <input name="NameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Description
+                        <input name="DescriptionCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Category
+                        <input name="CategoryCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Product Code
+                        <input name="ProductCodeCheck" type="checkbox" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        UPC
+                        <input name="UPCCheck" type="checkbox" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Quantity
+                        <input name="QuantityCheck" type="checkbox" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Price
+                        <input name="PriceCheck" type="checkbox" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <hr style="margin: 10px 0 10px 0; padding: 0" />
+                <button class="btn btn-primary"
+                        type="button"
+                        onclick="filterItems(event, SHOW_ALL)"
+                        style="width: 100%">
+                    Load All Products
+                </button>
+            </div>
         </div>
     </div>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <hr style="margin: 10px 0 0 0" />
 </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table id="product-lookup-table" class="table" style="margin-top: 2px">
-    <tr>
+<table id="product-lookup-table" class="table" style="margin-top: 0px">
+    <tr class="sticky">
         <th>
         </th>
         <th>
@@ -229,7 +238,7 @@
 
             firstCall = false;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function filterItems(event, showAll = false) {
@@ -267,7 +276,7 @@
                 ShowMessage("To execute a search you must select at least one of the fields listed in the search box menu.", titleMessage);
                 return;
             }
-            
+
             var itemsFound = 0;
             var rows = table.getElementsByTagName("tr");
             for (i = 1; i < rows.length; i++) {
@@ -337,7 +346,7 @@
             if (btn.nodeName.toLowerCase() !== "button") {
                 btn = btn.parentNode;
             }
-            
+
             var mainContainerRect = menuContainer.getBoundingClientRect();
             var btnRect = btn.getBoundingClientRect();
 
@@ -391,7 +400,7 @@
                 document.getElementById("search-box-menu").querySelector("input[name='AllCheck']").checked = false;
             }
         }
-        
-        /////////////////////////////////////////////////////////////////////////////////////////////
+
+            /////////////////////////////////////////////////////////////////////////////////////////////
     </script>
 }

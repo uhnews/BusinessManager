@@ -4,8 +4,7 @@
 
 @{
     var colorBlueText = "#1a53ff";
-    //string paymentNavBtnClass = "btn-pill-sky-blue";
-    string colorBGReceivableSourceDetail = "#b3e9ff";
+    string colorBGCustomerNoteDetail = "#b3e9ff";
     string colorBGItemDetail = "#fafeff";
     ViewBag.ItemDetailBackgroundColor = colorBGItemDetail;
 }
@@ -40,13 +39,9 @@
         max-width: 96%;
         margin: 5px 2% 0px 2%;
     }
-    /*td:last-child {
-        width: 100%;
-        white-space: nowrap;
-    }*/
 </style>
 <div class="col-md-12" style="display: flex; height: 661px; padding: 10px 0px 10px 20px; margin: auto; border-top: 1px solid #ddd">
-    <div style="background-color: @colorBGReceivableSourceDetail; width: 100%; margin: 0 23px 0 3px">
+    <div style="background-color: @colorBGCustomerNoteDetail; width: 100%; margin: 0 23px 0 3px">
         <div class="CustomerManagerCustomerNotes-fixed-header" style="width: 100%; padding: 15px 15px 15px 15px">
             @* NEW NOTE SECTION *@
             <div id="new-note-container" class="col-md-11 new-note-container border hidden">

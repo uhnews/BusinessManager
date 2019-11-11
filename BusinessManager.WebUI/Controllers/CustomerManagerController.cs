@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace BusinessManager.WebUI.Controllers
@@ -24,6 +25,7 @@ namespace BusinessManager.WebUI.Controllers
         IRepository<OnlineOrder> onlineorderContext;
         IRepository<OnlineOrderItem> onlineorderItemContext;
         IRepository<CustomerNote> customernoteContext;
+        IRepository<Attachment> attachmentContext;
 
         // dependency injection
         public CustomerManagerController(
@@ -38,7 +40,8 @@ namespace BusinessManager.WebUI.Controllers
                                             IRepository<POSSaleItem> possaleItemContext,
                                             IRepository<OnlineOrder> onlineorderContext,
                                             IRepository<OnlineOrderItem> onlineorderItemContext,
-                                            IRepository<CustomerNote> customernoteContext
+                                            IRepository<CustomerNote> customernoteContext,
+                                            IRepository<Attachment> attachmentContext
                                         )
         {
             this.customerContext = customerContext;
@@ -53,6 +56,7 @@ namespace BusinessManager.WebUI.Controllers
             this.onlineorderContext = onlineorderContext;
             this.onlineorderItemContext = onlineorderItemContext;
             this.customernoteContext = customernoteContext;
+            this.attachmentContext = attachmentContext;
         }
 
         // GET: Customers
@@ -469,6 +473,25 @@ namespace BusinessManager.WebUI.Controllers
         }
 
         public JsonResult DeleteCustomerNote(string Id)
+        {
+            ICustomerNoteService dataService = new CustomerNoteService();
+            object deleteResult = dataService.DeleteCustomerNote(customernoteContext, Id);
+            return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
+
+        }
+
+        //
+        //       *********************** Attachment Methods ***********************
+        //
+        public JsonResult AddAttachment(string data, HttpPostedFileBase file)
+        {
+            IAttachmentService dataService = new AttachmentService();
+            var addResult = dataService.AddAttachment(attachmentContext, data, file);
+
+            return Json(addResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DeleteAttachment(string Id)
         {
             ICustomerNoteService dataService = new CustomerNoteService();
             object deleteResult = dataService.DeleteCustomerNote(customernoteContext, Id);

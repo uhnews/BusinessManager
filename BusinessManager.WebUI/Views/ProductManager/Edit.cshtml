@@ -109,7 +109,12 @@
                 @Html.LabelFor(model => model.Product.Image, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     <input type="file" id="file" name="file" class="form-control hidden" />
-                    <a class="btn btn-primary" href="#"><label style="margin-top: 3px; cursor: pointer; max-height: 10px" for="file"><span class="far fa-image" style="font-size: large">&nbsp;&nbsp;</span>Select New Image File</label></a>
+                    <a class="btn btn-primary" href="#">
+                        <label style="margin-top: 3px; cursor: pointer; max-height: 10px" for="file">
+                            <span class="far fa-image" style="font-size: large">&nbsp;&nbsp;</span>
+                            Select New Image File
+                        </label>
+                    </a>
                     <p id="image-message" class="text-danger" style="margin-top: 10px; margin-bottom: 0"></p>
                 </div>
             </div>

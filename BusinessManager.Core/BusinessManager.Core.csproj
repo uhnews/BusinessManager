@@ -104,6 +104,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\IAttachmentService.cs" />
     <Compile Include="Contracts\IBasketService.cs" />
     <Compile Include="Contracts\IChargeItem.cs" />
     <Compile Include="Contracts\ICustomerNoteService.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Contracts\IProductRetrieveService.cs" />
     <Compile Include="Contracts\IRepository.cs" />
     <Compile Include="Contracts\ISequenceService.cs" />
+    <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Basket.cs" />
     <Compile Include="Models\BasketItem.cs" />
