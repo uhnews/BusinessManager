@@ -21,7 +21,7 @@
         width: 10%;
     }
 
-    .new-note-container {
+    #new-note-container {
         background-color: aliceblue;
         border-radius: 5px;
         z-index: 10;
@@ -34,7 +34,7 @@
         max-width: 95%;
     }
 
-    .new-note-body {
+    #new-note-body {
         min-width: 96%;
         max-width: 96%;
         margin: 5px 2% 0px 2%;
@@ -44,18 +44,19 @@
     <div style="background-color: @colorBGCustomerNoteDetail; width: 100%; margin: 0 23px 0 3px">
         <div class="CustomerManagerCustomerNotes-fixed-header" style="width: 100%; padding: 15px 15px 15px 15px">
             @* NEW NOTE SECTION *@
-            <div id="new-note-container" class="col-md-11 new-note-container border hidden">
+            <div id="new-note-container" class="col-md-11 border hidden">
                 <h4 style="margin-left: 20px">New Note</h4>
+                <hr />
                 <label style="margin: 0 0 0 20px">Category: </label>
-                <select class="form-control" id="new-customernote-category" style="display: inline; width: 30%">
+                <select class="form-control input-sm" id="new-customernote-category" style="display: inline; width: 30%">
                     <option>General</option>
                     <option>Invoices</option>
                     <option>Layaways</option>
                     <option>POS Sales</option>
                     <option>Online Orders</option>
                 </select>
-                <span id="UserName" class="pull-right" style="margin: 15px 20px 0px 0">@User.Identity.GetUserName()</span>
-                <textarea id="new-note-body" rows="5" class="new-note-body form-control"></textarea>
+                <span id="UserName" class="pull-right" style="margin: 13px 20px 0px 0">@User.Identity.GetUserName()</span>
+                <textarea id="new-note-body" rows="5" class="form-control"></textarea>
                 <div class="btn-group pull-right" style="margin: 10px 40% 20px 20px">
                     <button id="save-new-customernote-btn" class="btn btn-default btn-sm" type="button" onclick="saveNewCustomerNote(event)">Save</button>
                     <button id="hide-new-customernote-btn" class="btn btn-default btn-sm" type="button" onclick="hideNewCustomerNote()">Close</button>

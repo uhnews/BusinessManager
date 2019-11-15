@@ -398,6 +398,10 @@
     <Compile Include="Migrations\201911101132113_CreateAttachmentModel.Designer.cs">
       <DependentUpon>201911101132113_CreateAttachmentModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911141041177_ResizeAttachmentsLocationField.cs" />
+    <Compile Include="Migrations\201911141041177_ResizeAttachmentsLocationField.Designer.cs">
+      <DependentUpon>201911141041177_ResizeAttachmentsLocationField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -628,6 +632,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911101132113_CreateAttachmentModel.resx">
       <DependentUpon>201911101132113_CreateAttachmentModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911141041177_ResizeAttachmentsLocationField.resx">
+      <DependentUpon>201911141041177_ResizeAttachmentsLocationField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

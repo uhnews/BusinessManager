@@ -69,11 +69,6 @@
                 <hr style="margin: 0 0 5px 0; padding: 0" />
                 <div>
                     <label class="checkbox-container">
-                        Category
-                        <input name="CategoryCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="checkbox-container">
                         Name
                         <input name="NameCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
                         <span class="checkmark"></span>
@@ -81,6 +76,11 @@
                     <label class="checkbox-container">
                         Description
                         <input name="DescriptionCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                        Category
+                        <input name="CategoryCheck" type="checkbox" checked="checked" onclick="setAllCheck(event)">
                         <span class="checkmark"></span>
                     </label>
                     <label class="checkbox-container">
@@ -103,7 +103,7 @@
 </div>
 
 <div id="category-menu" class="col-md-2 sticky">
-    <h4>Filter by Category</h4>
+    <h4>Show by Category</h4>
     <div class="col-md-12">
         @Html.ActionLink("All", "Index", null, new { @class = Request["category"] == null ? "list-group-item active" : "list-group-item" })
         @foreach (var cat in Model.ProductCategories)
@@ -206,12 +206,12 @@
                 return;
             }
             //
-            var searchInCategory = document.getElementById("search-box-menu").querySelector("input[name='CategoryCheck']").checked;
             var searchInName = document.getElementById("search-box-menu").querySelector("input[name='NameCheck']").checked;
             var searchInDescription = document.getElementById("search-box-menu").querySelector("input[name='DescriptionCheck']").checked;
+            var searchInCategory = document.getElementById("search-box-menu").querySelector("input[name='CategoryCheck']").checked;
             var searchInPrice = document.getElementById("search-box-menu").querySelector("input[name='PriceCheck']").checked;
 
-            var columsWereSelected = searchInName || searchInDescription || searchInPrice;
+            var columsWereSelected = searchInName || searchInDescription || searchInCategory || searchInPrice;
 
             if (!columsWereSelected && !showAll) {
                 let titleMessage = "<span class='text-warning'>Missing search input!</span>"
@@ -228,15 +228,15 @@
                 var descriptionData = row.querySelector("span[name='Description']").innerHTML.toLowerCase();
                 var priceData = row.querySelector("span[name='Price']").innerHTML.toLowerCase();
                 
-                if ((categoryData.indexOf(searchText) > -1 && searchInCategory) || showAll) {
-                    row.classList.remove("hidden");
-                    itemsFound++;
-                }
-                else if (nameData.indexOf(searchText) > -1 && searchInName) {
+                if ((nameData.indexOf(searchText) > -1 && searchInName) || showAll) {
                     row.classList.remove("hidden");
                     itemsFound++;
                 }
                 else if (descriptionData.indexOf(searchText) > -1 && searchInDescription) {
+                    row.classList.remove("hidden");
+                    itemsFound++;
+                }
+                else if (categoryData.indexOf(searchText) > -1 && searchInCategory) {
                     row.classList.remove("hidden");
                     itemsFound++;
                 }

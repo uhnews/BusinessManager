@@ -4,6 +4,8 @@ using BusinessManager.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -252,9 +254,9 @@ namespace BusinessManager.WebUI.Controllers
         //                                   AJAX Response Methods 
         // ==================================================================================
 
-        //
-        //       *********************** Invoice Methods ***********************
-        //
+        //*******************************************************************************
+        //                              Invoice Methods
+        //*******************************************************************************
         public JsonResult AddInvoice(string customerId)
         {
             IInvoiceDataService dataService = new InvoiceDataService();
@@ -304,9 +306,9 @@ namespace BusinessManager.WebUI.Controllers
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
-        //
-        //       *********************** Layaway Methods ***********************
-        //
+        //*******************************************************************************
+        //                              Layaway Methods
+        //*******************************************************************************
         public JsonResult AddLayaway(string customerId)
         {
             ILayawayDataService dataService = new LayawayDataService();
@@ -356,9 +358,9 @@ namespace BusinessManager.WebUI.Controllers
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
-        //
-        //       *********************** POSSale Methods ***********************
-        //
+        //*******************************************************************************
+        //                              POSSale Methods
+        //*******************************************************************************
         public JsonResult AddPOSSale(string customerId)
         {
             IPOSSaleService dataService = new POSSaleService(possaleContext, possaleItemContext);
@@ -408,9 +410,9 @@ namespace BusinessManager.WebUI.Controllers
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
-        //
-        //       *********************** OnlineOrder Methods ***********************
-        //
+        //*******************************************************************************
+        //                              OnlineOrder Methods
+        //*******************************************************************************
         public JsonResult AddOnlineOrder(string customerId)
         {
             IOnlineOrderService dataService = new OnlineOrderService(onlineorderContext);
@@ -461,9 +463,9 @@ namespace BusinessManager.WebUI.Controllers
             return Json(updateResult, JsonRequestBehavior.AllowGet);
         }
 
-        //
-        //       *********************** CustomerNote Methods ***********************
-        //
+        //*******************************************************************************
+        //                              CustomerNote Methods
+        //*******************************************************************************
         public JsonResult AddCustomerNote(string data)
         {
             ICustomerNoteService dataService = new CustomerNoteService();
@@ -480,28 +482,41 @@ namespace BusinessManager.WebUI.Controllers
 
         }
 
-        //
-        //       *********************** Attachment Methods ***********************
-        //
-        public JsonResult AddAttachment(string data, HttpPostedFileBase file)
+        //*******************************************************************************
+        //                              Attachment Methods
+        //*******************************************************************************
+        [HttpPost]
+        public JsonResult AddAttachment()
         {
+            var form = HttpContext.Request.Form;
+            var file = HttpContext.Request.Files[0];
+            string customerId = form["CustomerId"];
+            String attachmentData = "{" +
+                "CustomerId: \"" + form["CustomerId"] + "\", " +
+                "Description: \"" + form["Description"] + "\", " +
+                "Type: \"" + form["Type"] + "\", " +
+                "Category: \"" + form["Category"] + "\", " +
+                "FileName: \"" + form["FileName"] + "\", " +
+                "Location: \"" + ConfigurationManager.AppSettings["AttachmentsFolder"].Replace("\\", "\\\\") + "\\\\" + customerId + "\", " +
+                "AttachedBy: \"" + form["AttachedBy"] + "\"}";
+
             IAttachmentService dataService = new AttachmentService();
-            var addResult = dataService.AddAttachment(attachmentContext, data, file);
+            var addResult = dataService.AddAttachment(attachmentContext, attachmentData, file);
 
             return Json(addResult, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult DeleteAttachment(string Id)
         {
-            ICustomerNoteService dataService = new CustomerNoteService();
-            object deleteResult = dataService.DeleteCustomerNote(customernoteContext, Id);
+            IAttachmentService dataService = new AttachmentService();
+            object deleteResult = dataService.DeleteAttachment(attachmentContext, Id);
             return Json(deleteResult, JsonRequestBehavior.AllowGet);    // deleteResult: {Successful = value, Message = vlue}
 
         }
 
-        //
-        //       *********************** Product Methods ***********************
-        //
+        //*******************************************************************************
+        //                              Product Methods
+        //*******************************************************************************
         public JsonResult GetProduct(string Id)
         {
             IProductRetrieveService productService = new ProductRetrieveService();
@@ -510,9 +525,9 @@ namespace BusinessManager.WebUI.Controllers
             return Json(product, JsonRequestBehavior.AllowGet);
         }
 
-        //
-        //       *********************** Payment Methods ***********************
-        //
+        //*******************************************************************************
+        //                              Payment Methods
+        //*******************************************************************************
         public JsonResult AddPayment(string data)
         {
             IPaymentService dataService = new PaymentService();

@@ -56,6 +56,7 @@
     <Compile Include="BasketService.cs" />
     <Compile Include="CustomerNoteService.cs" />
     <Compile Include="CustomerService.cs" />
+    <Compile Include="Helpers\AppUtils.cs" />
     <Compile Include="InvoiceDataService.cs" />
     <Compile Include="InvoiceService.cs" />
     <Compile Include="LayawayDataService.cs" />

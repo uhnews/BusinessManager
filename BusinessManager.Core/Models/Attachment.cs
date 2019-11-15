@@ -21,7 +21,7 @@ namespace BusinessManager.Core.Models
         [StringLength(50)]
         public string FileName { get; set; }
 
-        [StringLength(100)]
+        [StringLength(300)]
         public string Location { get; set; }
 
         [DisplayName("Attached By")]

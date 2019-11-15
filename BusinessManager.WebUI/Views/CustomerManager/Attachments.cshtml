@@ -20,17 +20,68 @@
         display: block;
         width: 10%;
     }
+
+    #new-attachment-container {
+        background-color: aliceblue;
+        border-radius: 5px;
+        z-index: 10;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 15px 0px 0px 0px;
+        margin: 80px 0px 0px 25px;
+        max-width: 95%;
+    }
 </style>
+
+<div id="new-attachment-container" class="col-md-11 border hidden">
+    <h4 style="margin-left: 20px">New Attachment</h4>
+    <span id="UserName" class="pull-right" style="margin: -15px 20px 0px 0; display: block">@User.Identity.GetUserName()</span>
+    <hr style="color: black !important" />
+    <div class="form-group">
+        <label class="col-md-2" style="margin: 0 0 0 20px; display: inline; text-align: right">File: </label>
+        <span id="new-attachment-file-name"></span><br />
+    </div>
+    <div class="form-group">
+        <label class="col-md-2" for="new-attachment-category" style="margin: 0 0 0 20px; display: inline; text-align: right">Category: </label>
+        <select class="form-control input-sm" id="new-attachment-category" oninput="setNewAttachmentCategory(event)" style="display: inline; width: 25%">
+            <option>General</option>
+            <option>Invoices</option>
+            <option>Layaways</option>
+            <option>POS Sales</option>
+            <option>Online Orders</option>
+            <option>Other</option>
+        </select>
+        <label id="new-attachment-category-other-label" for="new-attachment-category-other" class="hidden" style="margin: 0 10px 0 10px; display: inline; text-align: right">Enter Other Category: </label>
+        <input id="new-attachment-category-other" oninput="setNewAttachmentCategory(event)" class="form-control input-sm hidden" style="display: inline; width: 25%" />
+        <input id="new-attachment-category-2" name="Category" value="General" class="form-control input-sm hidden" />
+        <input id="new-attachment-file-name-2" name="FileName" value="" class="form-control input-sm hidden" />
+        <input id="new-attachment-customer-id" name="CustomerId" value="@ViewBag.CustomerId" class="form-control input-sm hidden" />
+        <input id="new-attachment-attached-by" name="AttachedBy" value="@User.Identity.GetUserName()" class="form-control input-sm hidden" />
+    </div>
+    <div class="form-group">
+        <label for="new-attachment-type" class="col-md-2" style="margin: 0 0 0 20px; display: inline; text-align: right">Type: </label>
+        <input id="new-attachment-type" name="Type" class="form-control input-sm" style="display: inline" oninput="newAttachmentBtn_setDisabled()" />
+    </div>
+    <div class="form-group" style="width: 100%">
+        <label for="new-attachment-description" class="col-md-2" style="margin: 0 0 0 20px; display: inline; text-align: right">Description: </label>
+        <input id="new-attachment-description" name="Description" class="form-control input-sm" style="display: inline" oninput="newAttachmentBtn_setDisabled()"/>
+    </div>
+    <div class="btn-group pull-right" style="margin: 10px 40% 20px 20px">
+        <button id="save-new-attachment-btn" class="btn btn-default btn-sm" type="button" disabled onclick="saveNewAttachment(event)">Save</button>
+        <button id="hide-new-attachment-btn" class="btn btn-default btn-sm" type="button" onclick="hideNewAttachment()">Close</button>
+    </div>
+</div>
+
 <div class="col-md-12" style="display: flex; height: 661px; padding: 10px 0px 10px 20px; margin: auto; border-top: 1px solid #ddd">
     <div style="background-color: @colorBGAttachmentDetail; width: 100%; margin: 0 23px 0 3px">
         <div class="CustomerManagerAttachments-fixed-header" style="width: 100%; padding: 15px 15px 15px 15px">
+            @* ATTACHMENTS TABLE SECTION *@
             <table id="attachments-table" class="table" style="width: 100%">
-                <tr class="col-md-12" style="background-color: @colorBGItemDetail">
+                <tr class="row" style="background-color: @colorBGItemDetail">
                     <th>
                         @Html.DisplayNameFor(model => model.CreatedAt)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ModifiedAt)
                     </th>
                     <th class="hidden">
                         @Html.DisplayNameFor(model => model.CustomerId)
@@ -51,12 +102,10 @@
                 </tr>
                 @foreach (var item in Model)
                 {
-                    <tr style="background-color: @colorBGItemDetail" class="col-md-12">
+                    <tr style="background-color: @colorBGItemDetail" class="row">
                         <td>
-                            @Html.DisplayFor(modelItem => item.CreatedAt)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ModifiedAt)
+                            @Html.DisplayFor(modelItem => item.CreatedAt).ToString().Substring(0, item.CreatedAt.ToString().IndexOf('-') - 1)
+                            <span name="attachment-id" class="hidden">@item.Id</span>
                         </td>
                         <td class="hidden">
                             @Html.DisplayFor(modelItem => item.CustomerId)
@@ -74,8 +123,8 @@
                             @Html.DisplayFor(modelItem => item.AttachedBy)
                         </td>
                         <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                            <a id="download-attachment-link" href="/Attachments/@item.CustomerId/@item.FileName" download>Download</a> |
+                            <a href="#" onclick="deleteAttachment('@item.Id')">Delete</a>
                         </td>
                     </tr>
                 }

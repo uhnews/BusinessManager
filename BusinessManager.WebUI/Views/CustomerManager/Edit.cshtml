@@ -1,4 +1,5 @@
-﻿@using BusinessManager.Core.Models
+﻿@using Microsoft.AspNet.Identity
+@using BusinessManager.Core.Models
 @model Customer
 
 @{
@@ -212,7 +213,7 @@
             <div style="margin: 0px 0px 5px 25px">
                 <div style="margin: 20px 0 10px 0">
                     <h4 style="display: inline">Attachments</h4>
-                    <input type="file" id="file" name="file" class="form-control hidden" />
+                    <input type="file" id="attachment-file" name="attachment-file" class="form-control hidden" />
                     <button onclick="addAttachment(event)"
                             id="add-attachment-btn"
                             type="button"
@@ -422,15 +423,15 @@
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////
+        
+        //document.getElementById("new-attachment-category-other").value = "";
+        //document.getElementById("new-attachment-category").value = "General";
+        //document.getElementById("new-attachment-category-2").value = "General";
+        hideNewAttachment();
 
         setInvoicesDatePickers(event);
         setLayawaysDatePickers(event);
         setCustomerTotals(event);
-
-        document.getElementById("file").onchange = function () {
-            //let message = ("New file selected: " + this.value).replace("C:\\fakepath\\", "");
-            //document.getElementById('image-message').innerText = message;
-        };
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -778,7 +779,7 @@
                 }
                 else {
                     document.getElementById(btnId).classList.remove(btnClass);
-                }                
+                }
             });
         }
 
@@ -792,7 +793,7 @@
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function showSubform(recordType) {
-            var RecordType = recordType;            
+            var RecordType = recordType;
             recordType = recordType.toLowerCase();
             var containerName = recordType + "s-container";
             var activeForm = getActiveSubForm();
@@ -1007,16 +1008,163 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-        function hideNewCustomerNote() {
-            document.getElementById("new-note-container").classList.add("hidden");
+        function hideNewAttachment() {
+            // set default values
+            document.getElementById("new-attachment-container").classList.add("hidden");
+            document.getElementById("new-attachment-category").value = "General";
+            document.getElementById("new-attachment-category-2").value = "General";
+            document.getElementById("new-attachment-category-other").value = "";
+            document.getElementById("new-attachment-type").value = "";
+            document.getElementById("new-attachment-description").value = "";
+
+            // hide category-other and disable save button (default behavior)
+            document.getElementById("new-attachment-category-other").classList.add("hidden");
+            document.getElementById("save-new-attachment-btn").setAttribute("disabled", "");
+
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function attachFile() {
+
+            // 'onchange' listener for file input "attachment-file"; will open dialog to prompt for
+            // attachment description and category; dialog will have actual file save (upload) button
+
+            var fileInput = document.getElementById("attachment-file");
+            document.getElementById("new-attachment-file-name").innerText = fileInput.files[0].name;
+            document.getElementById("new-attachment-container").classList.remove("hidden");
+            document.getElementById("new-attachment-category").focus();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         function addAttachment(event) {
-            //document.getElementById("new-note-container").classList.remove("hidden");
-            //document.getElementById("new-note-body").focus();
-            alert("test 1");
+
+            // this starts the file attachment process by driving the hidden file input to open an
+            // "open file" dialog box; function also binds 'onchange' event listener to the file input
+
+            var fileInput = document.getElementById("attachment-file");
+            fileInput.addEventListener("change", attachFile, false);
+            fileInput.click();
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function newAttachmentBtn_setDisabled() {
+            //
+            var category = document.getElementById("new-attachment-category-2").value;
+            var categoryOther = document.getElementById("new-attachment-category-other").value;
+            var type = document.getElementById("new-attachment-type").value;
+            var description = document.getElementById("new-attachment-description").value;
+
+            if (description && type && ((category !== "Other" && category !== "") || (category === "Other" && categoryOther !== ""))) {
+                document.getElementById("save-new-attachment-btn").disabled = false;
+            }
+            else {
+                document.getElementById("save-new-attachment-btn").disabled = true;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function setNewAttachmentCategory(event) {
+            var target = event.target;
+            if (target.id === "new-attachment-category") {
+                var categoryInput = document.getElementById("new-attachment-category");
+                if (categoryInput.value === "Other") {
+                    document.getElementById("new-attachment-category-other-label").classList.remove("hidden");
+                    document.getElementById("new-attachment-category-other").classList.remove("hidden");
+                    document.getElementById("new-attachment-category-2").value = document.getElementById("new-attachment-category-other").value;
+                }
+                else {
+                    document.getElementById("new-attachment-category-other-label").classList.add("hidden");
+                    document.getElementById("new-attachment-category-other").classList.add("hidden");
+                    document.getElementById("new-attachment-category-2").value = categoryInput.value;
+                }
+            }
+            else {
+                document.getElementById("new-attachment-category-2").value = document.getElementById("new-attachment-category-other").value;
+            }
+            newAttachmentBtn_setDisabled();
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function saveNewAttachment(event) {
+            var customerId = document.getElementById("new-attachment-customer-id").value;
+            var description = document.getElementById("new-attachment-description").value;
+            var category = document.getElementById("new-attachment-category-2").value;
+            var type = document.getElementById("new-attachment-type").value;
+            var fileName = document.getElementById("new-attachment-file-name").innerText;
+            var attachedBy = document.getElementById("new-attachment-attached-by").value;
+            var formData = new FormData();
+            var attachmentFileInput = document.getElementById("attachment-file");
+
+            // append attachment file to FormData object
+            formData.append(attachmentFileInput.files[0].name, attachmentFileInput.files[0]);
+
+            // append rest of data to FormData object
+            formData.append("Category", category);
+            formData.append("CustomerId", customerId);
+            formData.append("Description", description);
+            formData.append("FileName", fileName);
+            formData.append("Type", type);
+            formData.append("AttachedBy", attachedBy);
+            //
+            var url = "/CustomerManager/AddAttachment/";
+
+            // submit upload request
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", url, true);
+            xhttp.onload = function (event) {
+                if (xhttp.readyState === 4 && xhttp.status === 200) {
+                    location.reload(true);
+                    var responseText = this.responseText;
+                } else {
+                    showMessageBox("Error " + xhttp.status + " occurred while uploading file.");
+                }
+            };
+            xhttp.send(formData);
+            return false;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function deleteAttachment(attachmentId) {
+            var tableRow = getParent(event.target, "tr");
+            var attachmentId = tableRow.querySelector("[name='attachment-id']").innerText;
+            var mesgHtml = "Click Delete to remove attachment permanently or Cancel to abort.";
+            var titleHtml = "Warning - Please Confirm Attachment Deletion";
+            ShowMessage(mesgHtml, titleHtml, "delete, cancel").then(
+                function (response) {
+                    if (response === "Delete") {
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState === 4 && this.status === 200) {
+                                var responseText = this.responseText;
+                                var responseObject = JSON.parse(responseText);
+                                if (responseObject.Successful === true) {
+                                    tableRow.parentNode.removeChild(tableRow);
+                                }
+                                else if (responseObject.Message) {
+                                    ShowMessage(responseObject.Message, "<span class='text-warning'>Server Error</span>");
+                                }
+                            }
+                        };
+                        xhttp.open("GET", "/CustomerManager/DeleteAttachment/?Id=" + attachmentId, true);
+                        xhttp.send();
+                    }
+                },
+                function (error) {
+                    alert("Something went wrong!");
+                }
+            );
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function hideNewCustomerNote() {
+            document.getElementById("new-note-container").classList.add("hidden");
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1061,22 +1209,22 @@
             var rowCount = notesTable.rows.length;
 
             var newTD = `
-                            <td style="background-color: #fcfdfd">
-                                <span name="customernote-id" class="hidden"></span>
-                                <span name="row-index" style="margin-right: 5px; font-weight: 600">${(rowCount + 1)}</span>
-                                <span>${createdAt}</span>
-                                <span class="hidden">${customerId}</span>
-                                <span id="curr-user">${currUser}</span>
-                                <div>Category: <span>${category}</span></div>
-                                <div id="new-customernote-note-body" style="color: ${colorBlueText}; margin-right: 60px">${noteBody}</div>
-                                <button onclick="deleteCustomerNote(event)"
-                                        type="button"
-                                        class="btn btn-default btn-xs pull-right"
-                                        style="margin: -30px 0 0 0; display: block">
-                                    <span class="text-danger">Delete</span>
-                                </button>
-                            </td>
-                        `
+                                    <td style="background-color: #fcfdfd">
+                                        <span name="customernote-id" class="hidden"></span>
+                                        <span name="row-index" style="margin-right: 5px; font-weight: 600">${(rowCount + 1)}</span>
+                                        <span>${createdAt}</span>
+                                        <span class="hidden">${customerId}</span>
+                                        <span id="curr-user">${currUser}</span>
+                                        <div>Category: <span>${category}</span></div>
+                                        <div id="new-customernote-note-body" style="color: ${colorBlueText}; margin-right: 60px">${noteBody}</div>
+                                        <button onclick="deleteCustomerNote(event)"
+                                                type="button"
+                                                class="btn btn-default btn-xs pull-right"
+                                                style="margin: -30px 0 0 0; display: block">
+                                            <span class="text-danger">Delete</span>
+                                        </button>
+                                    </td>
+                                `
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
@@ -1663,29 +1811,29 @@
                 var baseUrl = protocol + "//" + host
                 var imageUrl = baseUrl + "//Content//ProductImages//" + product.Image;
                 var html = `
-                        <div>
-                             <div style="width: 35%; display: inline-block">
-                                 <img class="img-rounded img-thumbnail"
-                                      src="${imageUrl}"
-                                      style="width: 27%; position: absolute; top: 7%; left: 5%"
-                                      alt="Image" />
-                             </div>
-                             <div style="width: 50%; display: inline-block">
-                                <h3>${product.Name}</h3>
-                                <h4 class="text-primary">${product.Description}</h4>
-                                <p style="margin-bottom: 2px"><strong>Vendor Price: </strong><span class="text-primary pull-right">${parseFloat(product.SupplierPrice).toFixed(2)}</span></p>
-                                <p style="margin-bottom: 2px"><strong>Price: </strong><span class="text-primary pull-right">${product.Price}</span></p>
-                                <p style="margin-bottom: 2px"><strong>Wholesale Price: </strong><span class="text-primary pull-right">${product.WholesalePrice}</span></p>
-                                <p style="margin-bottom: 2px"><strong>Category: </strong><span class="text-primary pull-right">${product.Category}</span></span></span></p>
-                                <p style="margin-bottom: 2px"><strong>Quantity In Stock: </strong><span class="text-primary pull-right">${product.Quantity}</span></p>
-                                <p style="margin-bottom: 2px"><strong>Min: </strong><span class="text-primary pull-right">${product.QuantityMin}</p>
-                                <p style="margin-bottom: 2px"><strong>On Layaway: </strong><span class="text-primary pull-right">${product.QuantityOnLayaway}</span></p>
-                                <p style="margin-bottom: 2px"><strong>Is Service: </strong><span class="text-primary pull-right">${product.IsService}</span></p>
-                                <p style="margin-bottom: 2px"><strong>UPC: </strong><span class="text-primary pull-right">${product.UPC}</p>
-                                <p style="margin-bottom: 2px"><strong>Product Code: </strong><span class="text-primary pull-right">${product.ProductCode}</span></p>
-                             </div>
-                         </div>
-                        `;
+                                <div>
+                                     <div style="width: 35%; display: inline-block">
+                                         <img class="img-rounded img-thumbnail"
+                                              src="${imageUrl}"
+                                              style="width: 27%; position: absolute; top: 7%; left: 5%"
+                                              alt="Image" />
+                                     </div>
+                                     <div style="width: 50%; display: inline-block">
+                                        <h3>${product.Name}</h3>
+                                        <h4 class="text-primary">${product.Description}</h4>
+                                        <p style="margin-bottom: 2px"><strong>Vendor Price: </strong><span class="text-primary pull-right">${parseFloat(product.SupplierPrice).toFixed(2)}</span></p>
+                                        <p style="margin-bottom: 2px"><strong>Price: </strong><span class="text-primary pull-right">${product.Price}</span></p>
+                                        <p style="margin-bottom: 2px"><strong>Wholesale Price: </strong><span class="text-primary pull-right">${product.WholesalePrice}</span></p>
+                                        <p style="margin-bottom: 2px"><strong>Category: </strong><span class="text-primary pull-right">${product.Category}</span></span></span></p>
+                                        <p style="margin-bottom: 2px"><strong>Quantity In Stock: </strong><span class="text-primary pull-right">${product.Quantity}</span></p>
+                                        <p style="margin-bottom: 2px"><strong>Min: </strong><span class="text-primary pull-right">${product.QuantityMin}</p>
+                                        <p style="margin-bottom: 2px"><strong>On Layaway: </strong><span class="text-primary pull-right">${product.QuantityOnLayaway}</span></p>
+                                        <p style="margin-bottom: 2px"><strong>Is Service: </strong><span class="text-primary pull-right">${product.IsService}</span></p>
+                                        <p style="margin-bottom: 2px"><strong>UPC: </strong><span class="text-primary pull-right">${product.UPC}</p>
+                                        <p style="margin-bottom: 2px"><strong>Product Code: </strong><span class="text-primary pull-right">${product.ProductCode}</span></p>
+                                     </div>
+                                 </div>
+                                `;
 
                 ShowMessage(html, "<strong>Product Detail</strong>");
             }

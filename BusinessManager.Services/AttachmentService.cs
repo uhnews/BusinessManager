@@ -2,6 +2,7 @@
 using BusinessManager.Core.Models;
 using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Web;
 
 namespace BusinessManager.Services
@@ -12,16 +13,30 @@ namespace BusinessManager.Services
         {
             {
                 var attachment = JsonConvert.DeserializeObject<Attachment>(data);
-                attachment.Id = Guid.NewGuid().ToString();
-                if (file != null)
+                string fileLocation = attachment.Location;
+                System.IO.Directory.CreateDirectory(fileLocation);
+                if (file != null && file.ContentLength > 0)
                 {
                     try
                     {
-                        attachmentContext.Insert(attachment);
-                        attachmentContext.Commit();
+                        string fileName = Path.GetFileName(file.FileName);
+                        fileName = Helpers.AppUtils.getNextFileName(fileLocation, fileName);
+                        if (fileName != "")
+                        {
+                            file.SaveAs(Path.Combine(fileLocation, fileName));
 
-                        // send response object
-                        return new { Successful = true, Message = "Attachment added.", AttachmentId = attachment.Id };
+                            attachmentContext.Insert(attachment);
+                            attachmentContext.Commit();
+
+                            // send response object
+                            return new { Successful = true, Message = "Attachment added.", AttachmentId = attachment.Id };
+                        }
+                        else
+                        {
+                            // log error;
+                            Console.WriteLine("Invalid file name or location.");
+                            return new { Successful = false, Message = "Attachment failed to add." };
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -43,8 +58,11 @@ namespace BusinessManager.Services
         {
             try
             {
+                Attachment attachment = attachmentContext.Find(Id);
+
                 attachmentContext.Delete(Id);
                 attachmentContext.Commit();
+                File.Delete(attachment.Location + "\\" + attachment.FileName);
 
                 // send response object
                 return new { Successful = true, Message = "Attachment deleted." };
