@@ -1,13 +1,10 @@
 ﻿using BusinessManager.Core.Contracts;
 using BusinessManager.Core.Models;
 using BusinessManager.Services;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace BusinessManager.WebUI.Controllers

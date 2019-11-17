@@ -1,16 +1,15 @@
-﻿using System;
-using System.Globalization;
+﻿using BusinessManager.Core.Contracts;
+using BusinessManager.Core.Models;
+using BusinessManager.WebUI.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using BusinessManager.WebUI.Models;
-using BusinessManager.Core.Models;
-using BusinessManager.Core.Contracts;
+using System.Web.Security;
 
 namespace BusinessManager.WebUI.Controllers
 {
@@ -86,7 +85,18 @@ namespace BusinessManager.WebUI.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    IdentityUserClaim adminClaim = null;
+                    IdentityDbContext context = new IdentityDbContext();
+                    IdentityUser user = context.Users.Where(x => x.Email == model.Email).FirstOrDefault();
+
+                    if (user != null)
+                        adminClaim = user.Claims.Where(x => x.ClaimValue == "Admin").FirstOrDefault();
+
+                    if (adminClaim != null)
+                        return RedirectToLocal("/CustomerManager/Index");
+                    else
+                        return RedirectToLocal(returnUrl);
+
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
