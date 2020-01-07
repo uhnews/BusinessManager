@@ -83,7 +83,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.CreatedAt, htmlAttributes: new { @class = "control-label col-md-3", @style = @labelStyle })
                     <div class="col-md-7" style="padding-top: 5px">
-                        @Html.DisplayFor(model => model.CreatedAt, new { htmlAttributes = new { @class = "form-control", @style = @inputBoxStyle } }).ToString().Replace("-07:00", "")
+                        @Html.DisplayFor(x => x.CreatedAt, new { htmlAttributes = new { @class = "form-control", @style = @inputBoxStyle } }).ToString().Substring(0, Model.CreatedAt.ToString().IndexOf('-') - 1)
                     </div>
                 </div>
 

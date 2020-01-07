@@ -74,7 +74,7 @@
                             <td style="width: 40%">
                                 <span name="customernote-id" class="hidden">@item.Id</span>
                                 <span name="row-index" style="margin-right: 5px; font-weight: 600">@rowIndex</span>
-                                <span>@Html.DisplayFor(modelItem => item.CreatedAt).ToString().Replace("-07:00", "")</span>
+                                <span>@Html.DisplayFor(modelItem => item.CreatedAt).ToString().Substring(0, item.CreatedAt.ToString().IndexOf('-') - 1)</span>
                                 <span class="hidden">@Html.DisplayFor(modelItem => item.CustomerId)</span>
                                 <span id="curr-user">@Html.DisplayFor(modelItem => item.UserName)</span>
                                 @*<span style="opacity: 0">FILLER-TEXT-FILLER-TEXT-FILLER-TEXT-FILLER-</span>*@

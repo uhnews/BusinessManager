@@ -1,4 +1,5 @@
-﻿@using BusinessManager.Core.Models
+﻿@using System.Text.RegularExpressions
+@using BusinessManager.Core.Models
 @model IEnumerable<Customer>
 
 @{
@@ -199,7 +200,8 @@
     {
         <tr>
             <td>
-                <span name="CreatedAt">@Html.DisplayFor(modelItem => customer.CreatedAt).ToString().Replace("-07:00", "")</span>
+                @*<span name="CreatedAt">@Html.DisplayFor(modelItem => customer.CreatedAt).ToString().Replace("-07:00", "")</span>*@
+                <span name="CreatedAt">@Regex.Replace(Html.DisplayFor(modelItem => customer.CreatedAt).ToString(), "", "")</span>
             </td>
             <td>
                 <span name="FirstName">@Html.DisplayFor(modelItem => customer.FirstName)</span>

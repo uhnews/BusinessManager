@@ -118,6 +118,12 @@
         <th>
             @Html.DisplayNameFor(model => model.Email)
         </th>
+        <th>
+            <span>Items</span>
+        </th>
+        <th>
+            <span>Total</span>
+        </th>
         <th></th>
     </tr>
 
@@ -125,7 +131,7 @@
     {
         <tr>
             <td>
-                <span name="CreatedAt">@Html.DisplayFor(modelItem => item.CreatedAt).ToString().Replace("-07:00", "")</span>
+                <span name="CreatedAt">@Html.DisplayFor(modelItem => item.CreatedAt).ToString().Substring(0, item.CreatedAt.ToString().IndexOf('-') - 1)</span>
             </td>
             <td>
                 <span name="FirstName">@Html.DisplayFor(modelItem => item.FirstName)</span>
@@ -135,6 +141,12 @@
             </td>
             <td>
                 <span name="Email">@Html.DisplayFor(modelItem => item.Email)</span>
+            </td>
+            <td>
+                <span name="TotalItems">@item.POSSaleItems.Sum(x => x.Quantity)</span>
+            </td>
+            <td>
+                <span name="SaleTotal" style="text-align: right">@item.POSSaleItems.Sum(x => x.Quantity * x.Price)</span>
             </td>
             <td>
                 @Html.ActionLink("Detail", "UpdatePOSSale", new { id = item.Id })
